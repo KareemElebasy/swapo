@@ -1,0 +1,75 @@
+{
+  "common": {
+    "language": "Language",
+    "arabic": "العربية",
+    "english": "English",
+    "search": "Search",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "loading": "Loading",
+    "empty": "No data available",
+    "close": "Close",
+    "previous": "Previous",
+    "next": "Next",
+    "home": "Home"
+  },
+  "auth": {
+    "login": "Login",
+    "signup": "Create account",
+    "verify": "Verify code",
+    "phone": "Phone number",
+    "password": "Password"
+  },
+  "roles": {
+    "buyer": "Buyer",
+    "seller": "Seller"
+  },
+  "status": {
+    "pending": "Pending",
+    "awaitingPayment": "Awaiting Payment",
+    "confirmed": "Confirmed",
+    "shipped": "Shipped",
+    "completed": "Completed",
+    "canceled": "Canceled"
+  },
+  "carousel": {
+    "slideOf": "Slide {n} of {total}",
+    "goToSlide": "Go to slide {n}"
+  },
+  "category": {
+    "all": "All"
+  },
+  "nav": {
+    "cart": "Cart",
+    "notifications": "Notifications",
+    "profile": "My Account",
+    "postAd": "Post Ad",
+    "messages": "Messages",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions",
+    "contact": "Contact Us"
+  },
+  "profile": {
+    "nav": {
+      "overview": "Overview",
+      "orders": "My Orders",
+      "favorites": "Favorites",
+      "addresses": "My Addresses",
+      "reviews": "My Reviews",
+      "settings": "Account Settings",
+      "ads": "My Ads",
+      "wallet": "Wallet",
+      "subscriptions": "Subscriptions",
+      "promotions": "Promotions",
+      "messages": "Messages",
+      "logout": "Logout"
+    }
+  }
+}

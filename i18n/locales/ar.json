@@ -1,0 +1,75 @@
+{
+  "common": {
+    "language": "اللغة",
+    "arabic": "العربية",
+    "english": "English",
+    "search": "ابحث",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "delete": "حذف",
+    "loading": "جاري التحميل",
+    "empty": "لا توجد بيانات",
+    "close": "إغلاق",
+    "previous": "السابق",
+    "next": "التالي",
+    "home": "الرئيسية"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "signup": "إنشاء حساب",
+    "verify": "تأكيد الرمز",
+    "phone": "رقم الجوال",
+    "password": "كلمة المرور"
+  },
+  "roles": {
+    "buyer": "مشتري",
+    "seller": "بائع"
+  },
+  "status": {
+    "pending": "قيد الانتظار",
+    "awaitingPayment": "في انتظار الدفع",
+    "confirmed": "مؤكد",
+    "shipped": "تم الشحن",
+    "completed": "مكتمل",
+    "canceled": "ملغى"
+  },
+  "carousel": {
+    "slideOf": "شريحة {n} من {total}",
+    "goToSlide": "انتقل إلى الشريحة {n}"
+  },
+  "category": {
+    "all": "الكل"
+  },
+  "nav": {
+    "cart": "سلة التسوق",
+    "notifications": "الإشعارات",
+    "profile": "حسابي",
+    "postAd": "أضف إعلاناً",
+    "messages": "الرسائل",
+    "openMenu": "فتح القائمة",
+    "closeMenu": "إغلاق القائمة"
+  },
+  "footer": {
+    "rights": "جميع الحقوق محفوظة",
+    "privacy": "سياسة الخصوصية",
+    "terms": "الشروط والأحكام",
+    "contact": "تواصل معنا"
+  },
+  "profile": {
+    "nav": {
+      "overview": "نظرة عامة",
+      "orders": "طلباتي",
+      "favorites": "المفضلة",
+      "addresses": "عناويني",
+      "reviews": "تقييماتي",
+      "settings": "إعدادات الحساب",
+      "ads": "إعلاناتي",
+      "wallet": "المحفظة",
+      "subscriptions": "الاشتراكات",
+      "promotions": "الترويج",
+      "messages": "الرسائل",
+      "logout": "تسجيل الخروج"
+    }
+  }
+}
