@@ -45,7 +45,7 @@ const currentYear = new Date().getFullYear()
 
         <!-- Language toggle -->
         <div class="shrink-0 self-start">
-          <LanguageToggle variant="compact" :inverted="true" />
+          <SharedI18nLanguageToggle variant="compact" :inverted="true" />
         </div>
       </div>
 

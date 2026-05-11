@@ -1,6 +1,12 @@
 {
   "common": {
+    "brandName": "Swapo",
+    "logoAlt": "Swapo logo",
     "language": "Language",
+    "localeShort": {
+      "ar": "Ar",
+      "en": "EN"
+    },
     "arabic": "العربية",
     "english": "English",
     "search": "Search",
@@ -11,12 +17,80 @@
     "loading": "Loading",
     "empty": "No data available",
     "close": "Close",
+    "optional": "(Optional)",
     "previous": "Previous",
     "next": "Next",
     "home": "Home"
   },
   "auth": {
     "login": "Login",
+    "loginPage": {
+      "chrome": {
+        "finder": "Finder",
+        "file": "File",
+        "edit": "Edit",
+        "view": "View",
+        "go": "Go",
+        "window": "Window",
+        "help": "Help",
+        "time": "12:43 PM",
+        "domain": "Swapo.com",
+        "secureAddress": "Secure address",
+        "refresh": "Refresh",
+        "share": "Share",
+        "newTab": "New tab",
+        "back": "Back",
+        "forward": "Forward"
+      },
+      "hero": {
+        "titleStart": "Welcome",
+        "titleAccent": "to Swapo",
+        "description": "A faster, easier, and safer buying and selling experience designed for you, with comfort and simplicity in one place.",
+        "visualAlt": "Welcome visual for the Swapo app"
+      },
+      "form": {
+        "title": "Welcome back!",
+        "subtitle": "We are happy to see you again on Swapo.",
+        "phonePlaceholder": "Enter your phone number",
+        "phoneLabel": "Your phone number",
+        "countryCode": "+966",
+        "submit": "Confirm",
+        "generalError": "Something went wrong. Please try again"
+      }
+    },
+    "verifyPage": {
+      "form": {
+        "title": "WhatsApp verification",
+        "subtitle": "Enter the verification code sent through WhatsApp",
+        "otpLabel": "Verification code",
+        "digitLabel": "Verification code digit {index}",
+        "submit": "Verify",
+        "resend": "Resend code",
+        "backToLogin": "Back to login",
+        "invalidCode": "Enter the complete verification code",
+        "generalError": "Something went wrong. Please try again"
+      }
+    },
+    "signupPage": {
+      "form": {
+        "title": "One simple step and we are ready ✨",
+        "subtitle": "This step is required to activate your account and access all features.",
+        "backToVerify": "Back to verification",
+        "nameLabel": "Name",
+        "firstNamePlaceholder": "First name",
+        "lastNamePlaceholder": "Last name",
+        "emailLabel": "Your email",
+        "emailPlaceholder": "Write your email here",
+        "birthDateLabel": "Birth date",
+        "birthDatePlaceholder": "Example: 23/10/1999",
+        "genderLabel": "Gender",
+        "genderMale": "Male",
+        "genderFemale": "Female",
+        "submit": "Create account",
+        "missingSession": "Your verification session has ended. Please verify your phone again.",
+        "generalError": "Something went wrong. Please try again"
+      }
+    },
     "signup": "Create account",
     "verify": "Verify code",
     "phone": "Phone number",
@@ -70,6 +144,52 @@
       "promotions": "Promotions",
       "messages": "Messages",
       "logout": "Logout"
+    }
+  },
+  "seller": {
+    "registrationIntro": {
+      "title": "Register as a seller on Swapo",
+      "illustrationAlt": "Seller registration illustration",
+      "description": "Turn your account into a seller account and start posting your products in quick, simple steps.",
+      "benefits": {
+        "uploadProducts": "✔ Upload your products easily",
+        "directContact": "✔ Communicate directly with buyers",
+        "manageSales": "✔ Manage your offers and sales in one place",
+        "highlightProduct": "✔ Tools that help your product stand out"
+      },
+      "chips": {
+        "lowCommission": "Low commissions",
+        "lowCommissionIcon": "🪙",
+        "moreBuyers": "Reach more buyers",
+        "moreBuyersIcon": "📣",
+        "easy": "Easy",
+        "easyIcon": "⭐",
+        "fastUpload": "Fast upload",
+        "fastUploadIcon": "⏱️",
+        "yourPrices": "Your prices, your call",
+        "yourPricesIcon": "💸"
+      },
+      "action": "Register now"
+    },
+    "registration": {
+      "title": "Seller registration",
+      "form": {
+        "pickupLocation": "Shipment pickup location",
+        "pickupHelper": "Shipping companies use this location to pick up orders from you.",
+        "changeLocation": "Change shipment pickup location",
+        "storeName": "Store name",
+        "nationalId": "National ID number",
+        "bankName": "Bank name",
+        "iban": "IBAN number",
+        "submit": "Confirm",
+        "defaults": {
+          "location": "Al Nakheel District, Prince Turki Bin Abdulaziz Street, Riyadh, Southern Region, Saudi Arabia",
+          "storeName": "Al Rawdah",
+          "nationalId": "8794582655",
+          "bankName": "SNB Bank",
+          "iban": "SA00 0000 0000 0000 0000 0000"
+        }
+      }
     }
   }
 }

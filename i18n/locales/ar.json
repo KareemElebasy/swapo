@@ -1,6 +1,12 @@
 {
   "common": {
+    "brandName": "Swapo",
+    "logoAlt": "شعار سوابو",
     "language": "اللغة",
+    "localeShort": {
+      "ar": "Ar",
+      "en": "EN"
+    },
     "arabic": "العربية",
     "english": "English",
     "search": "ابحث",
@@ -11,12 +17,80 @@
     "loading": "جاري التحميل",
     "empty": "لا توجد بيانات",
     "close": "إغلاق",
+    "optional": "(اختياري)",
     "previous": "السابق",
     "next": "التالي",
     "home": "الرئيسية"
   },
   "auth": {
     "login": "تسجيل الدخول",
+    "loginPage": {
+      "chrome": {
+        "finder": "Finder",
+        "file": "File",
+        "edit": "Edit",
+        "view": "View",
+        "go": "Go",
+        "window": "Window",
+        "help": "Help",
+        "time": "12:43 PM",
+        "domain": "Swapo.com",
+        "secureAddress": "عنوان آمن",
+        "refresh": "تحديث",
+        "share": "مشاركة",
+        "newTab": "تبويب جديد",
+        "back": "رجوع",
+        "forward": "تقدم"
+      },
+      "hero": {
+        "titleStart": "مرحبًا بك",
+        "titleAccent": "في سوابو",
+        "description": "صُمّمت لك تجربة بيع وشراء أسرع، أسهل، وآمنة... تجمع الراحة والبساطة في مكان واحد.",
+        "visualAlt": "صورة ترحيبية لتطبيق سوابو"
+      },
+      "form": {
+        "title": "أهلاً بك من جديد!",
+        "subtitle": "سعداء بعودتك إلى سوابو.",
+        "phonePlaceholder": "ادخل رقم هاتفك",
+        "phoneLabel": "رقم هاتفك",
+        "countryCode": "+966",
+        "submit": "تأكيد",
+        "generalError": "حدث خطأ، حاول مجددًا"
+      }
+    },
+    "verifyPage": {
+      "form": {
+        "title": "التحقق عبر واتساب",
+        "subtitle": "أدخل رمز التحقق الذي تم إرساله خلال واتساب",
+        "otpLabel": "رمز التحقق",
+        "digitLabel": "خانة رمز التحقق {index}",
+        "submit": "تحقق",
+        "resend": "أعد إرسال الكود",
+        "backToLogin": "العودة لتسجيل الدخول",
+        "invalidCode": "أدخل رمز التحقق كاملًا",
+        "generalError": "حدث خطأ، حاول مجددًا"
+      }
+    },
+    "signupPage": {
+      "form": {
+        "title": "خطوة بسيطة ونكون جاهزين ✨",
+        "subtitle": "هذه الخطوة ضرورية لتفعيل حسابك والوصول إلى جميع المميزات.",
+        "backToVerify": "العودة للتحقق",
+        "nameLabel": "الإسم",
+        "firstNamePlaceholder": "الإسم الأول",
+        "lastNamePlaceholder": "الإسم الأخير",
+        "emailLabel": "بريدك الإلكتروني",
+        "emailPlaceholder": "اكتب بريدك الإلكتروني هنا",
+        "birthDateLabel": "تاريخ الميلاد",
+        "birthDatePlaceholder": "مثال: 23/10/1999",
+        "genderLabel": "الجنس",
+        "genderMale": "ذكر",
+        "genderFemale": "اُنثي",
+        "submit": "إنشاء الحساب",
+        "missingSession": "انتهت جلسة التحقق. يرجى تأكيد رقم الجوال مرة أخرى.",
+        "generalError": "حدث خطأ، حاول مجددًا"
+      }
+    },
     "signup": "إنشاء حساب",
     "verify": "تأكيد الرمز",
     "phone": "رقم الجوال",
@@ -70,6 +144,52 @@
       "promotions": "الترويج",
       "messages": "الرسائل",
       "logout": "تسجيل الخروج"
+    }
+  },
+  "seller": {
+    "registrationIntro": {
+      "title": "سجل كبائع على سواوبو",
+      "illustrationAlt": "رسم توضيحي للتسجيل كبائع",
+      "description": "حوّل حسابك لبائع وابدأ نشر منتجاتك بخطوات بسيطة وسريعة.",
+      "benefits": {
+        "uploadProducts": "✔ ارفع منتجاتك بسهولة",
+        "directContact": "✔ تواصل مباشر مع المشترين",
+        "manageSales": "✔ إدارة عروضك ومبيعاتك في مكان واحد",
+        "highlightProduct": "✔ أدوات تساعدك تبرز منتجك"
+      },
+      "chips": {
+        "lowCommission": "عمولات قليلة",
+        "lowCommissionIcon": "🪙",
+        "moreBuyers": "وصول لمشترين أكتر",
+        "moreBuyersIcon": "📣",
+        "easy": "سهولة",
+        "easyIcon": "⭐",
+        "fastUpload": "رفع سريع",
+        "fastUploadIcon": "⏱️",
+        "yourPrices": "أسعارك بإيدك",
+        "yourPricesIcon": "💸"
+      },
+      "action": "تسجيل الان"
+    },
+    "registration": {
+      "title": "التسجيل كبائع",
+      "form": {
+        "pickupLocation": "موقع استلام الشحنات",
+        "pickupHelper": "هذا الموقع تستخدمه شركات الشحن لاستلام الطلبات منك.",
+        "changeLocation": "تغيير موقع استلام الشحنات",
+        "storeName": "اسم المتجر",
+        "nationalId": "رقم الهوية الوطنية",
+        "bankName": "اسم البنك",
+        "iban": "رقم الآيبان",
+        "submit": "تأكيد",
+        "defaults": {
+          "location": "حي النخيل، شارع الأمير تركي بن عبدالعزيز، الرياض، المنطقة الجنوبية، المملكة العربية السعودية",
+          "storeName": "الروضة",
+          "nationalId": "8794582655",
+          "bankName": "البنك الأهلي",
+          "iban": "SA00 0000 0000 0000 0000 0000"
+        }
+      }
     }
   }
 }

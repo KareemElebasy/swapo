@@ -42,7 +42,7 @@ const showSearch = computed(() => props.mode !== 'seller')
 
       <!-- End actions: language toggle + role-specific slot -->
       <div class="flex items-center gap-1 shrink-0">
-        <LanguageToggle variant="compact" :inverted="true" />
+        <SharedI18nLanguageToggle variant="compact" :inverted="true" />
         <slot name="actions" />
       </div>
 

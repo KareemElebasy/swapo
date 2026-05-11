@@ -1,6 +1,6 @@
 <script setup lang="ts">
 interface Props {
-  variant?: 'pill' | 'compact'
+  variant?: 'pill' | 'compact' | 'softPill'
   inverted?: boolean
 }
 
@@ -9,7 +9,7 @@ const props = withDefaults(defineProps<Props>(), {
   inverted: false,
 })
 
-const { locale, locales } = useI18n()
+const { locale, locales, t } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
 
 const availableLocales = computed(() =>
@@ -22,21 +22,52 @@ const currentLocale = computed(() =>
     (l) => l.code === locale.value,
   ),
 )
+
+const softPillLocales = computed(() => [
+  { code: 'en', label: t('common.localeShort.en') },
+  { code: 'ar', label: t('common.localeShort.ar') },
+])
 </script>
 
 <template>
   <div
     :class="[
       'inline-flex items-center',
-      variant === 'pill'
+      variant === 'softPill'
+        ? 'h-7 gap-[5px] rounded-full bg-grey-normal p-0.5'
+        : variant === 'pill'
         ? 'rounded-sm border border-blue-light-active overflow-hidden'
         : 'gap-2',
     ]"
+    :dir="variant === 'softPill' ? 'ltr' : undefined"
     role="group"
     :aria-label="$t('common.language')"
   >
+    <template v-if="variant === 'softPill'">
+      <template
+        v-for="loc in softPillLocales"
+        :key="loc.code"
+      >
+        <span
+          v-if="loc.code === locale"
+          class="inline-flex h-6 w-[37px] items-center justify-center rounded-full bg-white px-1 text-sm leading-[19px] text-grey-darker"
+          aria-current="true"
+        >
+          {{ loc.label }}
+        </span>
+
+        <NuxtLink
+          v-else
+          :to="switchLocalePath(loc.code)"
+          class="inline-flex h-6 w-[37px] items-center justify-center rounded-full bg-grey-normal px-1 text-sm leading-[19px] text-grey-darker transition-colors hover:bg-white/70"
+        >
+          {{ loc.label }}
+        </NuxtLink>
+      </template>
+    </template>
+
     <!-- Current locale (active, non-interactive display in pill mode) -->
-    <template v-if="variant === 'pill'">
+    <template v-else-if="variant === 'pill'">
       <span
         class="px-3 py-1.5 text-sm font-medium bg-blue-normal text-green-normal"
         aria-current="true"
