@@ -3,7 +3,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <section class="relative h-[770px] w-full max-w-[601px] shrink-0 overflow-hidden rounded-[48px] bg-[#001566] px-4 pb-[88px]">
+  <section class="relative h-[clamp(560px,calc(100svh-136px),770px)] w-full max-w-[601px] shrink-0 overflow-hidden rounded-lg bg-[#001566] px-4 pb-[72px]">
     <div class="absolute inset-0" dir="ltr">
       <img
         class="pointer-events-none absolute top-[176px] start-[90px] h-[865px] w-[1223px] max-w-none"

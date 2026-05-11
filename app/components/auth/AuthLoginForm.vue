@@ -59,7 +59,7 @@ async function submitLogin() {
 
 <template>
   <form
-    class="flex h-[358px] w-full max-w-[603px] flex-col items-start justify-center pt-6"
+    class="flex w-full max-w-[603px] flex-col items-start justify-center rounded-lg border border-black/5 bg-white/80 p-5 shadow-[0_24px_80px_rgba(9,9,9,0.06)] backdrop-blur sm:p-6 lg:min-h-[420px] lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none"
     @submit.prevent="submitLogin"
   >
     <div class="flex w-full flex-col items-start gap-5">
@@ -78,7 +78,7 @@ async function submitLogin() {
         </p>
       </div>
 
-      <div class="w-full pb-4">
+      <div class="w-full pb-3">
         <AuthPhoneInput
           v-model="phone"
           :placeholder="t('auth.loginPage.form.phonePlaceholder')"
@@ -89,7 +89,7 @@ async function submitLogin() {
     </div>
 
     <BaseButton
-      class="h-12 rounded-lg! text-base!"
+      class="h-12 rounded-lg! text-base! font-semibold!"
       :class="
         canSubmit
           ? ''

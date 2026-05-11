@@ -61,13 +61,17 @@ const chips: IntroChip[] = [
     :close-label="t('common.close')"
     :close-to="localePath('/')"
     :close-icon-src="closeIcon"
-    body-class="px-4"
+    body-class="px-5"
   >
-    <div class="relative flex w-full flex-col items-center justify-center gap-6">
-      <div class="relative h-[160px] w-full max-w-[360px] shrink-0 overflow-visible">
+    <div class="relative flex w-full flex-col items-center justify-center gap-5">
+      <p class="w-full text-start text-sm leading-6 text-grey-darker">
+        {{ t('seller.registrationIntro.subtitle') }}
+      </p>
+
+      <div class="relative h-[172px] w-full max-w-[390px] shrink-0 overflow-visible">
         <div class="absolute inset-0 flex items-center justify-center">
           <img
-            class="h-[138.2px] w-[102.21px]"
+            class="h-[144px] w-[106px]"
             :src="registerIntroIllustration"
             :alt="t('seller.registrationIntro.illustrationAlt')"
           >
@@ -77,7 +81,7 @@ const chips: IntroChip[] = [
           v-for="chip in chips"
           :key="chip.key"
           :class="[
-            'absolute inline-flex items-center justify-center gap-[4.2px] whitespace-nowrap rounded-[105px] px-[8.43px] py-[2.1px] text-[12.645px] font-medium leading-normal',
+            'absolute inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium leading-normal shadow-sm',
             chip.classes,
           ]"
         >
@@ -88,12 +92,12 @@ const chips: IntroChip[] = [
         </span>
       </div>
 
-      <div class="flex h-[100px] w-full flex-col justify-center rounded-md bg-[#ebf9fe] px-3 pb-3 pt-2 text-end text-sm">
-        <p class="leading-normal text-black-normal-hover">
+      <div class="flex w-full flex-col justify-center rounded-lg border border-[#D8F1FA] bg-[#EBF9FE] px-4 py-3 text-start text-sm">
+        <p class="leading-6 text-black-normal-hover">
           {{ t('seller.registrationIntro.description') }}
         </p>
 
-        <ul class="mt-1 flex flex-col leading-6 text-black-normal">
+        <ul class="mt-2 flex flex-col gap-1 leading-6 text-black-normal">
           <li v-for="key in benefitKeys" :key="key">
             {{ t(key) }}
           </li>
@@ -106,7 +110,7 @@ const chips: IntroChip[] = [
         :to="localePath('/seller/register')"
         size="lg"
         full-width
-        class="h-12 rounded-sm! bg-blue-normal! text-base! font-normal! text-grey-light! hover:bg-blue-normal-hover! active:bg-blue-normal-active!"
+        class="h-12 rounded-lg! bg-blue-normal! text-base! font-semibold! text-grey-light! hover:bg-blue-normal-hover! active:bg-blue-normal-active!"
       >
         {{ t('seller.registrationIntro.action') }}
       </BaseButton>

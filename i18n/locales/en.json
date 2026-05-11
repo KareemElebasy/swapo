@@ -76,6 +76,10 @@
         "title": "One simple step and we are ready ✨",
         "subtitle": "This step is required to activate your account and access all features.",
         "backToVerify": "Back to verification",
+        "accountTypeLabel": "Account type",
+        "buyerStep": "Start as buyer",
+        "sellerStep": "Sell later",
+        "sellerUpgradeHint": "We create your buyer account first. If you want to sell, you can complete seller details after that.",
         "nameLabel": "Name",
         "firstNamePlaceholder": "First name",
         "lastNamePlaceholder": "Last name",
@@ -149,6 +153,7 @@
   "seller": {
     "registrationIntro": {
       "title": "Register as a seller on Swapo",
+      "subtitle": "Your base account stays ready for buying, and seller details are added only when you choose to start selling.",
       "illustrationAlt": "Seller registration illustration",
       "description": "Turn your account into a seller account and start posting your products in quick, simple steps.",
       "benefits": {
@@ -173,6 +178,7 @@
     },
     "registration": {
       "title": "Seller registration",
+      "subtitle": "Complete seller details so shipping pickup and payouts are connected to your current account.",
       "form": {
         "pickupLocation": "Shipment pickup location",
         "pickupHelper": "Shipping companies use this location to pick up orders from you.",
@@ -188,6 +194,12 @@
           "nationalId": "8794582655",
           "bankName": "SNB Bank",
           "iban": "SA00 0000 0000 0000 0000 0000"
+        },
+        "placeholders": {
+          "storeName": "Example: Al Rawdah",
+          "nationalId": "Example: 8794582655",
+          "bankName": "Example: SNB Bank",
+          "iban": "Example: SA00 0000 0000 0000 0000 0000"
         }
       }
     }

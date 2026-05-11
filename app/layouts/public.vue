@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const { t } = useI18n()
-const localePath = useLocalePath()
+const { t } = useI18n();
+const localePath = useLocalePath();
 </script>
 
 <template>
@@ -13,7 +13,7 @@ const localePath = useLocalePath()
           :to="localePath('/auth/login')"
           class="text-green-normal! hover:bg-blue-dark-hover!"
         >
-          {{ t('auth.login') }}
+          {{ t("auth.login") }}
         </BaseButton>
         <BaseButton
           variant="primary"
@@ -21,7 +21,7 @@ const localePath = useLocalePath()
           :to="localePath('/auth/signup')"
           class="bg-green-normal! text-blue-normal! hover:bg-green-normal-hover!"
         >
-          {{ t('auth.signup') }}
+          {{ t("auth.signup") }}
         </BaseButton>
       </template>
     </AppHeader>

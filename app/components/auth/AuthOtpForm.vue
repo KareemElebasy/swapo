@@ -140,7 +140,7 @@ onBeforeUnmount(() => {
 
 <template>
   <form
-    class="flex h-[358px] w-full max-w-[603px] flex-col items-end justify-center pt-6"
+    class="flex w-full max-w-[603px] flex-col items-end justify-center rounded-lg border border-black/5 bg-white/80 p-5 shadow-[0_24px_80px_rgba(9,9,9,0.06)] backdrop-blur sm:p-6 lg:min-h-[420px] lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none"
     @submit.prevent="submitOtp"
   >
     <div class="flex w-full flex-col items-center gap-4">
@@ -210,7 +210,7 @@ onBeforeUnmount(() => {
 
         <div class="flex w-full flex-col items-center justify-center gap-3">
           <BaseButton
-            class="h-12 rounded-lg! text-base!"
+            class="h-12 rounded-lg! text-base! font-semibold!"
             :class="
               canSubmit
                 ? ''
@@ -227,7 +227,7 @@ onBeforeUnmount(() => {
 
           <button
             type="button"
-            class="inline-flex items-center justify-center gap-1 rounded-full bg-[#F7F7F8] px-3 py-2 text-sm transition-colors disabled:cursor-not-allowed"
+            class="inline-flex min-h-10 items-center justify-center gap-1 rounded-full bg-[#F7F7F8] px-4 py-2 text-sm transition-colors hover:bg-grey-normal disabled:cursor-not-allowed"
             :disabled="!canResend"
             @click="resendOtp"
           >

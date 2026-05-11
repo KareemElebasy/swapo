@@ -56,7 +56,7 @@ function handleInput(event: Event) {
 
     <div
       :class="[
-        'flex h-14 w-full items-center justify-between gap-4 rounded-xl border bg-white p-4 transition-colors',
+        'flex h-14 w-full items-center justify-between gap-4 rounded-lg border bg-white p-4 transition-colors focus-within:border-blue-normal focus-within:ring-2 focus-within:ring-blue-light',
         error ? 'border-status-canceled-text' : 'border-grey-normal-hover',
         disabled ? 'opacity-60' : '',
       ]"

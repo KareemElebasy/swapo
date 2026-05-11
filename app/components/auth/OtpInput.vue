@@ -132,7 +132,7 @@ function handleKeydown(index: number, event: KeyboardEvent) {
 <template>
   <div class="flex w-full flex-col gap-2">
     <div
-      class="flex h-[103px] w-full items-center justify-center gap-2"
+      class="flex min-h-[96px] w-full items-center justify-center gap-2"
       dir="ltr"
       role="group"
       :aria-label="t('auth.verifyPage.form.otpLabel')"
@@ -144,7 +144,7 @@ function handleKeydown(index: number, event: KeyboardEvent) {
         :ref="(element) => setInputRef(element, index)"
         :value="digits[index]"
         :disabled="disabled"
-        class="size-16 rounded-2xl border-[0.5px] border-grey-normal-hover bg-white text-center text-2xl font-semibold leading-none text-black-normal caret-blue-normal outline-none transition-colors focus:border-blue-light-active focus:ring-2 focus:ring-blue-light sm:size-[72px]"
+        class="size-16 rounded-lg border border-grey-normal-hover bg-white text-center text-2xl font-semibold leading-none text-black-normal caret-blue-normal outline-none transition-colors focus:border-blue-normal focus:ring-2 focus:ring-blue-light sm:size-[72px]"
         type="text"
         inputmode="numeric"
         pattern="[0-9]*"

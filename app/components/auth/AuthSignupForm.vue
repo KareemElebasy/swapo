@@ -193,10 +193,10 @@ async function submitSignup() {
 
 <template>
   <form
-    class="flex w-full max-w-[603px] flex-col items-end justify-center pt-6"
+    class="flex w-full max-w-[603px] flex-col items-end justify-center rounded-lg border border-black/5 bg-white/80 p-5 shadow-[0_24px_80px_rgba(9,9,9,0.06)] backdrop-blur sm:p-6 lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none"
     @submit.prevent="submitSignup"
   >
-    <div class="flex w-full flex-col items-center gap-4">
+    <div class="flex w-full flex-col items-center gap-5">
       <div class="flex w-full items-center">
         <BaseIconButton
           variant="ghost"
@@ -242,6 +242,42 @@ async function submitSignup() {
         </p>
       </div>
 
+      <div class="flex w-full flex-col gap-2">
+        <p class="text-xs font-semibold uppercase leading-4 text-grey-darker">
+          {{ t("auth.signupPage.form.accountTypeLabel") }}
+        </p>
+
+        <div
+          class="grid w-full grid-cols-2 gap-2 rounded-lg border border-grey-normal-hover bg-white p-2"
+        >
+          <div
+            class="flex min-h-[72px] flex-col justify-center gap-1 rounded-lg border border-blue-normal bg-green-light px-3 py-2"
+          >
+            <span class="text-sm font-semibold leading-5 text-blue-normal">
+              {{ t("roles.buyer") }}
+            </span>
+            <span class="text-xs leading-5 text-black-normal-hover">
+              {{ t("auth.signupPage.form.buyerStep") }}
+            </span>
+          </div>
+
+          <div
+            class="flex min-h-[72px] flex-col justify-center gap-1 rounded-lg border border-grey-normal-hover bg-grey-normal px-3 py-2"
+          >
+            <span class="text-sm font-semibold leading-5 text-black-normal-hover">
+              {{ t("roles.seller") }}
+            </span>
+            <span class="text-xs leading-5 text-grey-darker">
+              {{ t("auth.signupPage.form.sellerStep") }}
+            </span>
+          </div>
+        </div>
+
+        <p class="rounded-lg bg-[#F5FBFA] px-3 py-2 text-sm leading-6 text-grey-darker">
+          {{ t("auth.signupPage.form.sellerUpgradeHint") }}
+        </p>
+      </div>
+
       <div class="flex w-full flex-col gap-4">
         <div class="flex w-full flex-col gap-2">
           <div
@@ -267,7 +303,7 @@ async function submitSignup() {
                 :aria-describedby="
                   fieldErrorMap[field.key] ? `${field.key}-error` : undefined
                 "
-                class="h-12 w-full rounded-xl border border-grey-normal-hover bg-white ps-4 pe-4 text-sm leading-5 text-black-normal placeholder:text-grey-normal-active focus:border-blue-light-active focus:outline-none disabled:opacity-60"
+                class="h-12 w-full rounded-lg border border-grey-normal-hover bg-white ps-4 pe-4 text-sm leading-5 text-black-normal placeholder:text-grey-normal-active transition-colors focus:border-blue-normal focus:outline-none focus:ring-2 focus:ring-blue-light disabled:opacity-60"
                 :disabled="loading"
                 @input="updateField(field, $event)"
               />
@@ -307,7 +343,7 @@ async function submitSignup() {
             :aria-describedby="
               fieldErrorMap[field.key] ? `${field.key}-error` : undefined
             "
-            class="h-12 w-full rounded-xl border border-grey-normal-hover bg-white ps-4 pe-4 text-sm leading-5 text-black-normal placeholder:text-grey-normal-active focus:border-blue-light-active focus:outline-none disabled:opacity-60"
+            class="h-12 w-full rounded-lg border border-grey-normal-hover bg-white ps-4 pe-4 text-sm leading-5 text-black-normal placeholder:text-grey-normal-active transition-colors focus:border-blue-normal focus:outline-none focus:ring-2 focus:ring-blue-light disabled:opacity-60"
             :disabled="loading"
             @input="updateField(field, $event)"
           />
@@ -334,10 +370,10 @@ async function submitSignup() {
               v-for="option in genderOptions"
               :key="option.value"
               :class="[
-                'flex h-12 cursor-pointer items-center justify-between rounded-xl border bg-white ps-4 pe-4 transition-colors',
+                'flex h-12 cursor-pointer items-center justify-between rounded-lg border ps-4 pe-4 transition-colors',
                 gender === option.value
-                  ? 'border-blue-normal'
-                  : 'border-grey-normal-hover',
+                  ? 'border-blue-normal bg-green-light'
+                  : 'border-grey-normal-hover bg-white hover:bg-grey-normal',
                 loading ? 'cursor-not-allowed opacity-60' : '',
               ]"
             >
@@ -384,7 +420,7 @@ async function submitSignup() {
       </div>
 
       <BaseButton
-        class="h-12 rounded-lg! text-base! disabled:opacity-100!"
+        class="h-12 rounded-lg! text-base! font-semibold! disabled:opacity-100!"
         :class="
           canSubmit
             ? ''
