@@ -5,7 +5,7 @@ interface BreadcrumbItem {
 }
 
 interface Props {
-  items: BreadcrumbItem[]
+  items?: BreadcrumbItem[]
   current?: string
   variant?: 'compact' | 'full'
   showHome?: boolean
@@ -14,26 +14,55 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   variant: 'full',
   showHome: true,
+  items: () => [],
 })
 
 const { t } = useI18n()
 const localePath = useLocalePath()
+const route = useRoute()
+
+const generatedItems = computed<BreadcrumbItem[]>(() => {
+  if (props.items.length) return props.items
+
+  const normalizedPath = route.path.replace(/^\/en(?=\/|$)/, '') || '/'
+  const segments = normalizedPath.split('/').filter(Boolean)
+
+  return segments.map((segment, index) => {
+    const path = `/${segments.slice(0, index + 1).join('/')}`
+    const label = segment
+      .replace(/-/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase())
+
+    return {
+      label,
+      to: index === segments.length - 1 ? undefined : path,
+    }
+  })
+})
 
 const allItems = computed<BreadcrumbItem[]>(() => {
-  if (!props.showHome) return props.items
-  return [{ label: t('common.home'), to: localePath('/') }, ...props.items]
+  if (!props.showHome) return generatedItems.value
+  return [{ label: t('common.home'), to: '/' }, ...generatedItems.value]
 })
 
-const visibleItems = computed(() => {
-  if (props.variant === 'compact' && allItems.value.length > 3) {
+const visibleItems = computed<BreadcrumbItem[]>(() => {
+  const items = allItems.value
+
+  if (props.variant === 'compact' && items.length > 3) {
     return [
-      allItems.value[0],
-      { label: '…', to: undefined },
-      ...allItems.value.slice(-2),
-    ]
+      items[0],
+      { label: '...', to: undefined },
+      ...items.slice(-2),
+    ].filter(Boolean) as BreadcrumbItem[]
   }
-  return allItems.value
+
+  return items
 })
+
+function itemTo(item: BreadcrumbItem) {
+  if (!item.to) return undefined
+  return item.to.startsWith('/') ? localePath(item.to) : item.to
+}
 </script>
 
 <template>
@@ -41,13 +70,12 @@ const visibleItems = computed(() => {
     <ol class="flex flex-wrap items-center gap-1 text-sm">
       <li
         v-for="(item, index) in visibleItems"
-        :key="index"
-        class="flex items-center gap-1"
+        :key="`${item.label}-${index}`"
+        class="flex min-w-0 items-center gap-1"
       >
-        <!-- Separator — hidden for first item -->
         <span
           v-if="index > 0"
-          class="flex items-center text-grey-dark shrink-0"
+          class="flex shrink-0 items-center text-grey-dark"
           aria-hidden="true"
         >
           <svg
@@ -63,29 +91,25 @@ const visibleItems = computed(() => {
         </span>
 
         <slot name="item" :item="item" :index="index" :is-last="index === visibleItems.length - 1">
-          <!-- Ellipsis -->
-          <span v-if="item.label === '…'" class="text-grey-dark px-1">…</span>
+          <span v-if="item.label === '...'" class="px-1 text-grey-dark">...</span>
 
-          <!-- Last item (current page) -->
           <span
             v-else-if="index === visibleItems.length - 1"
-            class="text-black-normal font-medium truncate max-w-[200px]"
+            class="max-w-[200px] truncate font-medium text-black-normal"
             aria-current="page"
           >
             {{ current ?? item.label }}
           </span>
 
-          <!-- Link -->
           <NuxtLink
-            v-else-if="item.to"
-            :to="item.to"
-            class="text-grey-dark-active hover:text-blue-normal transition-colors truncate max-w-[160px]"
+            v-else-if="itemTo(item)"
+            :to="itemTo(item)"
+            class="max-w-[160px] truncate text-grey-dark-active transition-colors hover:text-blue-normal"
           >
             {{ item.label }}
           </NuxtLink>
 
-          <!-- Non-linked item -->
-          <span v-else class="text-grey-dark-active truncate max-w-[160px]">
+          <span v-else class="max-w-[160px] truncate text-grey-dark-active">
             {{ item.label }}
           </span>
         </slot>

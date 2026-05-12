@@ -149,7 +149,7 @@ onBeforeUnmount(() => {
           variant="ghost"
           size="md"
           :to="localePath('/auth/login')"
-          :aria-label="t('auth.verifyPage.form.backToLogin')"
+          :ariaLabel="t('auth.verifyPage.form.backToLogin')"
           class="text-black-normal! hover:bg-transparent! active:bg-transparent!"
         >
           <template #icon>

@@ -10,6 +10,8 @@
     "arabic": "العربية",
     "english": "English",
     "search": "ابحث",
+    "filter": "تصفية",
+    "clear": "مسح",
     "save": "حفظ",
     "cancel": "إلغاء",
     "confirm": "تأكيد",
@@ -105,12 +107,25 @@
     "seller": "بائع"
   },
   "status": {
+    "default": "الحالة",
     "pending": "قيد الانتظار",
     "awaitingPayment": "في انتظار الدفع",
     "confirmed": "مؤكد",
     "shipped": "تم الشحن",
     "completed": "مكتمل",
-    "canceled": "ملغى"
+    "canceled": "ملغى",
+    "active": "نشط",
+    "agreed": "تم الاتفاق",
+    "ended": "منتهي",
+    "draft": "مسودة",
+    "published": "منشور",
+    "boosted": "مروّج",
+    "sold": "مباع",
+    "paused": "متوقف",
+    "rejected": "مرفوض",
+    "paid": "مدفوع",
+    "refunded": "مسترد",
+    "failed": "فشل"
   },
   "carousel": {
     "slideOf": "شريحة {n} من {total}",
@@ -119,7 +134,72 @@
   "category": {
     "all": "الكل"
   },
+  "homePage": {
+    "metaTitle": "سوابو | الرئيسية",
+    "hero": {
+      "titleLine1": "خلي إطلالتك تحكي عنك",
+      "titleLine2": "موضة تجمع بين الأناقة والراحة",
+      "subtitle": "تسوقي أحدث القطع اليوم",
+      "searchLabel": "البحث في منتجات سوابو",
+      "searchPlaceholder": "ابحث عن منتجات أو بائعين أو ستايلات",
+      "searchSubmit": "بحث",
+      "cardAlt": "بطاقة معاينة لإطلالة أزياء",
+      "blazerAlt": "صورة بليزر في واجهة الصفحة",
+      "handbagAlt": "صورة حقيبة وردية في واجهة الصفحة"
+    },
+    "services": {
+      "label": "مميزات التسوق",
+      "fastDelivery": {
+        "title": "توصيل سريع",
+        "message": "استلام وتسليم لحد بابك"
+      },
+      "installment": {
+        "title": "الدفع بالتقسيط",
+        "message": "عبر مزودي تقسيط معتمدين"
+      },
+      "moneyGuarantee": {
+        "title": "ضمان أموالك",
+        "message": "فلوسك محفوظة حتى استلام المنتج"
+      }
+    },
+    "sections": {
+      "featuredTitle": "افضل المنتجات",
+      "recommendedTitle": "مُقترحة خصيصاً لك",
+      "emptyTitle": "لا توجد منتجات حالياً",
+      "emptyMessage": "ستظهر الاختيارات الجديدة هنا فور توفرها."
+    },
+    "products": {
+      "denimJacket": "جاكيت دنيم أزرق بتصميم شبابي عصري",
+      "flameHeel": "كعب اللهب",
+      "heartCoat": "معطف أطفال شتوي بناتي بفراء خارجي وكابتشو جميل",
+      "pinkCoat": "معطف وردي بقلوب للأطفال"
+    },
+    "promo": {
+      "title": "سجل كبائع على سوابو",
+      "cta": "تسجيل حسابي كبائع",
+      "benefits": {
+        "uploadProducts": "ارفع منتجاتك بسهولة",
+        "directContact": "تواصل مباشر مع المشترين",
+        "manageSales": "إدارة عروضك ومبيعاتك في مكان واحد",
+        "highlightProduct": "أدوات تساعدك تبرز منتجك"
+      },
+      "chips": {
+        "lowCommission": "عمولات قليلة",
+        "moreBuyers": "وصول لمشترين أكتر",
+        "yourPrices": "أسعارك بإيدك",
+        "easy": "سهولة",
+        "fastUpload": "رفع سريع"
+      }
+    }
+  },
   "nav": {
+    "primary": "التنقل الرئيسي",
+    "sellerHome": "البائع",
+    "products": "المنتجات",
+    "orders": "الطلبات",
+    "negotiations": "المفاوضات",
+    "shop": "تسوق",
+    "sellerPromo": "سجل كبائع وابدأ نشر منتجاتك بخطوات بسيطة وسريعة.",
     "cart": "سلة التسوق",
     "notifications": "الإشعارات",
     "profile": "حسابي",
@@ -132,22 +212,188 @@
     "rights": "جميع الحقوق محفوظة",
     "privacy": "سياسة الخصوصية",
     "terms": "الشروط والأحكام",
-    "contact": "تواصل معنا"
+    "contact": "تواصل معنا",
+    "newsletterTitle": "ابقَ على اطلاع دائم بآخر أخبارنا وعروضنا",
+    "emailPlaceholder": "اكتب بريدك الإلكتروني هنا",
+    "newsletterSubmit": "اشترك",
+    "about": "من نحن",
+    "policy": "سياسة الاستخدام",
+    "support": "الدعم الفني",
+    "navLabel": "روابط التذييل",
+    "socialLabel": "روابط التواصل"
   },
   "profile": {
+    "navLabel": "قائمة الحساب",
+    "sections": {
+      "account": "حسابي",
+      "management": "الإدارة",
+      "settings": "الإعدادات"
+    },
     "nav": {
       "overview": "نظرة عامة",
       "orders": "طلباتي",
+      "incomingOrders": "الطلبات الواردة",
+      "negotiations": "المفاوضات",
       "favorites": "المفضلة",
       "addresses": "عناويني",
+      "phone": "رقم الجوال",
+      "profile": "الحساب الشخصي",
+      "policy": "سياسة الاستخدام",
+      "support": "الدعم الفني",
       "reviews": "تقييماتي",
       "settings": "إعدادات الحساب",
       "ads": "إعلاناتي",
+      "products": "منتجاتي",
+      "drafts": "المسودات",
       "wallet": "المحفظة",
       "subscriptions": "الاشتراكات",
+      "autoReplies": "الرسائل التلقائية",
+      "businessLocation": "موقعي التجاري",
+      "sellerData": "بيانات البائع",
       "promotions": "الترويج",
       "messages": "الرسائل",
       "logout": "تسجيل الخروج"
+    }
+  },
+  "product": {
+    "priceType": {
+      "fixed": "شراء الآن",
+      "negotiable": "تفاوض"
+    },
+    "condition": {
+      "new": "جديد",
+      "used": "مستعمل"
+    },
+    "listingType": {
+      "ad": "إعلان"
+    },
+    "addFavorite": "إضافة إلى المفضلة",
+    "removeFavorite": "إزالة من المفضلة"
+  },
+  "filters": {
+    "title": "التصفية والترتيب",
+    "sort": "ترتيب",
+    "apply": "تطبيق",
+    "reset": "إعادة ضبط",
+    "min": "من",
+    "max": "إلى",
+    "rating": "تقييم المنتج"
+  },
+  "catalog": {
+    "meta": {
+      "productsTitle": "سوابو | المنتجات",
+      "categoryTitle": "سوابو | {category}"
+    },
+    "breadcrumbs": {
+      "products": "المنتجات"
+    },
+    "eyebrow": "استكشاف المنتجات",
+    "activeFiltersLabel": "الفلاتر النشطة",
+    "page": {
+      "title": "تصفح المنتجات",
+      "description": "اكتشف قطع الأزياء من بائعي سوابو، ثم خصص النتائج حسب التصنيف والحالة والسعر والتقييم."
+    },
+    "search": {
+      "formLabel": "البحث في المنتجات",
+      "placeholder": "ابحث عن منتجات أو ستايلات أو تصنيفات",
+      "resultsTitle": "نتائج البحث عن {query}",
+      "resultsDescription": "تم العثور على {count} منتجات مطابقة."
+    },
+    "category": {
+      "description": "استكشف منتجات {category} المتاحة من بائعي سوابو.",
+      "notFoundTitle": "التصنيف غير موجود",
+      "notFoundMessage": "هذا التصنيف غير متاح حاليا. تصفح كل المنتجات لمتابعة الاستكشاف."
+    },
+    "categories": {
+      "mens-fashion": "أزياء رجالية",
+      "pants": "بناطيل",
+      "dresses": "فساتين",
+      "sportswear": "أزياء رياضية",
+      "womens-fashion": "أزياء نسائية",
+      "shoes": "أحذية",
+      "accessories": "إكسسوارات"
+    },
+    "products": {
+      "blueDenimJacket": {
+        "title": "جاكيت دنيم أزرق بتصميم شبابي عصري",
+        "description": "طبقة دنيم متعددة الاستخدامات للإطلالات اليومية."
+      },
+      "redFlameHeels": {
+        "title": "كعب أحمر لافت",
+        "description": "حذاء كعب بتصميم جريء ولمسة حمراء بارزة."
+      },
+      "heartWinterCoat": {
+        "title": "معطف أطفال شتوي بناتي بفرو وكابتشو",
+        "description": "معطف شتوي دافئ بتفاصيل قلوب مرحة."
+      },
+      "pinkHeartCoat": {
+        "title": "معطف وردي بقلوب للأطفال",
+        "description": "معطف وردي ناعم بتفاصيل قلوب للأيام الباردة."
+      },
+      "minimalHandbag": {
+        "title": "حقيبة وردية ناعمة",
+        "description": "حقيبة صغيرة لإطلالات بسيطة ومرتبة."
+      },
+      "wideLegPants": {
+        "title": "بنطال واسع كاجوال",
+        "description": "بنطال يومي مريح بقصة واسعة."
+      },
+      "sportSneakers": {
+        "title": "حذاء رياضي أزرق",
+        "description": "حذاء مريح للإطلالات الرياضية اليومية."
+      },
+      "goldStatementEarrings": {
+        "title": "أقراط ذهبية لافتة",
+        "description": "أقراط بلون ذهبي لإطلالة مميزة."
+      },
+      "linenDayDress": {
+        "title": "فستان نهاري من الكتان",
+        "description": "فستان خفيف مناسب للمشاوير النهارية."
+      }
+    },
+    "filters": {
+      "all": "الكل",
+      "condition": "حالة المنتج",
+      "price": "السعر",
+      "rating": "التقييم",
+      "tradeState": "الحالة التجارية",
+      "buyNow": "شراء الآن",
+      "negotiate": "تفاوض مع البائع"
+    },
+    "sort": {
+      "recommended": "الأكثر ملاءمة",
+      "newest": "الأحدث",
+      "priceAsc": "السعر: من الأقل للأعلى",
+      "priceDesc": "السعر: من الأعلى للأقل",
+      "topRated": "الأعلى تقييما"
+    },
+    "chips": {
+      "rating": "{rating} نجوم فأكثر",
+      "priceRange": "من {min} ر.س إلى {max} ر.س",
+      "minPrice": "من {min} ر.س",
+      "maxPrice": "حتى {max} ر.س"
+    },
+    "results": {
+      "title": "نتائج المنتجات",
+      "count": "{count} منتجات",
+      "searchCount": "{count} منتجات عن {query}"
+    },
+    "empty": {
+      "title": "لا توجد منتجات حاليا",
+      "message": "ستظهر المنتجات هنا فور توفرها.",
+      "filteredTitle": "لا توجد منتجات تطابق الفلاتر",
+      "filteredMessage": "جرب تعديل كلمة البحث أو إزالة بعض الفلاتر."
+    },
+    "error": {
+      "title": "تعذر تحميل المنتجات",
+      "message": "يرجى المحاولة مرة أخرى بعد قليل."
+    },
+    "actions": {
+      "filters": "الفلاتر",
+      "clearFilter": "مسح {filter}",
+      "resetFilters": "إعادة ضبط الفلاتر",
+      "clearSearch": "مسح البحث",
+      "viewAllProducts": "عرض كل المنتجات"
     }
   },
   "seller": {

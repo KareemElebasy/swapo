@@ -4,6 +4,14 @@ interface Props {
   inverted?: boolean
 }
 
+type LocaleCode = 'ar' | 'en'
+
+interface LocaleOption {
+  code: LocaleCode
+  name: string
+  dir?: string
+}
+
 const props = withDefaults(defineProps<Props>(), {
   variant: 'pill',
   inverted: false,
@@ -12,20 +20,25 @@ const props = withDefaults(defineProps<Props>(), {
 const { locale, locales, t } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
 
-const availableLocales = computed(() =>
-  (locales.value as Array<{ code: string; name: string; dir?: string }>)
+function isLocaleOption(entry: { code?: string; name?: string; dir?: string }): entry is LocaleOption {
+  return (entry.code === 'ar' || entry.code === 'en') && typeof entry.name === 'string'
+}
+
+const availableLocales = computed<LocaleOption[]>(() =>
+  (locales.value as Array<{ code?: string; name?: string; dir?: string }>)
+    .filter(isLocaleOption)
     .filter((l) => l.code !== locale.value),
 )
 
 const currentLocale = computed(() =>
-  (locales.value as Array<{ code: string; name: string }>).find(
+  (locales.value as LocaleOption[]).find(
     (l) => l.code === locale.value,
   ),
 )
 
 const softPillLocales = computed(() => [
-  { code: 'en', label: t('common.localeShort.en') },
-  { code: 'ar', label: t('common.localeShort.ar') },
+  { code: 'en' as const, label: t('common.localeShort.en') },
+  { code: 'ar' as const, label: t('common.localeShort.ar') },
 ])
 </script>
 

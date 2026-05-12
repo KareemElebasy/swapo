@@ -5,12 +5,20 @@ interface Props {
   title?: string
   closable?: boolean
   closeOnBackdrop?: boolean
+  closeLabel?: string
+  bodyClass?: string
+  footerClass?: string
+  panelClass?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   side: 'bottom',
   closable: true,
   closeOnBackdrop: true,
+  closeLabel: 'Close',
+  bodyClass: '',
+  footerClass: '',
+  panelClass: '',
 })
 
 const emit = defineEmits<{
@@ -37,6 +45,8 @@ function onKeydown(event: KeyboardEvent) {
 watch(
   () => props.open,
   (val) => {
+    if (!import.meta.client) return
+
     if (val) {
       document.body.style.overflow = 'hidden'
       nextTick(() => {
@@ -49,6 +59,7 @@ watch(
 )
 
 onUnmounted(() => {
+  if (!import.meta.client) return
   document.body.style.overflow = ''
 })
 
@@ -109,7 +120,7 @@ const leaveToClass = computed(() => enterFromClass.value)
             role="dialog"
             aria-modal="true"
             :aria-labelledby="title ? 'drawer-title' : undefined"
-            :class="panelClasses"
+            :class="[panelClasses, panelClass]"
             tabindex="-1"
           >
             <!-- Handle (bottom drawer only) -->
@@ -136,7 +147,7 @@ const leaveToClass = computed(() => enterFromClass.value)
                 v-if="closable"
                 type="button"
                 class="shrink-0 flex items-center justify-center size-8 rounded-sm text-grey-dark-active hover:bg-grey-normal hover:text-black-normal transition-colors"
-                aria-label="Close"
+                :aria-label="closeLabel"
                 @click="close"
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -146,12 +157,12 @@ const leaveToClass = computed(() => enterFromClass.value)
             </div>
 
             <!-- Body -->
-            <div class="flex-1 overflow-y-auto px-5 py-4">
+            <div :class="['flex-1 overflow-y-auto px-5 py-4', bodyClass]">
               <slot />
             </div>
 
             <!-- Footer -->
-            <div v-if="slots.footer" class="px-5 py-4 border-t border-grey-normal shrink-0">
+            <div v-if="slots.footer" :class="['px-5 py-4 border-t border-grey-normal shrink-0', footerClass]">
               <slot name="footer" />
             </div>
           </div>

@@ -6,12 +6,20 @@ interface Props {
   size?: 'sm' | 'md' | 'lg'
   closable?: boolean
   closeOnBackdrop?: boolean
+  closeLabel?: string
+  bodyClass?: string
+  footerClass?: string
+  panelClass?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   size: 'md',
   closable: true,
   closeOnBackdrop: true,
+  closeLabel: 'Close',
+  bodyClass: '',
+  footerClass: '',
+  panelClass: '',
 })
 
 const emit = defineEmits<{
@@ -42,6 +50,8 @@ function trapFocus(event: KeyboardEvent) {
   const focusable = panel.querySelectorAll<HTMLElement>(
     'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
   )
+  if (!focusable.length) return
+
   const first = focusable[0]
   const last = focusable[focusable.length - 1]
   if (event.shiftKey) {
@@ -60,6 +70,8 @@ function trapFocus(event: KeyboardEvent) {
 watch(
   () => props.open,
   (val) => {
+    if (!import.meta.client) return
+
     if (val) {
       document.body.style.overflow = 'hidden'
       nextTick(() => {
@@ -75,6 +87,7 @@ watch(
 )
 
 onUnmounted(() => {
+  if (!import.meta.client) return
   document.body.style.overflow = ''
 })
 
@@ -124,7 +137,7 @@ const sizeClasses: Record<string, string> = {
             aria-modal="true"
             :aria-labelledby="title ? 'modal-title' : undefined"
             :aria-describedby="description ? 'modal-description' : undefined"
-            :class="['relative w-full bg-grey-light rounded-md shadow-overlay flex flex-col', sizeClasses[size]]"
+            :class="['relative w-full bg-grey-light rounded-md shadow-overlay flex flex-col', sizeClasses[size], panelClass]"
           >
             <!-- Icon slot (result/confirm modals) -->
             <div v-if="slots.icon" class="flex justify-center pt-6 px-6">
@@ -148,7 +161,7 @@ const sizeClasses: Record<string, string> = {
                 v-if="closable"
                 type="button"
                 class="shrink-0 -mt-1 -me-1 flex items-center justify-center size-8 rounded-sm text-grey-dark-active hover:bg-grey-normal hover:text-black-normal transition-colors"
-                :aria-label="'Close'"
+                :aria-label="closeLabel"
                 @click="close"
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -158,12 +171,12 @@ const sizeClasses: Record<string, string> = {
             </div>
 
             <!-- Body -->
-            <div class="flex-1 px-6 py-6">
+            <div :class="['flex-1 px-6 py-6', bodyClass]">
               <slot />
             </div>
 
             <!-- Footer -->
-            <div v-if="slots.footer" class="px-6 pb-6">
+            <div v-if="slots.footer" :class="['px-6 pb-6', footerClass]">
               <slot name="footer" />
             </div>
           </div>

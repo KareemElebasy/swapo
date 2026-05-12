@@ -1,57 +1,63 @@
 @theme {
-  --color-blue-light: #E7E8EE;
-  --color-blue-light-hover: #DADDE6;
-  --color-blue-light-active: #B3B8CA;
-  --color-blue-normal: #0B1A55;
-  --color-blue-normal-hover: #0A174D;
+  --color-blue-light: #e7e8ee;
+  --color-blue-light-hover: #dadde6;
+  --color-blue-light-active: #b3b8ca;
+  --color-blue-normal: #0b1a55;
+  --color-blue-normal-hover: #0a174d;
   --color-blue-normal-active: #091544;
   --color-blue-dark: #081440;
   --color-blue-dark-hover: #071033;
-  --color-blue-dark-active: #050C26;
-  --color-blue-darker: #04091E;
+  --color-blue-dark-active: #050c26;
+  --color-blue-darker: #04091e;
 
-  --color-grey-light: #FEFEFE;
-  --color-grey-light-active: #FCFDFD;
-  --color-grey-normal: #F6F8F8;
-  --color-grey-normal-hover: #DDDFDF;
-  --color-grey-normal-active: #C5C6C6;
-  --color-grey-dark: #B9BABA;
+  --color-grey-light: #fefefe;
+  --color-grey-light-active: #fcfdfd;
+  --color-grey-normal: #f6f8f8;
+  --color-grey-normal-hover: #dddfdf;
+  --color-grey-normal-active: #c5c6c6;
+  --color-grey-dark: #b9baba;
   --color-grey-dark-hover: #949595;
-  --color-grey-dark-active: #6F7070;
+  --color-grey-dark-active: #6f7070;
   --color-grey-darker: #565757;
 
-  --color-green-light: #E7FDF8;
-  --color-green-light-hover: #DBFBF4;
-  --color-green-light-active: #B5F7E8;
-  --color-green-normal: #10E6B4;
-  --color-green-normal-hover: #0ECFA2;
-  --color-green-normal-active: #0DB890;
-  --color-green-dark: #0CAD87;
-  --color-green-dark-hover: #0A8A6C;
+  --color-green-light: #e7fdf8;
+  --color-green-light-hover: #dbfbf4;
+  --color-green-light-active: #b5f7e8;
+  --color-green-normal: #10e6b4;
+  --color-green-normal-hover: #0ecfa2;
+  --color-green-normal-active: #0db890;
+  --color-green-dark: #0cad87;
+  --color-green-dark-hover: #0a8a6c;
   --color-green-dark-active: #076751;
-  --color-green-darker: #06513F;
+  --color-green-darker: #06513f;
 
-  --color-black-lighter: #9D9D9D;
-  --color-black-light-hover: #8A8A8A;
+  --color-brand-cyan: #37c5f3;
+  --color-brand-cyan-hover: #28b6e4;
+  --color-brand-cyan-active: #169dca;
+  --color-brand-cyan-light: #ebf9fe;
+  --color-brand-cyan-light-active: #c1edfb;
+
+  --color-black-lighter: #9d9d9d;
+  --color-black-light-hover: #8a8a8a;
   --color-black-light-active: #727272;
   --color-black-normal: #262626;
   --color-black-normal-hover: #202020;
-  --color-black-normal-active: #1C1C1C;
-  --color-black-dark: #0D0D0D;
-  --color-black-dark-hover: #0A0A0A;
+  --color-black-normal-active: #1c1c1c;
+  --color-black-dark: #0d0d0d;
+  --color-black-dark-hover: #0a0a0a;
   --color-black-dark-active: #040404;
 
-  --color-status-pending-bg: #FFFBE6;
-  --color-status-pending-text: #F3C800;
-  --color-status-awaiting-payment-bg: #FAFEE5;
+  --color-status-pending-bg: #fffbe6;
+  --color-status-pending-text: #f3c800;
+  --color-status-awaiting-payment-bg: #fafee5;
   --color-status-awaiting-payment-text: #475800;
-  --color-status-confirmed-bg: #E7FDF8;
-  --color-status-confirmed-text: #10E6B4;
-  --color-status-shipped-bg: #F6F8F8;
+  --color-status-confirmed-bg: #e7fdf8;
+  --color-status-confirmed-text: #10e6b4;
+  --color-status-shipped-bg: #f6f8f8;
   --color-status-shipped-text: #565757;
-  --color-status-completed-bg: #F8FFF5;
+  --color-status-completed-bg: #f8fff5;
   --color-status-completed-text: #004850;
-  --color-status-canceled-bg: #FFF5F5;
+  --color-status-canceled-bg: #fff5f5;
   --color-status-canceled-text: #500001;
 
   --radius-xs: 4px;
@@ -62,5 +68,5 @@
 
   --shadow-overlay: 0 54px 60px rgba(0, 0, 0, 0.07);
 
-  --font-sans: "Ping AR + LT", "Inter", "Arial", sans-serif;
+  --font-sans: "Ping AR LT", Arial, sans-serif;
 }

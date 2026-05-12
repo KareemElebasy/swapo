@@ -5,13 +5,13 @@ const localePath = useLocalePath();
 
 <template>
   <div class="min-h-screen flex flex-col">
-    <AppHeader mode="public">
+    <SharedNavigationAppHeader mode="public">
       <template #actions>
         <BaseButton
           variant="ghost"
           size="sm"
           :to="localePath('/auth/login')"
-          class="text-green-normal! hover:bg-blue-dark-hover!"
+          class="border border-blue-light-active text-blue-normal! hover:bg-blue-light!"
         >
           {{ t("auth.login") }}
         </BaseButton>
@@ -19,17 +19,17 @@ const localePath = useLocalePath();
           variant="primary"
           size="sm"
           :to="localePath('/auth/signup')"
-          class="bg-green-normal! text-blue-normal! hover:bg-green-normal-hover!"
+          class="hidden bg-blue-normal! text-grey-light! hover:bg-blue-normal-hover! sm:inline-flex"
         >
           {{ t("auth.signup") }}
         </BaseButton>
       </template>
-    </AppHeader>
+    </SharedNavigationAppHeader>
 
     <main class="flex-1">
       <slot />
     </main>
 
-    <AppFooter />
+    <SharedNavigationAppFooter />
   </div>
 </template>

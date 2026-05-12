@@ -10,6 +10,8 @@
     "arabic": "العربية",
     "english": "English",
     "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
     "save": "Save",
     "cancel": "Cancel",
     "confirm": "Confirm",
@@ -105,12 +107,25 @@
     "seller": "Seller"
   },
   "status": {
+    "default": "Status",
     "pending": "Pending",
     "awaitingPayment": "Awaiting Payment",
     "confirmed": "Confirmed",
     "shipped": "Shipped",
     "completed": "Completed",
-    "canceled": "Canceled"
+    "canceled": "Canceled",
+    "active": "Active",
+    "agreed": "Agreed",
+    "ended": "Ended",
+    "draft": "Draft",
+    "published": "Published",
+    "boosted": "Boosted",
+    "sold": "Sold",
+    "paused": "Paused",
+    "rejected": "Rejected",
+    "paid": "Paid",
+    "refunded": "Refunded",
+    "failed": "Failed"
   },
   "carousel": {
     "slideOf": "Slide {n} of {total}",
@@ -119,7 +134,72 @@
   "category": {
     "all": "All"
   },
+  "homePage": {
+    "metaTitle": "Swapo | Home",
+    "hero": {
+      "titleLine1": "Let your look speak for you",
+      "titleLine2": "Fashion with comfort and style",
+      "subtitle": "Shop the latest pieces today",
+      "searchLabel": "Search Swapo products",
+      "searchPlaceholder": "Search products, sellers, and styles",
+      "searchSubmit": "Search",
+      "cardAlt": "Fashion look preview card",
+      "blazerAlt": "Blazer product hero image",
+      "handbagAlt": "Pink handbag product hero image"
+    },
+    "services": {
+      "label": "Marketplace promises",
+      "fastDelivery": {
+        "title": "Fast delivery",
+        "message": "Pickup and delivery right to your door"
+      },
+      "installment": {
+        "title": "Installment payments",
+        "message": "Through approved installment providers"
+      },
+      "moneyGuarantee": {
+        "title": "Your money is protected",
+        "message": "Funds stay secure until you receive the product"
+      }
+    },
+    "sections": {
+      "featuredTitle": "Best products",
+      "recommendedTitle": "Recommended for you",
+      "emptyTitle": "No products yet",
+      "emptyMessage": "Fresh picks will appear here as soon as they are available."
+    },
+    "products": {
+      "denimJacket": "Blue denim jacket with a modern youthful design",
+      "flameHeel": "Flame Heel",
+      "heartCoat": "Girls winter coat with faux fur and hood",
+      "pinkCoat": "Pink heart coat for kids"
+    },
+    "promo": {
+      "title": "Register as a seller on Swapo",
+      "cta": "Register my seller account",
+      "benefits": {
+        "uploadProducts": "Upload your products easily",
+        "directContact": "Communicate directly with buyers",
+        "manageSales": "Manage your offers and sales in one place",
+        "highlightProduct": "Tools that help your product stand out"
+      },
+      "chips": {
+        "lowCommission": "Low commissions",
+        "moreBuyers": "Reach more buyers",
+        "yourPrices": "Your prices, your call",
+        "easy": "Easy",
+        "fastUpload": "Fast upload"
+      }
+    }
+  },
   "nav": {
+    "primary": "Primary navigation",
+    "sellerHome": "Seller",
+    "products": "Products",
+    "orders": "Orders",
+    "negotiations": "Negotiations",
+    "shop": "Shop",
+    "sellerPromo": "Register as a seller and start publishing products in quick simple steps.",
     "cart": "Cart",
     "notifications": "Notifications",
     "profile": "My Account",
@@ -132,22 +212,188 @@
     "rights": "All rights reserved",
     "privacy": "Privacy Policy",
     "terms": "Terms & Conditions",
-    "contact": "Contact Us"
+    "contact": "Contact Us",
+    "newsletterTitle": "Stay up to date with our latest news and offers",
+    "emailPlaceholder": "Write your email here",
+    "newsletterSubmit": "Subscribe",
+    "about": "About us",
+    "policy": "Usage policy",
+    "support": "Technical support",
+    "navLabel": "Footer navigation",
+    "socialLabel": "Social links"
   },
   "profile": {
+    "navLabel": "Profile navigation",
+    "sections": {
+      "account": "My account",
+      "management": "Management",
+      "settings": "Settings"
+    },
     "nav": {
       "overview": "Overview",
       "orders": "My Orders",
+      "incomingOrders": "Incoming Orders",
+      "negotiations": "Negotiations",
       "favorites": "Favorites",
       "addresses": "My Addresses",
+      "phone": "Phone number",
+      "profile": "Personal account",
+      "policy": "Usage policy",
+      "support": "Technical support",
       "reviews": "My Reviews",
       "settings": "Account Settings",
       "ads": "My Ads",
+      "products": "My Products",
+      "drafts": "Drafts",
       "wallet": "Wallet",
       "subscriptions": "Subscriptions",
+      "autoReplies": "Auto replies",
+      "businessLocation": "Business location",
+      "sellerData": "Seller data",
       "promotions": "Promotions",
       "messages": "Messages",
       "logout": "Logout"
+    }
+  },
+  "product": {
+    "priceType": {
+      "fixed": "Buy now",
+      "negotiable": "Negotiable"
+    },
+    "condition": {
+      "new": "New",
+      "used": "Used"
+    },
+    "listingType": {
+      "ad": "Ad"
+    },
+    "addFavorite": "Add to favorites",
+    "removeFavorite": "Remove from favorites"
+  },
+  "filters": {
+    "title": "Filter and sort",
+    "sort": "Sort",
+    "apply": "Apply",
+    "reset": "Reset",
+    "min": "From",
+    "max": "To",
+    "rating": "Product rating"
+  },
+  "catalog": {
+    "meta": {
+      "productsTitle": "Swapo | Products",
+      "categoryTitle": "Swapo | {category}"
+    },
+    "breadcrumbs": {
+      "products": "Products"
+    },
+    "eyebrow": "Buyer discovery",
+    "activeFiltersLabel": "Active filters",
+    "page": {
+      "title": "Browse products",
+      "description": "Discover fashion pieces from Swapo sellers, then refine results by category, condition, price, and rating."
+    },
+    "search": {
+      "formLabel": "Search products",
+      "placeholder": "Search products, styles, or categories",
+      "resultsTitle": "Search results for {query}",
+      "resultsDescription": "{count} matching products found."
+    },
+    "category": {
+      "description": "Explore {category} products available from Swapo sellers.",
+      "notFoundTitle": "Category not found",
+      "notFoundMessage": "This category is not available right now. Browse all products to keep exploring."
+    },
+    "categories": {
+      "mens-fashion": "Men's fashion",
+      "pants": "Pants",
+      "dresses": "Dresses",
+      "sportswear": "Sportswear",
+      "womens-fashion": "Women's fashion",
+      "shoes": "Shoes",
+      "accessories": "Accessories"
+    },
+    "products": {
+      "blueDenimJacket": {
+        "title": "Blue denim jacket with a modern youthful design",
+        "description": "A versatile denim layer for casual everyday styling."
+      },
+      "redFlameHeels": {
+        "title": "Red flame heels",
+        "description": "Statement heels with a bold red finish."
+      },
+      "heartWinterCoat": {
+        "title": "Girls winter coat with faux fur and hood",
+        "description": "A cozy winter coat finished with playful heart details."
+      },
+      "pinkHeartCoat": {
+        "title": "Pink heart coat for kids",
+        "description": "A soft pink coat with heart details for cooler days."
+      },
+      "minimalHandbag": {
+        "title": "Minimal pink handbag",
+        "description": "A compact handbag for simple polished looks."
+      },
+      "wideLegPants": {
+        "title": "Wide-leg casual pants",
+        "description": "Easy everyday pants with a relaxed silhouette."
+      },
+      "sportSneakers": {
+        "title": "Blue sport sneakers",
+        "description": "Comfortable sneakers for active casual outfits."
+      },
+      "goldStatementEarrings": {
+        "title": "Gold statement earrings",
+        "description": "Polished gold-tone earrings for standout styling."
+      },
+      "linenDayDress": {
+        "title": "Linen day dress",
+        "description": "A lightweight dress for warm daytime plans."
+      }
+    },
+    "filters": {
+      "all": "All",
+      "condition": "Product condition",
+      "price": "Price",
+      "rating": "Rating",
+      "tradeState": "Listing type",
+      "buyNow": "Buy now",
+      "negotiate": "Negotiate with seller"
+    },
+    "sort": {
+      "recommended": "Recommended",
+      "newest": "Newest",
+      "priceAsc": "Price: low to high",
+      "priceDesc": "Price: high to low",
+      "topRated": "Top rated"
+    },
+    "chips": {
+      "rating": "{rating} stars and up",
+      "priceRange": "SAR {min} - SAR {max}",
+      "minPrice": "From SAR {min}",
+      "maxPrice": "Up to SAR {max}"
+    },
+    "results": {
+      "title": "Product results",
+      "count": "{count} products",
+      "searchCount": "{count} products for {query}"
+    },
+    "empty": {
+      "title": "No products yet",
+      "message": "Products will appear here as soon as they are available.",
+      "filteredTitle": "No products match your filters",
+      "filteredMessage": "Try changing the search term or removing a few filters."
+    },
+    "error": {
+      "title": "Products could not be loaded",
+      "message": "Please try again in a moment."
+    },
+    "actions": {
+      "filters": "Filters",
+      "clearFilter": "Clear {filter}",
+      "resetFilters": "Reset filters",
+      "clearSearch": "Clear search",
+      "viewAllProducts": "View all products"
     }
   },
   "seller": {

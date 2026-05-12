@@ -23,7 +23,7 @@ export function getDirection(locale: LocaleInput = 'ar'): AppDirection {
     return locale.dir
   }
 
-  const code = getLocaleCode(locale).toLowerCase().split('-')[0]
+  const code = getLocaleCode(locale).toLowerCase().split('-')[0] ?? 'ar'
 
   return rtlLocales.has(code) ? 'rtl' : 'ltr'
 }

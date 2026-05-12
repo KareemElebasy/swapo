@@ -11,19 +11,21 @@ import type { UseFetchOptions } from "nuxt/app";
 import type { ApiError } from "~/types/api";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+type ApiBody = Record<string, unknown> | object | FormData;
 
 interface UseApiOptions<T> extends Omit<
   UseFetchOptions<T>,
-  "method" | "baseURL"
+  "method" | "baseURL" | "body"
 > {
   method?: HttpMethod;
   useGeneral?: boolean;
+  body?: ApiBody;
 }
 
 // ─── buildFormData ─────────────────────────────────────────────────────────────
 // يحوّل أي object لـ FormData ويضيف _method override لو محتاج
 function buildFormData(
-  body: Record<string, unknown> | FormData,
+  body: ApiBody,
   methodOverride?: string,
 ): FormData {
   if (body instanceof FormData) {
@@ -35,7 +37,7 @@ function buildFormData(
 
   const fd = new FormData();
 
-  for (const [key, value] of Object.entries(body)) {
+  for (const [key, value] of Object.entries(body as Record<string, unknown>)) {
     if (value === undefined || value === null) continue;
 
     if (Array.isArray(value)) {
@@ -83,25 +85,22 @@ export function useApi<T = unknown>(
   const isWrite = method !== "GET";
   const formBody =
     isWrite && body
-      ? buildFormData(
-          body as Record<string, unknown>,
-          method !== "POST" ? method : undefined,
-        )
+      ? buildFormData(body, method !== "POST" ? method : undefined)
       : undefined;
 
   return useFetch<T>(path, {
     baseURL,
     headers,
-    method: isWrite ? "POST" : "GET", // دايماً GET أو POST
+    method: isWrite ? "post" : "get",
     body: formBody,
-    onResponseError({ response }) {
+    onResponseError({ response }: { response: { status: number } }) {
       if (response.status === 401) {
         authStore.logout();
-        navigateTo("/auth/register");
+        navigateTo("/auth/login");
       }
     },
     ...fetchOptions,
-  });
+  } as unknown as Parameters<typeof useFetch<T>>[1]);
 }
 
 // ─── apiFetch (one-shot async — للـ actions في composables) ───────────────────
@@ -109,7 +108,7 @@ export async function apiFetch<T = unknown>(
   path: string,
   options: {
     method?: HttpMethod;
-    body?: Record<string, unknown> | FormData;
+    body?: ApiBody;
     query?: Record<string, unknown>;
     useGeneral?: boolean;
     registrationToken?: string; // للـ complete-data فقط
@@ -144,14 +143,14 @@ export async function apiFetch<T = unknown>(
 
   try {
     return await $fetch<T>(`${baseURL}${path}`, {
-      method: isWrite ? "POST" : "GET",
+      method: isWrite ? "post" : "get",
       headers,
       body: formBody,
       params: query,
       onResponseError({ response }) {
         if (response.status === 401) {
           authStore.logout();
-          navigateTo("/auth/register");
+          navigateTo("/auth/login");
         }
       },
     });

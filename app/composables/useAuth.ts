@@ -52,8 +52,8 @@ export function useAuth() {
         device_type:  'web',
         device_token: 'web',
       })
-      registrationToken.value = data.registration_token
-      await router.push('/auth/complete-data')
+      registrationToken.value = data.data.registration_token
+      await router.push('/auth/signup')
     }
     catch (err) { handleError(err) }
     finally { loading.value = false }
@@ -81,7 +81,8 @@ export function useAuth() {
         device_type:       'web',
         device_token:      'web',
       })
-      authStore.setToken(result.access_token)
+      authStore.setToken(result.data.access_token)
+      authStore.setUser(result.data.user)
       // نظّف الـ state المؤقت
       pendingPhone.value      = ''
       registrationToken.value = ''
@@ -97,7 +98,7 @@ export function useAuth() {
     catch { /* نكمل logout حتى لو الـ API فشل */ }
     finally {
       authStore.logout()
-      await router.push('/auth/register')
+      await router.push('/auth/login')
     }
   }
 

@@ -202,7 +202,7 @@ async function submitSignup() {
           variant="ghost"
           size="md"
           :to="localePath('/auth/verify')"
-          :aria-label="t('auth.signupPage.form.backToVerify')"
+          :ariaLabel="t('auth.signupPage.form.backToVerify')"
           class="text-black-normal! hover:bg-transparent! active:bg-transparent!"
         >
           <template #icon>

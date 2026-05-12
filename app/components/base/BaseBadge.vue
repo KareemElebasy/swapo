@@ -2,6 +2,12 @@
 type BadgeTone =
   | 'default'
   | 'blue'
+  | 'neutral'
+  | 'success'
+  | 'warning'
+  | 'danger'
+  | 'info'
+  | 'brand'
   | 'pending'
   | 'awaitingPayment'
   | 'confirmed'
@@ -26,6 +32,12 @@ const props = withDefaults(defineProps<Props>(), {
 const toneClasses: Record<BadgeTone, string> = {
   default: 'bg-grey-normal text-grey-darker',
   blue: 'bg-blue-light text-blue-normal',
+  neutral: 'bg-grey-normal text-grey-darker',
+  success: 'bg-status-completed-bg text-status-completed-text',
+  warning: 'bg-status-pending-bg text-status-pending-text',
+  danger: 'bg-status-canceled-bg text-status-canceled-text',
+  info: 'bg-blue-light text-blue-normal',
+  brand: 'bg-brand-cyan-light text-blue-normal',
   pending: 'bg-status-pending-bg text-status-pending-text',
   awaitingPayment: 'bg-status-awaiting-payment-bg text-status-awaiting-payment-text',
   confirmed: 'bg-status-confirmed-bg text-status-confirmed-text',

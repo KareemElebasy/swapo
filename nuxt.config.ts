@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     enabled: true,
   },
 
-  modules: ["@pinia/nuxt", "@nuxt/image", "@nuxtjs/i18n"],
+  modules: ["@pinia/nuxt", "@nuxt/image", "@nuxtjs/i18n", "@nuxt/fonts"],
   runtimeConfig: {
     public: {
       apiBase: "https://swapo.hajar.aait-d.com/api/client/",
@@ -21,7 +21,19 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+  fonts: {
+    families: [
+      {
+        name: "Ping AR LT",
+        provider: "local",
 
+        weights: [300, 400, 500, 700, 800, 900],
+
+        styles: ["normal"],
+        subsets: ["arabic", "latin"],
+      },
+    ],
+  },
   i18n: {
     defaultLocale: "ar",
     strategy: "prefix_except_default",
