@@ -1,24 +1,14 @@
 <script setup lang="ts">
-import { resendCode, verifyOtp } from "~/services/auth.service";
-
-interface ServiceError {
-  message?: string;
-  errors?: Record<string, string[]>;
-}
-
 const resendDelaySeconds = 20;
 
 const { locale, t } = useI18n();
 const localePath = useLocalePath();
-const router = useRouter();
+
+const { verify, resend: resendOtpFn, loading, fieldErrors, pendingPhone } = useAuth();
 
 const otp = ref("");
-const loading = ref(false);
 const resending = ref(false);
 const resendRemaining = ref(resendDelaySeconds);
-const fieldErrors = ref<Record<string, string[]>>({});
-const pendingPhone = useState<string>("auth.phone", () => "");
-const registrationToken = useState<string>("auth.reg_token", () => "");
 
 let timerId: ReturnType<typeof setInterval> | undefined;
 
@@ -31,7 +21,7 @@ const formattedPhone = computed(() =>
 );
 const canSubmit = computed(() => otp.value.length === 4 && !loading.value);
 const canResend = computed(
-  () => resendRemaining.value === 0 && !resending.value && !!pendingPhone.value,
+  () => resendRemaining.value === 0 && !resending.value && !!pendingPhone.value && !loading.value,
 );
 const timerLabel = computed(() => {
   const minutes = Math.floor(resendRemaining.value / 60);
@@ -65,19 +55,6 @@ function startTimer() {
   }, 1000);
 }
 
-function setError(error: unknown) {
-  const serviceError = error as ServiceError;
-
-  if (serviceError.errors) {
-    fieldErrors.value = serviceError.errors;
-    return;
-  }
-
-  fieldErrors.value = {
-    general: [serviceError.message ?? t("auth.verifyPage.form.generalError")],
-  };
-}
-
 async function submitOtp() {
   if (!canSubmit.value) {
     fieldErrors.value = {
@@ -85,45 +62,17 @@ async function submitOtp() {
     };
     return;
   }
-
-  loading.value = true;
-  fieldErrors.value = {};
-
-  try {
-    const response = await verifyOtp({
-      phone_code: "966",
-      phone: pendingPhone.value,
-      otp: otp.value,
-      device_type: "web",
-      device_token: "web",
-    });
-
-    registrationToken.value = response.data.registration_token;
-    await router.push(localePath("/auth/signup"));
-  } catch (error) {
-    setError(error);
-  } finally {
-    loading.value = false;
-  }
+  await verify(otp.value);
 }
 
 async function resendOtp() {
-  if (!canResend.value) {
-    return;
-  }
-
+  if (!canResend.value) return;
   resending.value = true;
   fieldErrors.value = {};
-
   try {
-    await resendCode({
-      phone_code: "966",
-      phone: pendingPhone.value,
-    });
+    await resendOtpFn();
     otp.value = "";
     startTimer();
-  } catch (error) {
-    setError(error);
   } finally {
     resending.value = false;
   }

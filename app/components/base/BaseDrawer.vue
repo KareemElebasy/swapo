@@ -6,6 +6,7 @@ interface Props {
   closable?: boolean
   closeOnBackdrop?: boolean
   closeLabel?: string
+  headerClass?: string
   bodyClass?: string
   footerClass?: string
   panelClass?: string
@@ -16,6 +17,7 @@ const props = withDefaults(defineProps<Props>(), {
   closable: true,
   closeOnBackdrop: true,
   closeLabel: 'Close',
+  headerClass: '',
   bodyClass: '',
   footerClass: '',
   panelClass: '',
@@ -40,6 +42,28 @@ function onBackdropClick() {
 
 function onKeydown(event: KeyboardEvent) {
   if (event.key === 'Escape' && props.closable) close()
+  if (event.key === 'Tab') trapFocus(event)
+}
+
+function trapFocus(event: KeyboardEvent) {
+  const panel = panelRef.value
+  if (!panel) return
+  const focusable = panel.querySelectorAll<HTMLElement>(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+  )
+  if (!focusable.length) return
+
+  const first = focusable[0]
+  const last = focusable[focusable.length - 1]
+  if (event.shiftKey) {
+    if (document.activeElement === first) {
+      event.preventDefault()
+      last?.focus()
+    }
+  } else if (document.activeElement === last) {
+    event.preventDefault()
+    first?.focus()
+  }
 }
 
 watch(
@@ -50,7 +74,14 @@ watch(
     if (val) {
       document.body.style.overflow = 'hidden'
       nextTick(() => {
-        panelRef.value?.focus()
+        const first = panelRef.value?.querySelector<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        )
+        if (first) {
+          first.focus()
+        } else {
+          panelRef.value?.focus()
+        }
       })
     } else {
       document.body.style.overflow = ''
@@ -135,7 +166,7 @@ const leaveToClass = computed(() => enterFromClass.value)
             <!-- Header -->
             <div
               v-if="slots.header || title"
-              class="flex items-center justify-between gap-4 px-5 py-4 border-b border-grey-normal shrink-0"
+              :class="['flex items-center justify-between gap-4 px-5 py-4 border-b border-grey-normal shrink-0', headerClass]"
             >
               <slot name="header">
                 <h2 v-if="title" id="drawer-title" class="text-base font-medium text-black-normal">

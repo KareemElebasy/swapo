@@ -2,6 +2,7 @@ import type { FilterSection, SortOption } from "~/types/filter";
 import type { Category, Product, ProductPriceType } from "~/types/product";
 
 export type CatalogCondition = "new" | "used";
+export type CatalogSellerId = "tuwai-kids" | "rawdah-closet" | "style-circle";
 
 export interface CatalogProduct extends Product {
   condition: CatalogCondition;
@@ -11,18 +12,60 @@ export interface CatalogProduct extends Product {
   sortScore: number;
 }
 
+export interface CatalogSeller {
+  id: CatalogSellerId;
+  name: string;
+  location: string;
+  avatar: string;
+  rating: number;
+  reviewCount: number;
+  verified: boolean;
+  activeProducts: number;
+}
+
+export interface CatalogReview {
+  id: string;
+  authorName: string;
+  authorAvatar: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+
 interface CatalogProductFixture {
   id: string;
   titleKey: string;
   image: string;
+  galleryImages?: string[];
   condition: CatalogCondition;
   price: number;
   priceType: ProductPriceType;
   categoryId: CatalogCategoryId;
+  sellerId: CatalogSellerId;
   rating: number;
   publishedAt: string;
   sortScore: number;
   searchTokens: string[];
+}
+
+interface CatalogSellerFixture {
+  id: CatalogSellerId;
+  nameKey: string;
+  locationKey: string;
+  avatar: string;
+  rating: number;
+  reviewCount: number;
+  verified: boolean;
+  activeProducts: number;
+}
+
+interface CatalogReviewFixture {
+  id: string;
+  authorKey: string;
+  authorAvatar: string;
+  rating: number;
+  commentKey: string;
+  createdAt: string;
 }
 
 export const catalogCategoryIds = [
@@ -46,6 +89,7 @@ const productFixtures: CatalogProductFixture[] = [
     price: 250,
     priceType: "fixed",
     categoryId: "mens-fashion",
+    sellerId: "rawdah-closet",
     rating: 5,
     publishedAt: "2026-04-28",
     sortScore: 98,
@@ -59,6 +103,7 @@ const productFixtures: CatalogProductFixture[] = [
     price: 320,
     priceType: "negotiable",
     categoryId: "shoes",
+    sellerId: "style-circle",
     rating: 4,
     publishedAt: "2026-04-24",
     sortScore: 94,
@@ -68,10 +113,15 @@ const productFixtures: CatalogProductFixture[] = [
     id: "heart-winter-coat",
     titleKey: "heartWinterCoat",
     image: "/images/home/product-heart-coat.png",
+    galleryImages: [
+      "/images/home/product-pink-coat.png",
+      "/images/home/hero-card.png",
+    ],
     condition: "used",
     price: 180,
     priceType: "fixed",
     categoryId: "womens-fashion",
+    sellerId: "tuwai-kids",
     rating: 5,
     publishedAt: "2026-04-20",
     sortScore: 92,
@@ -81,10 +131,15 @@ const productFixtures: CatalogProductFixture[] = [
     id: "pink-heart-coat",
     titleKey: "pinkHeartCoat",
     image: "/images/home/product-pink-coat.png",
+    galleryImages: [
+      "/images/home/product-heart-coat.png",
+      "/images/home/hero-card.png",
+    ],
     condition: "new",
     price: 210,
     priceType: "negotiable",
     categoryId: "dresses",
+    sellerId: "tuwai-kids",
     rating: 5,
     publishedAt: "2026-04-18",
     sortScore: 90,
@@ -98,6 +153,7 @@ const productFixtures: CatalogProductFixture[] = [
     price: 430,
     priceType: "fixed",
     categoryId: "accessories",
+    sellerId: "style-circle",
     rating: 4,
     publishedAt: "2026-04-12",
     sortScore: 86,
@@ -111,6 +167,7 @@ const productFixtures: CatalogProductFixture[] = [
     price: 165,
     priceType: "fixed",
     categoryId: "pants",
+    sellerId: "rawdah-closet",
     rating: 3,
     publishedAt: "2026-04-08",
     sortScore: 82,
@@ -124,6 +181,7 @@ const productFixtures: CatalogProductFixture[] = [
     price: 145,
     priceType: "negotiable",
     categoryId: "sportswear",
+    sellerId: "style-circle",
     rating: 4,
     publishedAt: "2026-04-03",
     sortScore: 78,
@@ -137,6 +195,7 @@ const productFixtures: CatalogProductFixture[] = [
     price: 95,
     priceType: "fixed",
     categoryId: "accessories",
+    sellerId: "style-circle",
     rating: 5,
     publishedAt: "2026-03-29",
     sortScore: 74,
@@ -150,12 +209,111 @@ const productFixtures: CatalogProductFixture[] = [
     price: 280,
     priceType: "negotiable",
     categoryId: "dresses",
+    sellerId: "rawdah-closet",
     rating: 4,
     publishedAt: "2026-03-22",
     sortScore: 70,
     searchTokens: ["linen", "dress", "day", "womens"],
   },
 ];
+
+const productAliases: Record<string, string> = {
+  "denim-jacket": "blue-denim-jacket",
+  "denim-jacket-alt": "blue-denim-jacket",
+  "flame-heel": "red-flame-heels",
+  "heart-coat": "heart-winter-coat",
+  "pink-coat": "pink-heart-coat",
+};
+
+const sellerFixtures: Record<CatalogSellerId, CatalogSellerFixture> = {
+  "tuwai-kids": {
+    id: "tuwai-kids",
+    nameKey: "tuwaiKids",
+    locationKey: "riyadh",
+    avatar: "/images/auth/login/swapo-card-mark.svg",
+    rating: 4.8,
+    reviewCount: 287,
+    verified: true,
+    activeProducts: 18,
+  },
+  "rawdah-closet": {
+    id: "rawdah-closet",
+    nameKey: "rawdahCloset",
+    locationKey: "jeddah",
+    avatar: "/images/home/hero-card.png",
+    rating: 4.6,
+    reviewCount: 142,
+    verified: true,
+    activeProducts: 24,
+  },
+  "style-circle": {
+    id: "style-circle",
+    nameKey: "styleCircle",
+    locationKey: "dammam",
+    avatar: "/images/home/hero-handbag.png",
+    rating: 4.7,
+    reviewCount: 196,
+    verified: true,
+    activeProducts: 31,
+  },
+};
+
+const reviewFixtures: Record<CatalogSellerId, CatalogReviewFixture[]> = {
+  "tuwai-kids": [
+    {
+      id: "tuwai-kids-review-1",
+      authorKey: "mona",
+      authorAvatar: "/images/home/hero-card.png",
+      rating: 5,
+      commentKey: "excellentCondition",
+      createdAt: "2026-04-25",
+    },
+    {
+      id: "tuwai-kids-review-2",
+      authorKey: "reem",
+      authorAvatar: "/images/auth/login/phone-person.png",
+      rating: 5,
+      commentKey: "fastDelivery",
+      createdAt: "2026-04-10",
+    },
+  ],
+  "rawdah-closet": [
+    {
+      id: "rawdah-review-1",
+      authorKey: "sarah",
+      authorAvatar: "/images/auth/login/phone-person.png",
+      rating: 5,
+      commentKey: "matchesPhotos",
+      createdAt: "2026-04-18",
+    },
+    {
+      id: "rawdah-review-2",
+      authorKey: "noura",
+      authorAvatar: "/images/home/hero-card.png",
+      rating: 4,
+      commentKey: "cleanPackaging",
+      createdAt: "2026-03-30",
+    },
+  ],
+  "style-circle": [
+    {
+      id: "style-review-1",
+      authorKey: "hala",
+      authorAvatar: "/images/home/hero-card.png",
+      rating: 5,
+      commentKey: "quickReply",
+      createdAt: "2026-04-20",
+    },
+    {
+      id: "style-review-2",
+      authorKey: "layan",
+      authorAvatar: "/images/auth/login/phone-person.png",
+      rating: 4,
+      commentKey: "carefulListing",
+      createdAt: "2026-04-02",
+    },
+  ],
+};
 
 function normalizeSearchValue(value: string) {
   return value.trim().toLocaleLowerCase();
@@ -198,6 +356,25 @@ function sortProducts(products: CatalogProduct[], sort?: string | number) {
   }
 }
 
+function normalizeProductId(productId?: string | null) {
+  if (!productId) return undefined;
+  return productAliases[productId] ?? productId;
+}
+
+function buildProductMedia(fixture: CatalogProductFixture, title: string) {
+  const imageUrls = [fixture.image, ...(fixture.galleryImages ?? [])].filter(
+    (url, index, urls) => urls.indexOf(url) === index,
+  );
+
+  return imageUrls.map((url, index) => ({
+    id: `${fixture.id}-${index === 0 ? "cover" : `media-${index}`}`,
+    type: "image" as const,
+    url,
+    alt: title,
+    isCover: index === 0,
+  }));
+}
+
 export interface CatalogProductFilters {
   query?: string;
   categoryId?: string | null;
@@ -233,21 +410,13 @@ export function useProductCatalog() {
         },
         priceType: fixture.priceType,
         categoryId: fixture.categoryId,
-        sellerId: "swapo-fixture",
+        sellerId: fixture.sellerId,
         condition: fixture.condition,
         rating: fixture.rating,
         publishedAt: fixture.publishedAt,
         sortScore: fixture.sortScore,
         searchTokens: fixture.searchTokens,
-        media: [
-          {
-            id: `${fixture.id}-cover`,
-            type: "image",
-            url: fixture.image,
-            alt: title,
-            isCover: true,
-          },
-        ],
+        media: buildProductMedia(fixture, title),
       };
     }),
   );
@@ -312,6 +481,60 @@ export function useProductCatalog() {
     return categories.value.find((category) => category.id === categoryId);
   }
 
+  function getProduct(productId?: string | null) {
+    const normalizedId = normalizeProductId(productId);
+    return products.value.find((product) => product.id === normalizedId);
+  }
+
+  function getSeller(sellerId?: string | null): CatalogSeller | undefined {
+    if (!sellerId || !(sellerId in sellerFixtures)) return undefined;
+
+    const seller = sellerFixtures[sellerId as CatalogSellerId];
+
+    return {
+      id: seller.id,
+      name: t(`catalog.sellers.${seller.nameKey}.name`),
+      location: t(`catalog.sellers.locations.${seller.locationKey}`),
+      avatar: seller.avatar,
+      rating: seller.rating,
+      reviewCount: seller.reviewCount,
+      verified: seller.verified,
+      activeProducts: seller.activeProducts,
+    };
+  }
+
+  function getReviews(sellerId?: string | null): CatalogReview[] {
+    if (!sellerId || !(sellerId in reviewFixtures)) return [];
+
+    return reviewFixtures[sellerId as CatalogSellerId].map((review) => ({
+      id: review.id,
+      authorName: t(`catalog.reviews.authors.${review.authorKey}`),
+      authorAvatar: review.authorAvatar,
+      rating: review.rating,
+      comment: t(`catalog.reviews.comments.${review.commentKey}`),
+      createdAt: review.createdAt,
+    }));
+  }
+
+  function getRelatedProducts(productId?: string | null, limit = 5) {
+    const current = getProduct(productId);
+    if (!current) return [];
+
+    const sameCategory = products.value.filter(
+      (product) =>
+        product.id !== current.id && product.categoryId === current.categoryId,
+    );
+    const fallback = products.value.filter(
+      (product) =>
+        product.id !== current.id && product.categoryId !== current.categoryId,
+    );
+
+    return sortProducts([...sameCategory, ...fallback], "recommended").slice(
+      0,
+      limit,
+    );
+  }
+
   function filterProducts(
     sourceProducts: CatalogProduct[],
     filters: CatalogProductFilters = {},
@@ -374,6 +597,10 @@ export function useProductCatalog() {
     sortOptions,
     filterSections,
     getCategory,
+    getProduct,
+    getSeller,
+    getReviews,
+    getRelatedProducts,
     filterProducts,
   };
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const { t } = useI18n();
 const localePath = useLocalePath();
+const authStore = useAuthStore();
 </script>
 
 <template>
@@ -44,37 +45,26 @@ const localePath = useLocalePath();
         </BaseIconButton>
 
         <!-- Profile avatar -->
-        <BaseIconButton
-          :ariaLabel="t('nav.profile')"
+        <NuxtLink
           :to="localePath('/seller')"
-          variant="ghost"
-          size="sm"
-          class="text-black-normal! hover:bg-grey-normal!"
+          :aria-label="t('nav.profile')"
+          class="flex size-9 items-center justify-center overflow-hidden rounded-full border-2 border-green bg-surface"
         >
-          <template #icon>
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle
-                cx="9"
-                cy="6"
-                r="3"
-                stroke="currentColor"
-                stroke-width="1.5"
-              />
-              <path
-                d="M2 16c0-3.314 3.134-6 7-6s7 2.686 7 6"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-            </svg>
-          </template>
-        </BaseIconButton>
+          <img
+            v-if="authStore.user?.image"
+            :src="authStore.user.image"
+            :alt="authStore.user.full_name"
+            class="size-full object-cover"
+          />
+          <svg
+            v-else
+            class="size-5 text-navy"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-5.33 0-8 2.67-8 4v1h16v-1c0-1.33-2.67-4-8-4Z" />
+          </svg>
+        </NuxtLink>
       </template>
     </SharedNavigationAppHeader>
 

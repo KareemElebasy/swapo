@@ -270,6 +270,209 @@
     "addFavorite": "إضافة إلى المفضلة",
     "removeFavorite": "إزالة من المفضلة"
   },
+  "productDetail": {
+    "meta": {
+      "title": "سوابو | {product}",
+      "notFoundTitle": "سوابو | المنتج غير موجود",
+      "condition": "الحالة",
+      "listingType": "نوع الإعلان",
+      "category": "التصنيف",
+      "published": "تاريخ النشر"
+    },
+    "notFound": {
+      "title": "المنتج غير موجود",
+      "message": "قد يكون هذا المنتج أزيل أو أصبح غير متاح حاليا."
+    },
+    "gallery": {
+      "title": "وسائط المنتج",
+      "thumbnails": "صور المنتج المصغرة",
+      "thumbnailLabel": "عرض صورة المنتج {index}",
+      "emptyTitle": "لا توجد وسائط",
+      "emptyMessage": "لم تتم إضافة صور لهذا المنتج بعد."
+    },
+    "description": {
+      "title": "وصف المنتج",
+      "empty": "لم تتم إضافة وصف لهذا المنتج بعد.",
+      "readMore": "قراءة المزيد",
+      "showLess": "عرض أقل"
+    },
+    "rating": {
+      "value": "{rating} من 5",
+      "ariaLabel": "التقييم {rating} من 5"
+    },
+    "actions": {
+      "signInToBuy": "سجل الدخول للمتابعة",
+      "signInToNegotiate": "سجل الدخول للتفاوض",
+      "unavailable": "غير متاح",
+      "viewAllProducts": "عرض كل المنتجات"
+    },
+    "unavailable": {
+      "message": "هذا المنتج غير متاح حاليا، لذلك تم تعطيل إجراءات الشراء."
+    },
+    "seller": {
+      "verified": "بائع موثق",
+      "avatarAlt": "صورة متجر {seller}",
+      "rating": "تقييم البائع",
+      "reviews": "التقييمات",
+      "activeProducts": "منتجات نشطة"
+    },
+    "reviews": {
+      "title": "التقييمات",
+      "summary": "التقييم العام للمنتج: {rating} من 5.",
+      "count": "{count} تقييم",
+      "emptyTitle": "لا توجد تقييمات بعد",
+      "emptyMessage": "ستظهر التقييمات هنا بعد أن يقيم المشترون هذا البائع.",
+      "authorAvatarAlt": "صورة {author}"
+    },
+    "related": {
+      "title": "منتجات مشابهة",
+      "emptyTitle": "لا توجد منتجات مشابهة",
+      "emptyMessage": "ستظهر منتجات مشابهة أكثر مع توسع الكتالوج."
+    }
+  },
+  "favorites": {
+    "meta": {
+      "title": "سوابو | المفضلة"
+    },
+    "breadcrumbs": {
+      "current": "المفضلة"
+    },
+    "eyebrow": "مفضلة المشتري",
+    "activeFiltersLabel": "فلاتر المفضلة النشطة",
+    "page": {
+      "title": "المفضلة",
+      "description": "احتفظي بالمنتجات التي أعجبتك في مكان واحد، ثم تصفحيها حسب التصنيف أو الحالة أو السعر أو نوع الإعلان."
+    },
+    "search": {
+      "formLabel": "البحث في المفضلة",
+      "placeholder": "ابحثي في المنتجات المحفوظة"
+    },
+    "filters": {
+      "title": "تصفية المفضلة"
+    },
+    "results": {
+      "title": "منتجات المفضلة",
+      "count": "{count} منتجات مفضلة",
+      "filteredCount": "{count} من {total} منتجات مفضلة"
+    },
+    "empty": {
+      "title": "لا توجد منتجات مفضلة بعد",
+      "message": "ستظهر هنا المنتجات التي تحفظينها لتعودي إليها بسرعة.",
+      "filteredTitle": "لا توجد منتجات مفضلة تطابق الفلاتر",
+      "filteredMessage": "جربي تعديل كلمة البحث أو التصنيف أو الفلاتر للعثور على منتج محفوظ."
+    },
+    "status": {
+      "removed": "تمت إزالة {product} من المفضلة."
+    },
+    "actions": {
+      "filters": "الفلاتر",
+      "clearFilter": "مسح {filter}",
+      "resetBrowsing": "إعادة ضبط عرض المفضلة",
+      "browseProducts": "تصفح المنتجات"
+    }
+  },
+  "cart": {
+    "title": "سلة مشترياتك",
+    "shippingNotice": "رسوم الشحن يتم حسابها عند الدفع بعد تأكيد الطلب",
+    "loading": {
+      "title": "جاري تحميل السلة"
+    },
+    "empty": {
+      "title": "سلة مشترياتك فارغة",
+      "message": "المنتجات التي تضيفها إلى السلة ستظهر هنا قبل إتمام الشراء."
+    },
+    "seller": {
+      "itemCount": "{count} منتجات",
+      "avatarAlt": "صورة متجر {seller}"
+    },
+    "delivery": {
+      "range": "احصل عليها بين {start} - {end}"
+    },
+    "summary": {
+      "title": "ملخص الطلب",
+      "totalProducts": "إجمالي المنتجات ({count} منتجات)",
+      "serviceFee": "رسوم خدمة",
+      "sellerSubtotal": "المجموع الفرعي للبائع",
+      "total": "الإجمالي"
+    },
+    "actions": {
+      "openCart": "فتح السلة",
+      "browseProducts": "تصفح المنتجات",
+      "completePurchase": "إتمام الشراء",
+      "increaseQuantity": "زيادة كمية {product}",
+      "decreaseQuantity": "تقليل كمية {product}",
+      "removeItem": "إزالة {product}",
+      "toggleSeller": "إظهار أو إخفاء منتجات {seller}",
+      "toggleSummary": "إظهار أو إخفاء ملخص الطلب"
+    },
+    "status": {
+      "quantityUpdated": "تم تحديث كمية {product}.",
+      "removed": "تمت إزالة {product} من السلة.",
+      "checkoutUnavailable": "الدفع غير متاح في هذا العرض التجريبي بعد."
+    }
+  },
+  "checkout": {
+    "title": "إتمام الطلب",
+    "loading": "جاري تحميل إتمام الطلب",
+    "empty": {
+      "title": "سلة مشترياتك فارغة",
+      "message": "أضف منتجات إلى السلة قبل إتمام الطلب.",
+      "action": "تصفح المنتجات"
+    },
+    "address": {
+      "title": "عنوان التوصيل",
+      "addNew": "أضف عنوان جديد",
+      "fullName": "الاسم الكامل",
+      "fullNamePlaceholder": "مثال: سارة أحمد",
+      "phone": "رقم الجوال",
+      "phonePlaceholder": "مثال: +966 500 000 000",
+      "city": "المدينة",
+      "cityPlaceholder": "مثال: الرياض",
+      "district": "الحي",
+      "districtPlaceholder": "مثال: حي النخيل",
+      "line1": "العنوان",
+      "line1Placeholder": "الشارع، المبنى، وأقرب معلم",
+      "details": "تفاصيل إضافية",
+      "detailsPlaceholder": "الشقة، الدور، أو ملاحظات التوصيل",
+      "required": "هذا الحقل مطلوب",
+      "save": "حفظ العنوان",
+      "useSample": "استخدام عنوان تجريبي"
+    },
+    "shipping": {
+      "title": "من فضلك اختر طريقة الشحن",
+      "methods": {
+        "standard": {
+          "title": "الشحن العادي",
+          "description": "خيار موثوق للتوصيل حسب جدول شركة الشحن"
+        },
+        "express": {
+          "title": "الشحن السريع",
+          "description": "احصل عليها في نفس اليوم"
+        }
+      }
+    },
+    "notes": {
+      "title": "ملاحظات الطلب",
+      "prompt": "هل لديك أية تعليمات خاصة؟",
+      "helper": "اكتب أي تعليمات إضافية بخصوص طلبك أو التوصيل.",
+      "placeholder": "اكتب تعليماتك هنا"
+    },
+    "summary": {
+      "shipping": "الشحن",
+      "toggleSeller": "إظهار أو إخفاء منتجات {seller}"
+    },
+    "actions": {
+      "confirmOrder": "تأكيد الطلب",
+      "confirmed": "تم تأكيد الطلب"
+    },
+    "status": {
+      "addressMissing": "أضف عنوان التوصيل قبل تأكيد الطلب.",
+      "addressSaved": "تم حفظ عنوان التوصيل.",
+      "shippingMissing": "اختر طريقة الشحن قبل تأكيد الطلب.",
+      "shippingSelected": "تم اختيار طريقة الشحن.",
+      "orderPlaceholder": "تم حفظ تأكيد الطلب محليًا لهذا العرض التجريبي."
+    }
+  },
   "filters": {
     "title": "التصفية والترتيب",
     "sort": "ترتيب",
@@ -349,6 +552,40 @@
       "linenDayDress": {
         "title": "فستان نهاري من الكتان",
         "description": "فستان خفيف مناسب للمشاوير النهارية."
+      }
+    },
+    "sellers": {
+      "tuwaiKids": {
+        "name": "متجر توي للأطفال"
+      },
+      "rawdahCloset": {
+        "name": "خزانة الروضة"
+      },
+      "styleCircle": {
+        "name": "ستايل سيركل"
+      },
+      "locations": {
+        "riyadh": "الرياض، السعودية",
+        "jeddah": "جدة، السعودية",
+        "dammam": "الدمام، السعودية"
+      }
+    },
+    "reviews": {
+      "authors": {
+        "mona": "منى الصافي",
+        "reem": "ريم خالد",
+        "sarah": "سارة عادل",
+        "noura": "نورة المطيري",
+        "hala": "هلا يوسف",
+        "layan": "ليان سالم"
+      },
+      "comments": {
+        "excellentCondition": "وصلت القطعة بحالة ممتازة وكانت مطابقة لصور الإعلان.",
+        "fastDelivery": "تجربة سلسة وتوصيل سريع والبائع كان متجاوبا جدا.",
+        "matchesPhotos": "القطعة مثل الصور تماما وملاحظة المقاس كانت مفيدة.",
+        "cleanPackaging": "تغليف نظيف ووصف واضح. سأشتري من هذا البائع مرة أخرى.",
+        "quickReply": "ردود سريعة وتعامل مرتب من البداية للنهاية.",
+        "carefulListing": "التفاصيل كانت دقيقة، والقطعة وصلت جاهزة للاستخدام."
       }
     },
     "filters": {
@@ -433,7 +670,16 @@
         "nationalId": "رقم الهوية الوطنية",
         "bankName": "اسم البنك",
         "iban": "رقم الآيبان",
+        "city": "المدينة",
+        "district": "الحي",
+        "details": "تفاصيل إضافية",
         "submit": "تأكيد",
+        "skip": "تخطي الآن",
+        "skipHint": "يمكنك إكمال بيانات البائع لاحقاً من إعدادات حسابك.",
+        "storeInfoSection": "بيانات المتجر والدفع",
+        "addressSection": "موقع استلام الشحنات",
+        "mapHelper": "اضغط على الخريطة أو اسحب الدبوس لتحديد موقعك.",
+        "generalError": "حدث خطأ، حاول مجدداً",
         "defaults": {
           "location": "حي النخيل، شارع الأمير تركي بن عبدالعزيز، الرياض، المنطقة الجنوبية، المملكة العربية السعودية",
           "storeName": "الروضة",
@@ -445,7 +691,10 @@
           "storeName": "مثال: الروضة",
           "nationalId": "8794582655",
           "bankName": "مثال: البنك الأهلي",
-          "iban": "SA00 0000 0000 0000 0000 0000"
+          "iban": "SA00 0000 0000 0000 0000 0000",
+          "city": "اختر مدينتك",
+          "district": "اختر الحي",
+          "details": "أي تفاصيل إضافية للعنوان (اختياري)"
         }
       }
     }

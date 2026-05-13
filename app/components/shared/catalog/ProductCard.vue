@@ -17,6 +17,7 @@ interface Props {
   showSeller?: boolean;
   showStatus?: boolean;
   showPriceType?: boolean;
+  clickable?: boolean;
   conditionLabel?: string;
   listingLabel?: string;
   sellerName?: string;
@@ -32,6 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
   showSeller: false,
   showStatus: false,
   showPriceType: true,
+  clickable: true,
   conditionLabel: undefined,
   listingLabel: undefined,
   sellerName: undefined,
@@ -54,7 +56,7 @@ const coverImage = computed<ProductMedia | undefined>(
 );
 
 const resolvedTo = computed(() => {
-  if (!props.product) return undefined;
+  if (!props.product || !props.clickable) return undefined;
   if (props.to) return localePath(props.to);
 
   const base =
@@ -174,7 +176,52 @@ function onFavorite() {
         </NuxtLink>
 
         <div v-else class="size-full">
-          <slot name="image" :product="product" :image="coverImage" />
+          <slot name="image" :product="product" :image="coverImage">
+            <img
+              v-if="coverImage"
+              :src="coverImage.url"
+              :alt="coverImage.alt ?? product.title"
+              class="size-full object-contain"
+              loading="lazy"
+            />
+            <div
+              v-else
+              class="flex size-full items-center justify-center text-grey-dark-active"
+            >
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <rect
+                  x="7"
+                  y="9"
+                  width="26"
+                  height="22"
+                  rx="3"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="m10 27 7-7 5 5 3-3 5 5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <circle
+                  cx="25.5"
+                  cy="16.5"
+                  r="2.5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+              </svg>
+            </div>
+          </slot>
         </div>
 
         <button

@@ -14,6 +14,7 @@ export interface VerifyPayload {
 
 export interface CompleteDataPayload {
   phone_code: string
+  phone: string
   first_name: string
   last_name: string
   email: string
@@ -26,15 +27,18 @@ export interface CompleteDataPayload {
 
 export interface VerifyResponse {
   data: {
-    registration_token: string
+    id: number
+    is_complete_data: boolean
+    is_seller: boolean
+    token: string
   }
 }
 
-export interface AuthResponse {
+export interface CompleteDataResponse {
   data: {
-    access_token: string
-    token_type: string
-    user: import('~/types/user').User
+    is_complete_data: boolean
+    is_seller: boolean
+    token: string
   }
 }
 
@@ -50,4 +54,13 @@ export interface SellerRegistrationPayload {
   address_type?: string
   city_id: number
   district_id?: number
+  details?: string
+}
+
+export interface SellerRegistrationResponse {
+  data: {
+    token: string
+    is_complete_data: boolean
+    is_seller: boolean
+  }
 }

@@ -270,6 +270,209 @@
     "addFavorite": "Add to favorites",
     "removeFavorite": "Remove from favorites"
   },
+  "productDetail": {
+    "meta": {
+      "title": "Swapo | {product}",
+      "notFoundTitle": "Swapo | Product not found",
+      "condition": "Condition",
+      "listingType": "Listing type",
+      "category": "Category",
+      "published": "Published"
+    },
+    "notFound": {
+      "title": "Product not found",
+      "message": "This product may have been removed or is not available right now."
+    },
+    "gallery": {
+      "title": "Product media",
+      "thumbnails": "Product thumbnails",
+      "thumbnailLabel": "View product image {index}",
+      "emptyTitle": "No media available",
+      "emptyMessage": "This product does not have images yet."
+    },
+    "description": {
+      "title": "Product description",
+      "empty": "No description has been added for this product yet.",
+      "readMore": "Read more",
+      "showLess": "Show less"
+    },
+    "rating": {
+      "value": "{rating} out of 5",
+      "ariaLabel": "Rated {rating} out of 5"
+    },
+    "actions": {
+      "signInToBuy": "Sign in to continue",
+      "signInToNegotiate": "Sign in to negotiate",
+      "unavailable": "Unavailable",
+      "viewAllProducts": "View all products"
+    },
+    "unavailable": {
+      "message": "This product is currently unavailable, so buyer actions are disabled."
+    },
+    "seller": {
+      "verified": "Verified seller",
+      "avatarAlt": "{seller} store avatar",
+      "rating": "Seller rating",
+      "reviews": "Reviews",
+      "activeProducts": "Active products"
+    },
+    "reviews": {
+      "title": "Reviews",
+      "summary": "Overall product rating: {rating} out of 5.",
+      "count": "{count} reviews",
+      "emptyTitle": "No reviews yet",
+      "emptyMessage": "Reviews will appear here after buyers rate this seller.",
+      "authorAvatarAlt": "{author} avatar"
+    },
+    "related": {
+      "title": "Related products",
+      "emptyTitle": "No related products",
+      "emptyMessage": "More related products will appear as the catalog grows."
+    }
+  },
+  "favorites": {
+    "meta": {
+      "title": "Swapo | Favorites"
+    },
+    "breadcrumbs": {
+      "current": "Favorites"
+    },
+    "eyebrow": "Buyer favorites",
+    "activeFiltersLabel": "Active favorite filters",
+    "page": {
+      "title": "Favorites",
+      "description": "Keep your saved Swapo finds in one place, then browse them by category, condition, price, and listing type."
+    },
+    "search": {
+      "formLabel": "Search favorites",
+      "placeholder": "Search your saved products"
+    },
+    "filters": {
+      "title": "Filter favorites"
+    },
+    "results": {
+      "title": "Favorite products",
+      "count": "{count} favorites",
+      "filteredCount": "{count} of {total} favorites"
+    },
+    "empty": {
+      "title": "No favorites yet",
+      "message": "Products you save will appear here so you can come back to them quickly.",
+      "filteredTitle": "No favorites match your filters",
+      "filteredMessage": "Try changing the search term, category, or filters to find a saved product."
+    },
+    "status": {
+      "removed": "{product} removed from favorites."
+    },
+    "actions": {
+      "filters": "Filters",
+      "clearFilter": "Clear {filter}",
+      "resetBrowsing": "Reset favorites view",
+      "browseProducts": "Browse products"
+    }
+  },
+  "cart": {
+    "title": "Your cart",
+    "shippingNotice": "Shipping fees are calculated at payment after order confirmation",
+    "loading": {
+      "title": "Loading cart"
+    },
+    "empty": {
+      "title": "Your cart is empty",
+      "message": "Items you add to your cart will appear here before checkout."
+    },
+    "seller": {
+      "itemCount": "{count} items",
+      "avatarAlt": "{seller} store avatar"
+    },
+    "delivery": {
+      "range": "Get it between {start} - {end}"
+    },
+    "summary": {
+      "title": "Order summary",
+      "totalProducts": "Total products ({count} items)",
+      "serviceFee": "Service fee",
+      "sellerSubtotal": "Seller subtotal",
+      "total": "Total"
+    },
+    "actions": {
+      "openCart": "Open cart",
+      "browseProducts": "Browse products",
+      "completePurchase": "Complete purchase",
+      "increaseQuantity": "Increase quantity for {product}",
+      "decreaseQuantity": "Decrease quantity for {product}",
+      "removeItem": "Remove {product}",
+      "toggleSeller": "Show or hide {seller} items",
+      "toggleSummary": "Show or hide order summary"
+    },
+    "status": {
+      "quantityUpdated": "Quantity updated for {product}.",
+      "removed": "{product} removed from cart.",
+      "checkoutUnavailable": "Checkout is not available in this demo yet."
+    }
+  },
+  "checkout": {
+    "title": "Complete order",
+    "loading": "Loading checkout",
+    "empty": {
+      "title": "Your cart is empty",
+      "message": "Add products to your cart before completing the order.",
+      "action": "Browse products"
+    },
+    "address": {
+      "title": "Delivery address",
+      "addNew": "Add new address",
+      "fullName": "Full name",
+      "fullNamePlaceholder": "Example: Sara Ahmed",
+      "phone": "Phone number",
+      "phonePlaceholder": "Example: +966 500 000 000",
+      "city": "City",
+      "cityPlaceholder": "Example: Riyadh",
+      "district": "District",
+      "districtPlaceholder": "Example: Al Nakheel",
+      "line1": "Address",
+      "line1Placeholder": "Street, building, and nearest landmark",
+      "details": "Additional details",
+      "detailsPlaceholder": "Apartment, floor, or delivery notes",
+      "required": "This field is required",
+      "save": "Save address",
+      "useSample": "Use demo address"
+    },
+    "shipping": {
+      "title": "Please choose a shipping method",
+      "methods": {
+        "standard": {
+          "title": "Standard shipping",
+          "description": "A reliable option delivered on the carrier schedule"
+        },
+        "express": {
+          "title": "Express shipping",
+          "description": "Get it today"
+        }
+      }
+    },
+    "notes": {
+      "title": "Order notes",
+      "prompt": "Do you have any special instructions?",
+      "helper": "Write any extra instructions about your order or delivery.",
+      "placeholder": "Write your instructions here"
+    },
+    "summary": {
+      "shipping": "Shipping",
+      "toggleSeller": "Show or hide {seller} items"
+    },
+    "actions": {
+      "confirmOrder": "Confirm order",
+      "confirmed": "Order confirmed"
+    },
+    "status": {
+      "addressMissing": "Add a delivery address before confirming your order.",
+      "addressSaved": "Delivery address saved.",
+      "shippingMissing": "Choose a shipping method before confirming your order.",
+      "shippingSelected": "Shipping method selected.",
+      "orderPlaceholder": "Order confirmation is saved locally for this demo."
+    }
+  },
   "filters": {
     "title": "Filter and sort",
     "sort": "Sort",
@@ -349,6 +552,40 @@
       "linenDayDress": {
         "title": "Linen day dress",
         "description": "A lightweight dress for warm daytime plans."
+      }
+    },
+    "sellers": {
+      "tuwaiKids": {
+        "name": "Tuwai Kids Store"
+      },
+      "rawdahCloset": {
+        "name": "Al Rawdah Closet"
+      },
+      "styleCircle": {
+        "name": "Style Circle"
+      },
+      "locations": {
+        "riyadh": "Riyadh, Saudi Arabia",
+        "jeddah": "Jeddah, Saudi Arabia",
+        "dammam": "Dammam, Saudi Arabia"
+      }
+    },
+    "reviews": {
+      "authors": {
+        "mona": "Mona Al-Safi",
+        "reem": "Reem Khalid",
+        "sarah": "Sarah Adel",
+        "noura": "Noura Al-Mutairi",
+        "hala": "Hala Youssef",
+        "layan": "Layan Salem"
+      },
+      "comments": {
+        "excellentCondition": "The item arrived in excellent condition and matched the listing photos.",
+        "fastDelivery": "Smooth experience, fast delivery, and the seller was very responsive.",
+        "matchesPhotos": "The piece looked exactly like the photos and the sizing note was helpful.",
+        "cleanPackaging": "Clean packaging and a clear description. I would buy from this seller again.",
+        "quickReply": "Quick replies and careful handling from start to finish.",
+        "carefulListing": "The details were accurate, and the item arrived ready to wear."
       }
     },
     "filters": {
@@ -433,7 +670,16 @@
         "nationalId": "National ID number",
         "bankName": "Bank name",
         "iban": "IBAN number",
+        "city": "City",
+        "district": "District",
+        "details": "Additional details",
         "submit": "Confirm",
+        "skip": "Skip for now",
+        "skipHint": "You can complete seller details later from your account settings.",
+        "storeInfoSection": "Store and payment details",
+        "addressSection": "Shipment pickup location",
+        "mapHelper": "Tap the map or drag the pin to set your location.",
+        "generalError": "Something went wrong, please try again",
         "defaults": {
           "location": "Al Nakheel District, Prince Turki Bin Abdulaziz Street, Riyadh, Southern Region, Saudi Arabia",
           "storeName": "Al Rawdah",
@@ -445,7 +691,10 @@
           "storeName": "Example: Al Rawdah",
           "nationalId": "Example: 8794582655",
           "bankName": "Example: SNB Bank",
-          "iban": "Example: SA00 0000 0000 0000 0000 0000"
+          "iban": "Example: SA00 0000 0000 0000 0000 0000",
+          "city": "Select your city",
+          "district": "Select district",
+          "details": "Any additional address details (optional)"
         }
       }
     }

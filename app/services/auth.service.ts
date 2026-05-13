@@ -1,4 +1,13 @@
-import type { RegisterPayload, VerifyPayload, CompleteDataPayload, VerifyResponse, AuthResponse } from '~/types/auth'
+import type {
+  RegisterPayload,
+  VerifyPayload,
+  CompleteDataPayload,
+  VerifyResponse,
+  CompleteDataResponse,
+  SellerRegistrationPayload,
+  SellerRegistrationResponse,
+} from '~/types/auth'
+import type { User } from '~/types/user'
 import { apiFetch } from '~/composables/useApi'
 
 export const registerPhone = (payload: RegisterPayload) =>
@@ -20,11 +29,17 @@ export const resendCode = (payload: { phone_code: string; phone: string }) =>
   })
 
 export const completeData = (payload: CompleteDataPayload) =>
-  apiFetch<AuthResponse>('auth/complete-data', {
+  apiFetch<CompleteDataResponse>('auth/complete-data', {
     method: 'POST',
     body: payload,
-    // registration_token بيتبعت كـ Bearer header وكـ field في الـ body
     registrationToken: payload.registration_token,
+  })
+
+export const sellerRegistration = (payload: SellerRegistrationPayload) =>
+  apiFetch<SellerRegistrationResponse>('auth/seller-registration', {
+    method: 'POST',
+    body: payload,
+    // Authorization header comes from authStore.token automatically via apiFetch
   })
 
 export const logoutUser = () =>
@@ -32,3 +47,6 @@ export const logoutUser = () =>
     method: 'POST',
     body: { device_type: 'web', device_token: 'web' },
   })
+
+export const fetchProfile = () =>
+  apiFetch<{ data: User }>('profile')

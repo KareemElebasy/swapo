@@ -107,7 +107,7 @@ const chips: IntroChip[] = [
 
     <template #footer>
       <BaseButton
-        :to="localePath('/seller/register')"
+        :to="localePath('/auth/seller-registration')"
         size="lg"
         full-width
         class="h-12 rounded-lg! bg-blue-normal! text-base! font-semibold! text-grey-light! hover:bg-blue-normal-hover! active:bg-blue-normal-active!"

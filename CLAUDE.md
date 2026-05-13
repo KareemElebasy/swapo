@@ -25,7 +25,7 @@
 | State | Pinia (`@pinia/nuxt`) |
 | i18n | `@nuxtjs/i18n` v10 |
 | Images | `@nuxt/image` |
-| Font | Cairo (Google Fonts — محملة في `tailwind.css`) |
+| Font | `@nuxt/fonts` |
 
 ---
 

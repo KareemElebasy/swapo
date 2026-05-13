@@ -1,59 +1,18 @@
 <script setup lang="ts">
-import { registerPhone } from "~/services/auth.service";
-
-interface ServiceError {
-  message?: string;
-  errors?: Record<string, string[]>;
-}
-
-const { locale, t } = useI18n();
-const router = useRouter();
+const { t } = useI18n();
 const localePath = useLocalePath();
 
+const { register, loading, fieldErrors } = useAuth();
+
 const phone = ref("");
-const loading = ref(false);
-const fieldErrors = ref<Record<string, string[]>>({});
-const pendingPhone = useState<string>("auth.phone", () => "");
 
 const phoneError = computed(() => fieldErrors.value.phone?.[0]);
 const generalError = computed(() => fieldErrors.value.general?.[0]);
 const canSubmit = computed(() => phone.value.length > 0 && !loading.value);
 
-function setError(error: unknown) {
-  const serviceError = error as ServiceError;
-
-  if (serviceError.errors) {
-    fieldErrors.value = serviceError.errors;
-    return;
-  }
-
-  fieldErrors.value = {
-    general: [serviceError.message ?? t("auth.loginPage.form.generalError")],
-  };
-}
-
 async function submitLogin() {
-  if (!canSubmit.value) {
-    return;
-  }
-
-  loading.value = true;
-  fieldErrors.value = {};
-
-  try {
-    await registerPhone({
-      phone_code: "966",
-      phone: phone.value,
-      locale: locale.value,
-    });
-
-    pendingPhone.value = phone.value;
-    await router.push(localePath("/auth/verify"));
-  } catch (error) {
-    setError(error);
-  } finally {
-    loading.value = false;
-  }
+  if (!canSubmit.value) return;
+  await register(phone.value);
 }
 </script>
 

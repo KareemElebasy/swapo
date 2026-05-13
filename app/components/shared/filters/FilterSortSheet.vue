@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { FilterPrimitive, FilterSortValue } from '~/types/filter'
 import type { FilterSection, SortOption } from '~/types/filter'
+import FilterSortPanel from './FilterSortPanel.vue'
 
 type SheetMode = 'responsive' | 'desktop' | 'drawer'
 

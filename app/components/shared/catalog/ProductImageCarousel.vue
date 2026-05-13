@@ -72,7 +72,7 @@ function altText(img: ProductMedia, index: number) {
   <div class="relative select-none">
     <!-- Image track -->
     <div
-      class="overflow-hidden rounded-sm bg-grey-normal"
+      class="relative overflow-hidden rounded-sm bg-grey-normal"
       :style="{ paddingTop }"
     >
       <div

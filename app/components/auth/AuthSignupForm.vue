@@ -1,14 +1,7 @@
 <script setup lang="ts">
 import type { Ref } from "vue";
-import type { CompleteDataPayload } from "~/types/auth";
-import { completeData } from "~/services/auth.service";
 
-type Gender = CompleteDataPayload["gender"];
-
-interface ServiceError {
-  message?: string;
-  errors?: Record<string, string[]>;
-}
+type Gender = "male" | "female";
 
 interface SignupField {
   key: "firstName" | "lastName" | "email" | "birthDate";
@@ -26,17 +19,14 @@ interface SignupDetailField extends SignupField {
 
 const { locale, t } = useI18n();
 const localePath = useLocalePath();
-const router = useRouter();
+
+const { complete, loading, fieldErrors, registrationToken } = useAuth();
 
 const firstName = ref("");
 const lastName = ref("");
 const email = ref("");
 const birthDate = ref("");
 const gender = ref<Gender | "">("");
-const loading = ref(false);
-const fieldErrors = ref<Record<string, string[]>>({});
-const pendingPhone = useState<string>("auth.phone", () => "");
-const registrationToken = useState<string>("auth.reg_token", () => "");
 
 const nameFields: SignupField[] = [
   {
@@ -113,81 +103,32 @@ function updateField(field: SignupField, event: Event) {
   field.model.value = target.value;
 }
 
-function toApiBirthDate(value: string) {
+function toApiBirthDate(value: string): string {
   const trimmedValue = value.trim();
   const isoMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(trimmedValue);
-
-  if (isoMatch) {
-    return trimmedValue;
-  }
+  if (isoMatch) return trimmedValue;
 
   const displayMatch = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(trimmedValue);
-
-  if (!displayMatch) {
-    return trimmedValue;
-  }
+  if (!displayMatch) return trimmedValue;
 
   const [, day = "", month = "", year = ""] = displayMatch;
-
   return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-}
-
-function setError(error: unknown) {
-  const serviceError = error as ServiceError;
-
-  if (serviceError.errors) {
-    fieldErrors.value = serviceError.errors;
-    return;
-  }
-
-  fieldErrors.value = {
-    general: [serviceError.message ?? t("auth.signupPage.form.generalError")],
-  };
 }
 
 async function submitSignup() {
   if (!registrationToken.value) {
-    fieldErrors.value = {
-      general: [t("auth.signupPage.form.missingSession")],
-    };
+    fieldErrors.value = { general: [t("auth.signupPage.form.missingSession")] };
     return;
   }
+  if (!canSubmit.value || !gender.value) return;
 
-  if (!canSubmit.value || !gender.value) {
-    return;
-  }
-
-  loading.value = true;
-  fieldErrors.value = {};
-
-  try {
-    const response = await completeData({
-      phone_code: "966",
-      first_name: firstName.value.trim(),
-      last_name: lastName.value.trim(),
-      email: email.value.trim(),
-      gender: gender.value,
-      birth_date: toApiBirthDate(birthDate.value),
-      device_type: "web",
-      device_token: "web",
-      registration_token: registrationToken.value,
-    });
-
-    if (typeof useAuthStore === "function") {
-      const authStore = useAuthStore();
-
-      authStore.setToken(response.data.access_token);
-      authStore.setUser(response.data.user);
-    }
-
-    pendingPhone.value = "";
-    registrationToken.value = "";
-    await router.push(localePath("/"));
-  } catch (error) {
-    setError(error);
-  } finally {
-    loading.value = false;
-  }
+  await complete({
+    first_name: firstName.value.trim(),
+    last_name: lastName.value.trim(),
+    email: email.value.trim(),
+    gender: gender.value,
+    birth_date: toApiBirthDate(birthDate.value),
+  });
 }
 </script>
 
@@ -386,9 +327,7 @@ async function submitSignup() {
                 :disabled="loading"
               />
 
-              <span
-                class="min-w-0 flex-1 text-sm leading-5 text-black-normal-hover"
-              >
+              <span class="min-w-0 flex-1 text-sm leading-5 text-black-normal-hover">
                 {{ t(option.labelKey) }}
               </span>
 
