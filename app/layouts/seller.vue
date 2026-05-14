@@ -62,7 +62,9 @@ const authStore = useAuthStore();
             viewBox="0 0 24 24"
             fill="currentColor"
           >
-            <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-5.33 0-8 2.67-8 4v1h16v-1c0-1.33-2.67-4-8-4Z" />
+            <path
+              d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-5.33 0-8 2.67-8 4v1h16v-1c0-1.33-2.67-4-8-4Z"
+            />
           </svg>
         </NuxtLink>
       </template>
