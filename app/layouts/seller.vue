@@ -46,7 +46,7 @@ const authStore = useAuthStore();
 
         <!-- Profile avatar -->
         <NuxtLink
-          :to="localePath('/seller')"
+          :to="localePath('/seller/profile')"
           :aria-label="t('nav.profile')"
           class="flex size-9 items-center justify-center overflow-hidden rounded-full border-2 border-green bg-surface"
         >

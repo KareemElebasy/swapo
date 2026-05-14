@@ -26,15 +26,19 @@ const isActive = computed(() => {
   <NuxtLink
     :to="localizedTo"
     :class="[
-      'flex min-h-[50px] items-center justify-between gap-3 rounded-xs p-3 text-base transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-normal',
+      'flex min-h-[50px] items-center justify-between gap-3 rounded-xs p-3 text-base font-normal tracking-[-0.15px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-normal',
       isActive
-        ? 'bg-brand-cyan-light text-brand-cyan'
+        ? 'bg-brand-cyan-light/60 text-brand-cyan'
         : 'text-black-normal hover:bg-grey-normal',
     ]"
+    :aria-current="isActive ? 'page' : undefined"
   >
     <span
       v-if="showChevron"
-      class="flex size-4 shrink-0 items-center justify-center text-grey-dark-active"
+      :class="[
+        'flex size-4 shrink-0 items-center justify-center',
+        isActive ? 'text-brand-cyan' : 'text-grey-dark-active',
+      ]"
       aria-hidden="true"
     >
       <svg

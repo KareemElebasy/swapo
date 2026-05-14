@@ -232,16 +232,18 @@
     "nav": {
       "overview": "Overview",
       "orders": "My Orders",
+      "purchases": "Purchases",
       "incomingOrders": "Incoming Orders",
       "negotiations": "Negotiations",
       "favorites": "Favorites",
       "addresses": "My Addresses",
       "phone": "Phone number",
       "profile": "Personal account",
+      "about": "About us",
       "policy": "Usage policy",
       "support": "Technical support",
       "reviews": "My Reviews",
-      "settings": "Account Settings",
+      "settings": "Settings",
       "ads": "My Ads",
       "products": "My Products",
       "drafts": "Drafts",
@@ -249,10 +251,201 @@
       "subscriptions": "Subscriptions",
       "autoReplies": "Auto replies",
       "businessLocation": "Business location",
+      "bankAccount": "Bank account details",
       "sellerData": "Seller data",
       "promotions": "Promotions",
       "messages": "Messages",
       "logout": "Logout"
+    },
+    "ordersPage": {
+      "metaTitle": "Swapo | Purchases",
+      "orderNumber": "Order ID {id}",
+      "productsCount": "{count} products",
+      "moreProducts": "+ {count} products",
+      "filters": {
+        "recent": "Last week"
+      }
+    },
+    "settingsPage": {
+      "metaTitle": "Swapo | Settings",
+      "title": "Settings",
+      "language": {
+        "title": "Language",
+        "description": "Choose the interface language."
+      },
+      "notifications": {
+        "title": "Notifications",
+        "description": "Receive account and marketplace alerts."
+      },
+      "orderUpdates": {
+        "title": "Order updates",
+        "description": "Get updates when purchase statuses change."
+      }
+    },
+    "aboutPage": {
+      "metaTitle": "Swapo | About us",
+      "title": "About us",
+      "description": "Swapo is a fashion marketplace built for simple buying and selling, with account tools that keep orders, addresses, support, and policies close at hand.",
+      "points": {
+        "trusted": {
+          "title": "Trusted flow",
+          "description": "Clear order states and support access."
+        },
+        "simple": {
+          "title": "Simple account",
+          "description": "Everything important is grouped in one area."
+        },
+        "secure": {
+          "title": "Secure details",
+          "description": "Profile and address data stay organized."
+        }
+      }
+    },
+    "sellerTabPages": {
+      "descriptions": {
+        "orders": "Incoming buyer orders will appear here with their fulfillment status.",
+        "purchases": "Purchases made from this account are shown in the same account area.",
+        "addresses": "Delivery addresses connected to this seller account are managed here.",
+        "wallet": "Balances, payouts, and wallet activity are grouped here.",
+        "drafts": "Unpublished listings and saved product drafts are collected here.",
+        "subscriptions": "Seller subscription plans and renewals are managed here.",
+        "autoReplies": "Automatic replies for buyer messages are configured here.",
+        "businessLocation": "Your commercial pickup and business location details are shown here.",
+        "settings": "Seller account preferences and controls are available here.",
+        "about": "Learn more about Swapo and the marketplace experience.",
+        "policy": "Usage policies and selling rules are available here.",
+        "support": "Support contact options for seller account help are shown here."
+      }
+    },
+    "page": {
+      "metaTitle": "Swapo | Personal account",
+      "title": "Personal account",
+      "avatarAlt": "{name}'s photo",
+      "changeAvatar": "Change photo",
+      "editInfo": "Edit info",
+      "cancelEdit": "Cancel",
+      "saveInfo": "Save changes",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "saveError": "Something went wrong, try again",
+      "info": {
+        "section": "Personal info",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone number",
+        "gender": "Gender",
+        "birthDate": "Date of birth",
+        "notSet": "Not set",
+        "male": "Male",
+        "female": "Female"
+      },
+      "becomeSeller": {
+        "title": "Start selling on Swapo",
+        "description": "Upgrade your account to a seller and start listing your products.",
+        "cta": "Register as seller"
+      }
+    },
+    "phonePage": {
+      "metaTitle": "Swapo | Edit phone number",
+      "title": "Edit phone number",
+      "currentLabel": "Your current number",
+      "info": "To change your phone number, please contact support."
+    },
+    "addressesPage": {
+      "metaTitle": "Swapo | My addresses",
+      "title": "My addresses",
+      "add": "Add new address",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteConfirm": "Are you sure you want to delete this address?",
+      "defaultBadge": "Default",
+      "setDefault": "Set as default",
+      "empty": {
+        "title": "No addresses yet",
+        "message": "Add an address to make ordering easier."
+      },
+      "loading": "Loading addresses"
+    },
+    "addressForm": {
+      "newMetaTitle": "Swapo | Add address",
+      "editMetaTitle": "Swapo | Edit address",
+      "newTitle": "Add new address",
+      "editTitle": "Edit address",
+      "fullName": "Full name",
+      "fullNamePlaceholder": "e.g. Sarah Ahmed",
+      "phone": "Phone number",
+      "phonePlaceholder": "e.g. 0500000000",
+      "city": "City",
+      "cityPlaceholder": "Select your city",
+      "district": "District",
+      "districtPlaceholder": "Select district",
+      "line1": "Address details",
+      "line1Placeholder": "Street, building, nearest landmark",
+      "details": "Additional details",
+      "detailsPlaceholder": "Apartment, floor, or delivery notes (optional)",
+      "save": "Save address",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "saveError": "Something went wrong, try again",
+      "required": "This field is required"
+    },
+    "supportPage": {
+      "metaTitle": "Swapo | Technical support",
+      "title": "Technical support",
+      "description": "Need help? We're here for you.",
+      "contactTitle": "Contact us",
+      "emailLabel": "Email",
+      "email": "support{'@'}swapo.sa",
+      "whatsappLabel": "WhatsApp",
+      "whatsapp": "+966 50 000 0000",
+      "hoursLabel": "Working hours",
+      "hours": "Sunday – Thursday, 9 AM – 6 PM"
+    },
+    "policyPage": {
+      "metaTitle": "Swapo | Usage policy",
+      "title": "Usage policy",
+      "lastUpdated": "Last updated: January 2025",
+      "intro": "By using the Swapo platform, you agree to the terms and policies outlined below.",
+      "sections": {
+        "usage": {
+          "title": "Terms of use",
+          "body": "Users are required to use the platform legally and ethically, and must not post content that violates regulations or public decency."
+        },
+        "privacy": {
+          "title": "Privacy and data protection",
+          "body": "We are committed to protecting your personal data and do not share it with third parties except for service operation purposes."
+        },
+        "transactions": {
+          "title": "Financial transactions",
+          "body": "All payments are processed through secure, certified payment gateways. Swapo is not responsible for any transactions outside the platform."
+        },
+        "disputes": {
+          "title": "Dispute resolution",
+          "body": "In the event of a dispute between a buyer and seller, please contact technical support to resolve the issue."
+        }
+      }
+    },
+    "sellerDataPage": {
+      "metaTitle": "Swapo | Seller data",
+      "title": "Seller data",
+      "storeSection": "Store & payment info",
+      "addressSection": "Pickup location",
+      "editInfo": "Edit info",
+      "cancelEdit": "Cancel",
+      "save": "Save changes",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "saveError": "Something went wrong, try again",
+      "notSet": "Not set",
+      "labels": {
+        "storeName": "Store name",
+        "nationalId": "National ID number",
+        "bankName": "Bank name",
+        "iban": "IBAN number",
+        "city": "City",
+        "district": "District",
+        "details": "Additional details"
+      }
     }
   },
   "product": {
