@@ -165,6 +165,14 @@
     "sections": {
       "featuredTitle": "Best products",
       "recommendedTitle": "Recommended for you",
+      "categoriesTitle": "Browse Categories",
+      "latestTitle": "Latest Products",
+      "newTitle": "New Products",
+      "usedTitle": "Used Products",
+      "suggestedTitle": "Suggested for you",
+      "boostedTitle": "Featured Ads",
+      "recentlyViewedTitle": "Recently Viewed",
+      "viewAll": "View All",
       "emptyTitle": "No products yet",
       "emptyMessage": "Fresh picks will appear here as soon as they are available."
     },
@@ -205,8 +213,11 @@
     "profile": "My Account",
     "postAd": "Post Ad",
     "messages": "Messages",
+    "favorites": "Favourites",
+    "myAds": "My Ads",
     "openMenu": "Open menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "allCategories": "All Categories"
   },
   "footer": {
     "rights": "All rights reserved",
@@ -224,6 +235,7 @@
   },
   "profile": {
     "navLabel": "Profile navigation",
+    "backToMenu": "Menu",
     "sections": {
       "account": "My account",
       "management": "Management",

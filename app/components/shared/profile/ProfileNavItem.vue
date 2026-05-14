@@ -26,7 +26,7 @@ const isActive = computed(() => {
   <NuxtLink
     :to="localizedTo"
     :class="[
-      'flex min-h-[50px] items-center justify-between gap-3 rounded-xs p-3 text-base font-normal tracking-[-0.15px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-normal',
+      'flex min-h-12.5 items-center justify-between gap-3 rounded-xs p-3 text-base font-normal tracking-[-0.15px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-normal',
       isActive
         ? 'bg-brand-cyan-light/60 text-brand-cyan'
         : 'text-black-normal hover:bg-grey-normal',

@@ -1,99 +1,150 @@
 <script setup lang="ts">
-import type { Product, ProductPriceType } from "~/types/product";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { Autoplay, Pagination, FreeMode } from "swiper/modules";
+import type { Product } from "~/types/product";
+import { useApi } from "~/composables/useApi";
 
-type ProductCondition = "new" | "used";
-
-interface HomeProductConfig {
-  id: string;
-  titleKey: string;
+interface HomeCategory {
+  id: number;
+  title: string;
   image: string;
-  condition: ProductCondition;
+}
+
+interface HomeSlider {
+  id: number;
+  slider_type: string;
+  title: string;
+  desc: string;
+  external_link?: string;
+  image: string;
+  seller_data: { id: number; full_name: string; image: string };
+}
+
+interface HomeFeature {
+  id: number;
+  title: string;
+  desc: string;
+  image: string;
+}
+
+interface HomeApiProduct {
+  id: number;
+  product_name: string;
+  cover: string;
+  status: "new" | "used";
+  status_trans: string;
+  ad_type: "direct" | "negotiation";
+  ad_type_trans: string;
   price: number;
-  priceType: ProductPriceType;
+  availability_status: string;
+  is_favorite: boolean;
+  seller_data: {
+    id: number;
+    full_name: string;
+    store_name?: string;
+    image: string;
+  };
 }
 
-interface HomeProduct extends Product {
-  condition: ProductCondition;
+interface HomeData {
+  categories: HomeCategory[];
+  sliders: HomeSlider[];
+  features: HomeFeature[];
+  latest_products: HomeApiProduct[];
+  used_products: HomeApiProduct[];
+  new_products: HomeApiProduct[];
+  recently_viewed_products: HomeApiProduct[];
+  suggested_products: HomeApiProduct[];
+  boosted_products: HomeApiProduct[];
 }
 
-definePageMeta({
-  layout: "public",
-});
+interface HomeApiResponse {
+  data: HomeData;
+  status: string;
+}
+
+type ApiProduct = Product & { condition: "new" | "used" };
+
+definePageMeta({ layout: "public" });
 
 const { t } = useI18n();
 const localePath = useLocalePath();
 const router = useRouter();
 
-const searchQuery = ref("");
+const { data: homeResponse } = await useApi<HomeApiResponse>("home");
 
-const productConfigs: HomeProductConfig[] = [
-  {
-    id: "denim-jacket",
-    titleKey: "denimJacket",
-    image: "/images/home/product-denim-jacket.png",
-    condition: "used",
-    price: 250,
-    priceType: "fixed",
-  },
-  {
-    id: "flame-heel",
-    titleKey: "flameHeel",
-    image: "/images/home/product-red-heels.png",
-    condition: "new",
-    price: 320,
-    priceType: "negotiable",
-  },
-  {
-    id: "heart-coat",
-    titleKey: "heartCoat",
-    image: "/images/home/product-heart-coat.png",
-    condition: "new",
-    price: 180,
-    priceType: "fixed",
-  },
-  {
-    id: "pink-coat",
-    titleKey: "pinkCoat",
-    image: "/images/home/product-pink-coat.png",
-    condition: "new",
-    price: 210,
-    priceType: "negotiable",
-  },
-  {
-    id: "denim-jacket-alt",
-    titleKey: "denimJacket",
-    image: "/images/home/product-denim-jacket.png",
-    condition: "used",
-    price: 250,
-    priceType: "fixed",
-  },
-];
+const homeData = computed(() => homeResponse.value?.data);
 
-const recommendedProductConfigs: HomeProductConfig[] = [
-  productConfigs[4]!,
-  productConfigs[1]!,
-  productConfigs[2]!,
-  productConfigs[3]!,
-  productConfigs[0]!,
-];
+function toProduct(item: HomeApiProduct): ApiProduct {
+  return {
+    id: String(item.id),
+    title: item.product_name,
+    price: { amount: item.price, currency: "SAR" },
+    priceType: item.ad_type === "direct" ? "fixed" : "negotiable",
+    categoryId: "",
+    sellerId: String(item.seller_data.id),
+    condition: item.status,
+    media: [
+      {
+        id: `${item.id}-cover`,
+        type: "image",
+        url: item.cover,
+        alt: item.product_name,
+        isCover: true,
+      },
+    ],
+  };
+}
 
-const homeServices = computed(() => [
-  {
-    key: "delivery",
-    title: t("homePage.services.fastDelivery.title"),
-    message: t("homePage.services.fastDelivery.message"),
-  },
-  {
-    key: "installment",
-    title: t("homePage.services.installment.title"),
-    message: t("homePage.services.installment.message"),
-  },
-  {
-    key: "guarantee",
-    title: t("homePage.services.moneyGuarantee.title"),
-    message: t("homePage.services.moneyGuarantee.message"),
-  },
-]);
+const conditionLabels = computed<Record<string, string>>(() => ({
+  new: t("product.condition.new"),
+  used: t("product.condition.used"),
+}));
+
+const productSections = computed(() => {
+  const data = homeData.value;
+  if (!data) return [];
+
+  const base = [
+    {
+      id: "latest",
+      title: t("homePage.sections.latestTitle"),
+      products: data.latest_products ?? [],
+    },
+    {
+      id: "new",
+      title: t("homePage.sections.newTitle"),
+      products: data.new_products ?? [],
+    },
+    {
+      id: "used",
+      title: t("homePage.sections.usedTitle"),
+      products: data.used_products ?? [],
+    },
+    {
+      id: "suggested",
+      title: t("homePage.sections.suggestedTitle"),
+      products: data.suggested_products ?? [],
+    },
+    {
+      id: "boosted",
+      title: t("homePage.sections.boostedTitle"),
+      products: data.boosted_products ?? [],
+    },
+  ];
+
+  if (data.recently_viewed_products?.length) {
+    base.unshift({
+      id: "recent",
+      title: t("homePage.sections.recentlyViewedTitle"),
+      products: data.recently_viewed_products,
+    });
+  }
+
+  return base
+    .filter((s) => s.products.length > 0)
+    .map((s) => ({ ...s, products: s.products.map(toProduct) }));
+});
 
 const sellerBenefitKeys = [
   "uploadProducts",
@@ -103,7 +154,7 @@ const sellerBenefitKeys = [
 ] as const;
 
 const sellerBenefits = computed(() =>
-  sellerBenefitKeys.map((key) => t(`homePage.promo.benefits.${key}`)),
+  sellerBenefitKeys.map((k) => t(`homePage.promo.benefits.${k}`)),
 );
 
 const sellerChips = computed(() => [
@@ -129,296 +180,412 @@ const sellerChips = computed(() => [
   },
 ]);
 
-function buildProduct(config: HomeProductConfig): HomeProduct {
-  const title = t(`homePage.products.${config.titleKey}`);
-
-  return {
-    id: config.id,
-    title,
-    price: {
-      amount: config.price,
-      currency: "SAR",
-    },
-    priceType: config.priceType,
-    categoryId: "fashion",
-    sellerId: "swapo-fixture",
-    condition: config.condition,
-    media: [
-      {
-        id: `${config.id}-cover`,
-        type: "image",
-        url: config.image,
-        alt: title,
-        isCover: true,
-      },
-    ],
-  };
-}
-
-const featuredProducts = computed(() => productConfigs.map(buildProduct));
-const recommendedProducts = computed(() =>
-  recommendedProductConfigs.map(buildProduct),
-);
-
-const productSections = computed(() => [
-  {
-    id: "featured",
-    title: t("homePage.sections.featuredTitle"),
-    products: featuredProducts.value,
-  },
-  {
-    id: "recommended",
-    title: t("homePage.sections.recommendedTitle"),
-    products: recommendedProducts.value,
-  },
-]);
-
-const conditionLabels = computed<Record<ProductCondition, string>>(() => ({
-  new: t("product.condition.new"),
-  used: t("product.condition.used"),
-}));
-
-function submitSearch() {
-  const query = searchQuery.value.trim();
-  const path = localePath("/products");
-
-  router.push(query ? { path, query: { q: query } } : path);
-}
-
 function handleFavorite() {
   router.push(localePath("/auth/login"));
 }
 
-useHead(() => ({
-  title: t("homePage.metaTitle"),
-}));
+useHead(() => ({ title: t("homePage.metaTitle") }));
 </script>
 
 <template>
   <main class="bg-white">
-    <!-- Start Hero -->
+    <!-- ── Hero Slider ─────────────────────────────────────────────────── -->
     <section
       class="relative isolate overflow-hidden bg-brand-cyan-light"
-      :aria-labelledby="'home-hero-title'"
+      :aria-label="t('homePage.hero.searchLabel')"
     >
-      <div
-        class="absolute inset-x-0 bottom-0 h-32 bg-[linear-gradient(180deg,rgba(235,249,254,0)_0%,rgba(193,237,251,0.38)_100%)]"
-        aria-hidden="true"
-      />
-
-      <div
-        class="container-app relative grid min-h-[620px] items-center gap-10 py-12 lg:min-h-[792px] lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.8fr)] lg:py-16"
-      >
-        <div
-          class="relative z-10 flex max-w-2xl flex-col items-start gap-6 text-start"
+      <template v-if="homeData?.sliders?.length">
+        <Swiper
+          :modules="[Autoplay, Pagination]"
+          :autoplay="{ delay: 4000, disableOnInteraction: false }"
+          :pagination="{ clickable: true }"
+          :loop="homeData.sliders.length > 1"
+          class="hero-swiper w-full"
         >
-          <div class="flex flex-col gap-2">
-            <h1
-              id="home-hero-title"
-              class="text-4xl font-bold leading-tight text-black-dark-hover sm:text-[46px]"
+          <SwiperSlide v-for="slide in homeData.sliders" :key="slide.id">
+            <component
+              :is="slide.external_link ? 'a' : 'div'"
+              :href="slide.external_link || undefined"
+              :target="slide.external_link ? '_blank' : undefined"
+              :rel="slide.external_link ? 'noopener noreferrer' : undefined"
+              class="relative block h-85 w-full overflow-hidden lg:h-120"
             >
-              <span class="block">{{ t("homePage.hero.titleLine1") }}</span>
-              <span class="block">{{ t("homePage.hero.titleLine2") }}</span>
-            </h1>
-            <p
-              class="text-xl font-medium leading-8 text-grey-dark-active sm:text-[26px]"
-            >
-              {{ t("homePage.hero.subtitle") }}
-            </p>
+              <img
+                :src="slide.image"
+                :alt="slide.title"
+                class="absolute inset-0 size-full object-cover"
+                loading="eager"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"
+                aria-hidden="true"
+              />
+              <div
+                class="container-app relative flex h-full flex-col justify-end gap-3 pb-12 pt-8 text-start lg:pb-16"
+              >
+                <h1
+                  class="max-w-lg text-2xl font-bold leading-snug text-white sm:text-3xl"
+                >
+                  {{ slide.title }}
+                </h1>
+                <p class="max-w-md text-sm leading-6 text-white/80">
+                  {{ slide.desc }}
+                </p>
+              </div>
+            </component>
+          </SwiperSlide>
+        </Swiper>
+      </template>
+
+      <template v-else>
+        <div
+          class="absolute inset-x-0 bottom-0 h-32 bg-[linear-gradient(180deg,rgba(235,249,254,0)_0%,rgba(193,237,251,0.38)_100%)]"
+          aria-hidden="true"
+        />
+        <div
+          class="container-app relative grid min-h-155 items-center gap-10 py-12 lg:min-h-198 lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.8fr)] lg:py-16"
+        >
+          <div
+            class="relative z-10 flex max-w-2xl flex-col items-start gap-6 text-start"
+          >
+            <div class="flex flex-col gap-2">
+              <h1
+                class="text-4xl font-bold leading-tight text-black-dark-hover sm:text-[46px]"
+              >
+                <span class="block">{{ t("homePage.hero.titleLine1") }}</span>
+                <span class="block">{{ t("homePage.hero.titleLine2") }}</span>
+              </h1>
+              <p
+                class="text-xl font-medium leading-8 text-grey-dark-active sm:text-[26px]"
+              >
+                {{ t("homePage.hero.subtitle") }}
+              </p>
+            </div>
+          </div>
+          <div class="relative min-h-[320px] lg:min-h-[560px]" dir="ltr">
+            <div
+              class="absolute inset-x-8 bottom-0 h-12 rounded-[50%] bg-blue-light-active/25 blur-sm"
+              aria-hidden="true"
+            />
+            <img
+              src="/images/home/hero-card.png"
+              :alt="t('homePage.hero.cardAlt')"
+              class="absolute bottom-0 left-[4%] h-[170px] w-[146px] rounded-t-[18px] object-cover shadow-sm sm:h-[230px] sm:w-[190px] lg:left-[2%] lg:h-[288px] lg:w-[220px]"
+              loading="eager"
+            />
+            <img
+              src="/images/home/hero-blazer.png"
+              :alt="t('homePage.hero.blazerAlt')"
+              class="absolute bottom-8 left-[20%] w-[68%] max-w-[520px] object-contain drop-shadow-sm lg:bottom-2 lg:left-[18%]"
+              loading="eager"
+            />
+            <img
+              src="/images/home/hero-handbag.png"
+              :alt="t('homePage.hero.handbagAlt')"
+              class="absolute bottom-10 right-0 w-[28%] max-w-[170px] object-contain drop-shadow-sm lg:bottom-20 lg:right-0"
+              loading="eager"
+            />
           </div>
         </div>
-
-        <div class="relative min-h-[320px] lg:min-h-[560px]" dir="ltr">
-          <div
-            class="absolute inset-x-8 bottom-0 h-12 rounded-[50%] bg-blue-light-active/25 blur-sm"
-            aria-hidden="true"
-          />
-          <img
-            src="/images/home/hero-card.png"
-            :alt="t('homePage.hero.cardAlt')"
-            class="absolute bottom-0 left-[4%] h-[170px] w-[146px] rounded-t-[18px] object-cover shadow-sm sm:h-[230px] sm:w-[190px] lg:left-[2%] lg:h-[288px] lg:w-[220px]"
-            loading="eager"
-          />
-          <img
-            src="/images/home/hero-blazer.png"
-            :alt="t('homePage.hero.blazerAlt')"
-            class="absolute bottom-8 left-[20%] w-[68%] max-w-[520px] object-contain drop-shadow-sm lg:bottom-2 lg:left-[18%]"
-            loading="eager"
-          />
-          <img
-            src="/images/home/hero-handbag.png"
-            :alt="t('homePage.hero.handbagAlt')"
-            class="absolute bottom-10 right-0 w-[28%] max-w-[170px] object-contain drop-shadow-sm lg:bottom-20 lg:right-0"
-            loading="eager"
-          />
-        </div>
-      </div>
+      </template>
     </section>
-    <!-- end hero -->
+
+    <!-- ── Features bar ────────────────────────────────────────────────── -->
     <section
       class="border-b border-grey-normal bg-white"
       :aria-label="t('homePage.services.label')"
     >
       <div class="container-app grid gap-4 py-4 md:grid-cols-3 md:gap-0">
-        <article
-          v-for="(service, index) in homeServices"
-          :key="service.key"
-          :class="[
-            'flex items-center justify-start gap-3 py-2 text-start md:justify-center md:px-6',
-            index > 0 ? 'md:border-s md:border-grey-normal-hover' : '',
-          ]"
-        >
-          <span
-            class="flex size-10 shrink-0 items-center justify-center rounded-sm bg-brand-cyan-light text-blue-normal"
+        <template v-if="homeData?.features?.length">
+          <article
+            v-for="(feature, index) in homeData.features"
+            :key="feature.id"
+            :class="[
+              'flex items-center justify-start gap-3 py-2 text-start md:justify-center md:px-6',
+              index > 0 ? 'md:border-s md:border-grey-normal-hover' : '',
+            ]"
           >
-            <svg
-              v-if="service.key === 'delivery'"
-              width="22"
-              height="22"
-              viewBox="0 0 22 22"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
+            <span
+              class="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-brand-cyan-light"
             >
-              <path
-                d="M3 6.5h10v8H3v-8ZM13 9h3.2l2.8 3v2.5h-6V9Z"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linejoin="round"
+              <img
+                :src="feature.image"
+                :alt="feature.title"
+                class="size-full object-contain"
+                loading="lazy"
               />
-              <path
-                d="M6.5 17a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM16 17a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"
-                stroke="currentColor"
-                stroke-width="1.5"
-              />
-            </svg>
-            <svg
-              v-else-if="service.key === 'installment'"
-              width="22"
-              height="22"
-              viewBox="0 0 22 22"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
+            </span>
+            <span class="flex min-w-0 flex-col gap-1">
+              <strong
+                class="text-base font-medium leading-6 text-black-normal-hover"
+                >{{ feature.title }}</strong
+              >
+              <span class="text-sm leading-5 text-grey-darker">{{
+                feature.desc
+              }}</span>
+            </span>
+          </article>
+        </template>
+        <template v-else>
+          <article
+            class="flex items-center justify-start gap-3 py-2 text-start md:justify-center md:px-6"
+          >
+            <span
+              class="flex size-10 shrink-0 items-center justify-center rounded-sm bg-brand-cyan-light text-blue-normal"
             >
-              <rect
-                x="3"
-                y="5"
-                width="16"
-                height="12"
-                rx="2"
-                stroke="currentColor"
-                stroke-width="1.5"
-              />
-              <path
-                d="M3 9h16M7 13h4"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-            </svg>
-            <svg
-              v-else
-              width="22"
-              height="22"
-              viewBox="0 0 22 22"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 22 22"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M3 6.5h10v8H3v-8ZM13 9h3.2l2.8 3v2.5h-6V9Z"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M6.5 17a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM16 17a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+              </svg>
+            </span>
+            <span class="flex min-w-0 flex-col gap-1">
+              <strong
+                class="text-base font-medium leading-6 text-black-normal-hover"
+                >{{ t("homePage.services.fastDelivery.title") }}</strong
+              >
+              <span class="text-sm leading-5 text-grey-darker">{{
+                t("homePage.services.fastDelivery.message")
+              }}</span>
+            </span>
+          </article>
+          <article
+            class="flex items-center justify-start gap-3 py-2 text-start md:border-s md:border-grey-normal-hover md:justify-center md:px-6"
+          >
+            <span
+              class="flex size-10 shrink-0 items-center justify-center rounded-sm bg-brand-cyan-light text-blue-normal"
             >
-              <path
-                d="M11 3.5 17 6v4.5c0 3.7-2.4 6.4-6 8-3.6-1.6-6-4.3-6-8V6l6-2.5Z"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linejoin="round"
-              />
-              <path
-                d="m8.5 11 1.7 1.7 3.5-3.7"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </span>
-          <span class="flex min-w-0 flex-col gap-1">
-            <strong
-              class="text-base font-medium leading-6 text-black-normal-hover"
-              >{{ service.title }}</strong
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 22 22"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <rect
+                  x="3"
+                  y="5"
+                  width="16"
+                  height="12"
+                  rx="2"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M3 9h16M7 13h4"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+            <span class="flex min-w-0 flex-col gap-1">
+              <strong
+                class="text-base font-medium leading-6 text-black-normal-hover"
+                >{{ t("homePage.services.installment.title") }}</strong
+              >
+              <span class="text-sm leading-5 text-grey-darker">{{
+                t("homePage.services.installment.message")
+              }}</span>
+            </span>
+          </article>
+          <article
+            class="flex items-center justify-start gap-3 py-2 text-start md:border-s md:border-grey-normal-hover md:justify-center md:px-6"
+          >
+            <span
+              class="flex size-10 shrink-0 items-center justify-center rounded-sm bg-brand-cyan-light text-blue-normal"
             >
-            <span class="text-sm leading-5 text-grey-darker">{{
-              service.message
-            }}</span>
-          </span>
-        </article>
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 22 22"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M11 3.5 17 6v4.5c0 3.7-2.4 6.4-6 8-3.6-1.6-6-4.3-6-8V6l6-2.5Z"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="m8.5 11 1.7 1.7 3.5-3.7"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            <span class="flex min-w-0 flex-col gap-1">
+              <strong
+                class="text-base font-medium leading-6 text-black-normal-hover"
+                >{{ t("homePage.services.moneyGuarantee.title") }}</strong
+              >
+              <span class="text-sm leading-5 text-grey-darker">{{
+                t("homePage.services.moneyGuarantee.message")
+              }}</span>
+            </span>
+          </article>
+        </template>
       </div>
     </section>
 
+    <!-- ── Page body ───────────────────────────────────────────────────── -->
     <div class="py-8 lg:py-10">
+      <!-- Categories -->
+      <section
+        v-if="homeData?.categories?.length"
+        class="mb-2 bg-white py-4 lg:py-6"
+        :aria-labelledby="'home-categories-title'"
+      >
+        <div class="container-app mb-4 flex items-center justify-between gap-4">
+          <h2
+            id="home-categories-title"
+            class="min-w-0 truncate text-2xl font-medium leading-6 text-black-normal-hover"
+          >
+            {{ t("homePage.sections.categoriesTitle") }}
+          </h2>
+          <NuxtLink
+            :to="localePath('/products')"
+            class="shrink-0 text-sm font-medium text-blue-normal hover:text-blue-normal-hover"
+          >
+            {{ t("homePage.sections.viewAll") }}
+          </NuxtLink>
+        </div>
+
+        <!-- full-width swiper aligned to container via .swiper-inset -->
+        <Swiper
+          :modules="[FreeMode]"
+          :free-mode="{ enabled: true, momentum: true }"
+          slides-per-view="auto"
+          :space-between="16"
+          :breakpoints="{
+            640: { spaceBetween: 20 },
+            1024: { spaceBetween: 24 },
+          }"
+          class="swiper-inset !overflow-visible pb-2"
+        >
+          <SwiperSlide
+            v-for="category in homeData.categories"
+            :key="category.id"
+            class="!w-[72px] sm:!w-[84px]"
+          >
+            <NuxtLink
+              :to="localePath(`/products?category=${category.id}`)"
+              class="flex flex-col items-center gap-2"
+            >
+              <span
+                class="flex size-[64px] items-center justify-center overflow-hidden rounded-full border border-grey-normal bg-grey-light-active sm:size-[72px]"
+              >
+                <img
+                  :src="category.image"
+                  :alt="category.title"
+                  class="size-full object-cover"
+                  loading="lazy"
+                />
+              </span>
+              <span
+                class="w-full text-center text-xs leading-4 text-black-normal line-clamp-2"
+                >{{ category.title }}</span
+              >
+            </NuxtLink>
+          </SwiperSlide>
+        </Swiper>
+      </section>
+
+      <!-- Product sections -->
       <section
         v-for="section in productSections"
         :key="section.id"
         class="bg-white py-4 lg:py-6"
         :aria-labelledby="`home-${section.id}-title`"
       >
-        <div class="container-app">
-          <header class="mb-4 flex items-center justify-between gap-4">
-            <h2
-              :id="`home-${section.id}-title`"
-              class="min-w-0 truncate text-2xl font-medium leading-6 text-black-normal-hover"
-            >
-              {{ section.title }}
-            </h2>
-          </header>
+        <!-- Section header -->
+        <div class="container-app mb-4 flex items-center justify-between gap-4">
+          <h2
+            :id="`home-${section.id}-title`"
+            class="min-w-0 truncate text-2xl font-medium leading-6 text-black-normal-hover"
+          >
+            {{ section.title }}
+          </h2>
+          <NuxtLink
+            :to="localePath('/products')"
+            class="shrink-0 text-sm font-medium text-blue-normal hover:text-blue-normal-hover"
+          >
+            {{ t("homePage.sections.viewAll") }}
+          </NuxtLink>
+        </div>
 
-          <div
-            v-if="section.products.length"
-            class="scrollbar-none -mx-4 flex snap-x gap-6 overflow-x-auto px-4 pb-3 md:mx-0 md:px-0"
+        <!-- Product swiper — full width, aligned via .swiper-inset -->
+        <Swiper
+          :modules="[FreeMode]"
+          :free-mode="{ enabled: true, momentum: true }"
+          :slides-per-view="1.2"
+          :space-between="12"
+          :breakpoints="{
+            480: { slidesPerView: 2, spaceBetween: 14 },
+            768: { slidesPerView: 3, spaceBetween: 16 },
+            1024: { slidesPerView: 4, spaceBetween: 20 },
+            1280: { slidesPerView: 4, spaceBetween: 24 },
+          }"
+          class="swiper-inset !overflow-visible pb-4"
+        >
+          <SwiperSlide
+            v-for="product in section.products"
+            :key="`${section.id}-${product.id}`"
           >
             <SharedCatalogProductCard
-              v-for="product in section.products"
-              :key="`${section.id}-${product.id}`"
               :product="product"
               :to="`/products/${product.id}`"
               :condition-label="conditionLabels[product.condition]"
               :listing-label="t('product.listingType.ad')"
               show-favorite
-              class="w-[min(82vw,326px)] shrink-0 snap-start md:w-[326px]"
               @favorite="handleFavorite"
             />
-          </div>
+          </SwiperSlide>
+        </Swiper>
 
-          <SharedFeedbackEmptyState
-            v-else
-            :title="t('homePage.sections.emptyTitle')"
-            :message="t('homePage.sections.emptyMessage')"
-            tone="brand"
-          />
-
+        <!-- Scroll indicator -->
+        <div class="container-app mt-1">
           <div
-            v-if="section.products.length"
-            class="mx-auto mt-3 h-[3px] w-[125px] rounded-xl bg-grey-normal"
+            class="mx-auto h-0.75 w-31.25 rounded-xl bg-grey-normal"
             aria-hidden="true"
           >
-            <div
-              class="ms-auto h-full w-[34px] rounded-xl bg-blue-light-active"
-            />
+            <div class="ms-auto h-full w-8.5 rounded-xl bg-blue-light-active" />
           </div>
         </div>
       </section>
 
+      <!-- Seller promo -->
       <section
         class="container-app py-6 lg:py-8"
         :aria-labelledby="'home-seller-promo-title'"
       >
         <div
-          class="relative isolate overflow-hidden rounded-lg bg-brand-cyan-light px-5 py-8 text-center sm:px-8 lg:min-h-[232px] lg:rounded-[32px] lg:px-16"
+          class="relative isolate overflow-hidden rounded-lg bg-brand-cyan-light px-5 py-8 text-center sm:px-8 lg:min-h-58 lg:rounded-4xl lg:px-16"
         >
           <div
             class="absolute inset-0 opacity-50 [background-image:linear-gradient(110deg,rgba(255,255,255,0.72),rgba(55,197,243,0.16))]"
             aria-hidden="true"
           />
-
           <span
             v-for="chip in sellerChips"
             :key="chip.label"
@@ -427,12 +594,10 @@ useHead(() => ({
               chip.class,
             ]"
             aria-hidden="true"
+            >{{ chip.label }}</span
           >
-            {{ chip.label }}
-          </span>
-
           <div
-            class="relative mx-auto flex max-w-[520px] flex-col items-center gap-6"
+            class="relative mx-auto flex max-w-130 flex-col items-center gap-6"
           >
             <div class="flex flex-col items-center gap-3">
               <h2
@@ -441,7 +606,6 @@ useHead(() => ({
               >
                 {{ t("homePage.promo.title") }}
               </h2>
-
               <ul
                 class="grid gap-x-6 gap-y-1 text-start text-xs font-medium leading-6 text-black-normal sm:grid-cols-2"
               >
@@ -471,7 +635,6 @@ useHead(() => ({
                 </li>
               </ul>
             </div>
-
             <BaseButton
               :to="localePath('/auth/lock')"
               size="lg"
@@ -486,3 +649,21 @@ useHead(() => ({
     </div>
   </main>
 </template>
+
+<style>
+/* Hero pagination pill animation */
+.hero-swiper .swiper-pagination-bullet {
+  background: white;
+  opacity: 0.5;
+  width: 8px;
+  height: 8px;
+  transition:
+    width 0.3s,
+    opacity 0.3s;
+}
+.hero-swiper .swiper-pagination-bullet-active {
+  opacity: 1;
+  width: 24px;
+  border-radius: 4px;
+}
+</style>

@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "./tokens.css";
+@import "swiper/css";
+@import "swiper/css/pagination";
 
 html {
   scroll-behavior: smooth;
@@ -11,6 +13,7 @@ body {
   background: var(--color-grey-light);
   color: var(--color-black-normal);
   font-family: var(--font-sans);
+  overflow-x: clip;
 }
 
 html[dir="rtl"] body {
@@ -38,6 +41,11 @@ svg {
 .container-app {
   width: min(100% - 32px, 1312px);
   margin-inline: auto;
+}
+
+/* Swiper sections: full-width but inset to match container-app alignment */
+.swiper-inset {
+  padding-inline: max(16px, calc((100% - 1312px) / 2));
 }
 
 .scrollbar-none {

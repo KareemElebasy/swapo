@@ -165,6 +165,14 @@
     "sections": {
       "featuredTitle": "افضل المنتجات",
       "recommendedTitle": "مُقترحة خصيصاً لك",
+      "categoriesTitle": "تصفح الأقسام",
+      "latestTitle": "أحدث المنتجات",
+      "newTitle": "منتجات جديدة",
+      "usedTitle": "منتجات مستعملة",
+      "suggestedTitle": "مقترحة لك",
+      "boostedTitle": "إعلانات مميزة",
+      "recentlyViewedTitle": "شاهدتها مؤخراً",
+      "viewAll": "عرض الكل",
       "emptyTitle": "لا توجد منتجات حالياً",
       "emptyMessage": "ستظهر الاختيارات الجديدة هنا فور توفرها."
     },
@@ -205,8 +213,11 @@
     "profile": "حسابي",
     "postAd": "أضف إعلاناً",
     "messages": "الرسائل",
+    "favorites": "المفضلة",
+    "myAds": "إعلاناتي",
     "openMenu": "فتح القائمة",
-    "closeMenu": "إغلاق القائمة"
+    "closeMenu": "إغلاق القائمة",
+    "allCategories": "جميع التصنيفات"
   },
   "footer": {
     "rights": "جميع الحقوق محفوظة",
@@ -224,6 +235,7 @@
   },
   "profile": {
     "navLabel": "قائمة الحساب",
+    "backToMenu": "القائمة",
     "sections": {
       "account": "حسابي",
       "management": "الإدارة",

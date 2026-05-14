@@ -44,7 +44,7 @@ const defaultSections: Record<ProfileRole, ProfileNavSection[]> = {
           icon: "addresses",
         },
         {
-          to: "/profile",
+          to: "/profile/account",
           labelKey: "profile.nav.profile",
           icon: "user",
           exact: true,
@@ -77,7 +77,7 @@ const defaultSections: Record<ProfileRole, ProfileNavSection[]> = {
       labelKey: "profile.sections.account",
       items: [
         {
-          to: "/seller/profile",
+          to: "/seller/account",
           labelKey: "profile.nav.profile",
           icon: "user",
           exact: true,
@@ -90,7 +90,7 @@ const defaultSections: Record<ProfileRole, ProfileNavSection[]> = {
         {
           to: "/seller/purchases",
           labelKey: "profile.nav.purchases",
-          icon: "orders",
+          icon: "purchases",
         },
         {
           to: "/seller/addresses",
@@ -177,7 +177,7 @@ function sectionLabel(section: ProfileNavSection) {
 
 <template>
   <aside
-    class="w-full max-w-[318px] shrink-0 rounded-sm bg-grey-light-active p-2"
+    class="w-full md:max-w-79.5 shrink-0 rounded-sm bg-grey-light-active p-2"
   >
     <nav class="flex flex-col gap-2" :aria-label="t('profile.navLabel')">
       <section
@@ -214,7 +214,7 @@ function sectionLabel(section: ProfileNavSection) {
       <button
         v-if="showLogout"
         type="button"
-        class="flex min-h-[50px] items-center justify-end gap-2 rounded-xs p-3 text-base font-normal tracking-[-0.15px] text-black-normal transition-colors hover:bg-grey-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-normal"
+        class="flex min-h-12.5 items-center justify-end gap-2 rounded-xs p-3 text-base font-normal tracking-[-0.15px] text-black-normal transition-colors hover:bg-grey-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-normal"
         @click="emit('logout')"
       >
         <span class="min-w-0 flex-1 truncate text-end">{{
