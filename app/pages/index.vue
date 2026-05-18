@@ -206,7 +206,7 @@ useHead(() => ({ title: t("homePage.metaTitle") }));
           :autoplay="{ delay: 4000, disableOnInteraction: false }"
           :pagination="{ clickable: true }"
           :loop="homeData.sliders.length > 1"
-          class="hero-swiper h-85 w-full lg:h-120"
+          class="hero-swiper h-[60vh] w-full lg:h-[75vh]"
         >
           <SwiperSlide v-for="slide in homeData.sliders" :key="slide.id">
             <component
@@ -222,22 +222,6 @@ useHead(() => ({ title: t("homePage.metaTitle") }));
                 class="absolute inset-0 size-full object-cover"
                 loading="eager"
               />
-              <div
-                class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"
-                aria-hidden="true"
-              />
-              <div
-                class="container-app relative flex h-full flex-col justify-end gap-3 pb-12 pt-8 text-start lg:pb-16"
-              >
-                <h1
-                  class="max-w-lg text-2xl font-bold leading-snug text-white sm:text-3xl"
-                >
-                  {{ slide.title }}
-                </h1>
-                <p class="max-w-md text-sm leading-6 text-white/80">
-                  {{ slide.desc }}
-                </p>
-              </div>
             </component>
           </SwiperSlide>
         </Swiper>
