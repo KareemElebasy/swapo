@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Swiper, SwiperSlide } from "swiper/vue";
-import { Autoplay, Pagination, FreeMode } from "swiper/modules";
+import { Autoplay, Pagination, FreeMode, Navigation } from "swiper/modules";
 import type { Product } from "~/types/product";
 import { useApi } from "~/composables/useApi";
 
@@ -184,11 +184,17 @@ function handleFavorite() {
   router.push(localePath("/auth/login"));
 }
 
+const swiperProgressMap = ref<Record<string, number>>({});
+
+function onSwiperProgress(sectionId: string, progress: number) {
+  swiperProgressMap.value[sectionId] = progress;
+}
+
 useHead(() => ({ title: t("homePage.metaTitle") }));
 </script>
 
 <template>
-  <main class="bg-white">
+  <main class="overflow-x-hidden bg-white">
     <!-- ── Hero Slider ─────────────────────────────────────────────────── -->
     <section
       class="relative isolate overflow-hidden bg-brand-cyan-light"
@@ -200,7 +206,7 @@ useHead(() => ({ title: t("homePage.metaTitle") }));
           :autoplay="{ delay: 4000, disableOnInteraction: false }"
           :pagination="{ clickable: true }"
           :loop="homeData.sliders.length > 1"
-          class="hero-swiper w-full"
+          class="hero-swiper h-85 w-full lg:h-120"
         >
           <SwiperSlide v-for="slide in homeData.sliders" :key="slide.id">
             <component
@@ -208,7 +214,7 @@ useHead(() => ({ title: t("homePage.metaTitle") }));
               :href="slide.external_link || undefined"
               :target="slide.external_link ? '_blank' : undefined"
               :rel="slide.external_link ? 'noopener noreferrer' : undefined"
-              class="relative block h-85 w-full overflow-hidden lg:h-120"
+              class="relative block h-full w-full overflow-hidden"
             >
               <img
                 :src="slide.image"
@@ -481,7 +487,7 @@ useHead(() => ({ title: t("homePage.metaTitle") }));
             640: { spaceBetween: 20 },
             1024: { spaceBetween: 24 },
           }"
-          class="swiper-inset !overflow-visible pb-2"
+          class="swiper-inset overflow-visible! pb-2"
         >
           <SwiperSlide
             v-for="category in homeData.categories"
@@ -536,8 +542,9 @@ useHead(() => ({ title: t("homePage.metaTitle") }));
 
         <!-- Product swiper — full width, aligned via .swiper-inset -->
         <Swiper
-          :modules="[FreeMode]"
+          :modules="[FreeMode, Navigation]"
           :free-mode="{ enabled: true, momentum: true }"
+          :navigation="true"
           :slides-per-view="1.2"
           :space-between="12"
           :breakpoints="{
@@ -546,7 +553,8 @@ useHead(() => ({ title: t("homePage.metaTitle") }));
             1024: { slidesPerView: 4, spaceBetween: 20 },
             1280: { slidesPerView: 4, spaceBetween: 24 },
           }"
-          class="swiper-inset !overflow-visible pb-4"
+          class="swiper-inset product-swiper overflow-visible! pb-4"
+          @progress="(_, p) => onSwiperProgress(section.id, p)"
         >
           <SwiperSlide
             v-for="product in section.products"
@@ -569,7 +577,13 @@ useHead(() => ({ title: t("homePage.metaTitle") }));
             class="mx-auto h-0.75 w-31.25 rounded-xl bg-grey-normal"
             aria-hidden="true"
           >
-            <div class="ms-auto h-full w-8.5 rounded-xl bg-blue-light-active" />
+            <div
+              class="h-full w-8.5 rounded-xl bg-blue-light-active"
+              :style="{
+                marginInlineStart: `${(swiperProgressMap[section.id] ?? 0) * 91}px`,
+                transition: 'margin-inline-start 150ms ease',
+              }"
+            />
           </div>
         </div>
       </section>
@@ -651,6 +665,28 @@ useHead(() => ({ title: t("homePage.metaTitle") }));
 </template>
 
 <style>
+/* Product swiper navigation arrows */
+.product-swiper .swiper-button-next,
+.product-swiper .swiper-button-prev {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  padding: 10px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  color: var(--color-blue-normal);
+  top: 38%;
+}
+.product-swiper .swiper-button-next::after,
+.product-swiper .swiper-button-prev::after {
+  font-size: 13px;
+  font-weight: 700;
+}
+.product-swiper .swiper-button-disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Hero pagination pill animation */
 .hero-swiper .swiper-pagination-bullet {
   background: white;

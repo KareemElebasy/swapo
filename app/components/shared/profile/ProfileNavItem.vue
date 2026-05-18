@@ -1,25 +1,28 @@
 <script setup lang="ts">
 interface Props {
-  to: string
-  label: string
-  exact?: boolean
-  badge?: string | number
-  showChevron?: boolean
+  to: string;
+  label: string;
+  exact?: boolean;
+  badge?: string | number;
+  showChevron?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   exact: false,
   showChevron: true,
-})
+});
 
-const route = useRoute()
-const localePath = useLocalePath()
+const route = useRoute();
+const localePath = useLocalePath();
 
-const localizedTo = computed(() => localePath(props.to))
+const localizedTo = computed(() => localePath(props.to));
 const isActive = computed(() => {
-  if (props.exact) return route.path === localizedTo.value
-  return route.path === localizedTo.value || route.path.startsWith(`${localizedTo.value}/`)
-})
+  if (props.exact) return route.path === localizedTo.value;
+  return (
+    route.path === localizedTo.value ||
+    route.path.startsWith(`${localizedTo.value}/`)
+  );
+});
 </script>
 
 <template>
@@ -33,10 +36,19 @@ const isActive = computed(() => {
     ]"
     :aria-current="isActive ? 'page' : undefined"
   >
+    <span class="flex min-w-0 flex-1 items-center gap-2">
+      <span
+        class="flex size-5 shrink-0 items-center justify-center text-current"
+        aria-hidden="true"
+      >
+        <slot name="icon" />
+      </span>
+      <span class="min-w-0 flex-1 truncate">{{ label }}</span>
+    </span>
     <span
       v-if="showChevron"
       :class="[
-        'flex size-4 shrink-0 items-center justify-center',
+        'flex size-4 shrink-0 items-center justify-center ltr:rotate-180',
         isActive ? 'text-brand-cyan' : 'text-grey-dark-active',
       ]"
       aria-hidden="true"
@@ -49,16 +61,14 @@ const isActive = computed(() => {
         xmlns="http://www.w3.org/2000/svg"
         class="ltr:rotate-180"
       >
-        <path d="M10 4 6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path
+          d="M10 4 6 8l4 4"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
       </svg>
-    </span>
-
-    <span class="flex min-w-0 flex-1 items-center justify-end gap-2">
-      <span class="min-w-0 flex-1 truncate text-end">{{ label }}</span>
-
-      <span class="flex size-5 shrink-0 items-center justify-center text-current" aria-hidden="true">
-        <slot name="icon" />
-      </span>
     </span>
 
     <span

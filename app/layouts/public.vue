@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import BuyerCartDrawer from "~/components/buyer/cart/CartDrawer.vue";
-
 const { t } = useI18n();
 const localePath = useLocalePath();
 const authStore = useAuthStore();
-const { itemCount } = useDemoCart();
-
-const cartDrawerOpen = ref(false);
+const cartStore = useCartStore();
 
 const isGuest = computed(() => !authStore.token);
 const isSeller = computed(() => !!authStore.user?.is_seller);
@@ -84,7 +80,7 @@ const extraNavItems = computed(() =>
             variant="ghost"
             size="sm"
             class="text-black-normal! hover:bg-grey-normal!"
-            @click="cartDrawerOpen = true"
+            @click="cartStore.openCart()"
           >
             <template #icon>
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -95,9 +91,9 @@ const extraNavItems = computed(() =>
             </template>
           </BaseIconButton>
           <span
-            v-if="itemCount > 0"
+            v-if="cartStore.totalItems > 0"
             class="absolute -end-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-cyan px-1 text-[10px] font-bold leading-none text-blue-normal"
-          >{{ itemCount }}</span>
+          >{{ cartStore.totalItems }}</span>
         </div>
 
         <!-- Search icon -->
@@ -157,7 +153,7 @@ const extraNavItems = computed(() =>
       </template>
     </SharedNavigationAppHeader>
 
-    <BuyerCartDrawer v-model:open="cartDrawerOpen" />
+    <SharedCartDrawer />
 
     <main class="flex-1">
       <slot />

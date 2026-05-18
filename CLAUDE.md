@@ -165,7 +165,7 @@ POST auth/complete-data  (Bearer: registration_token)
 | Add product step 4 | `add-product/step-4` | POST | ✅ |
 | Commission calc | `add-product/commission/{catId}` | POST | ✅ |
 | Cart | `cart` | GET | ✅ |
-| Cart add | `cart/add` | POST | ✅ |
+| Cart add | `cart` | POST | ✅ |
 | Cart update | `cart/update/{id}` | PATCH | ✅ |
 | Cart delete | `cart/delete` | DELETE | ✅ |
 | Cart checkout | `cart/checkout` | POST | ✅ |

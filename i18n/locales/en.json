@@ -473,7 +473,13 @@
       "ad": "Ad"
     },
     "addFavorite": "Add to favorites",
-    "removeFavorite": "Remove from favorites"
+    "removeFavorite": "Remove from favorites",
+    "addToCart": "Add to cart",
+    "negotiate": "Negotiate with seller",
+    "sold": "Sold",
+    "views": "{count} views",
+    "weight": "{value} {unit}",
+    "loginToAct": "Sign in first"
   },
   "productDetail": {
     "meta": {
@@ -509,7 +515,28 @@
       "signInToBuy": "Sign in to continue",
       "signInToNegotiate": "Sign in to negotiate",
       "unavailable": "Unavailable",
-      "viewAllProducts": "View all products"
+      "viewAllProducts": "View all products",
+      "addToCart": "Add to cart",
+      "inCart": "In cart",
+      "startNegotiation": "Start negotiation",
+      "viewNegotiation": "View negotiation",
+      "editProduct": "Edit product",
+      "deleteProduct": "Delete product",
+      "soldOut": "Sold out"
+    },
+    "cart": {
+      "quantity": "Quantity",
+      "max": "Max {max}",
+      "addedToCart": "Added to cart"
+    },
+    "info": {
+      "views": "{count} views",
+      "weight": "Weight",
+      "category": "Category",
+      "subcategory": "Subcategory",
+      "condition": "Condition",
+      "adType": "Listing type",
+      "shipping": "Shipping"
     },
     "unavailable": {
       "message": "This product is currently unavailable, so buyer actions are disabled."
@@ -836,6 +863,76 @@
       "resetFilters": "Reset filters",
       "clearSearch": "Clear search",
       "viewAllProducts": "View all products"
+    }
+  },
+  "negotiation": {
+    "meta": {
+      "title": "Swapo | Negotiation"
+    },
+    "startModal": {
+      "title": "Send a price offer",
+      "priceLabel": "Your proposed price",
+      "pricePlaceholder": "Enter the price that works for you",
+      "submit": "Send offer",
+      "policy": "By sending the offer, you agree to the negotiation policy",
+      "rules": {
+        "title": "Negotiation policy:",
+        "onceOnly": "Send serious offers only",
+        "noEdit": "Offers cannot be deleted or edited after sending",
+        "sellerCounter": "The seller may send a new counter-price",
+        "noChangeAfterAccept": "After accepting an offer, it cannot be changed",
+        "finalPrice": "The agreed price becomes the final purchase price"
+      }
+    },
+    "detail": {
+      "product": "Product",
+      "originalPrice": "Original price",
+      "proposedPrice": "Proposed price",
+      "shippingNote": "Shipping fees are calculated at payment",
+      "expiresIn": "Offer expires in {time}",
+      "awaitingReply": "Awaiting reply",
+      "offerFrom": "Offer from {name}",
+      "you": "You",
+      "offerSubmitter": "Offer submitter",
+      "paymentWarning": "If payment is not completed, the order may be cancelled by the seller."
+    },
+    "rejected": {
+      "bySeller": "Rejected (by seller)",
+      "byBuyer": "Rejected (by buyer)"
+    },
+    "finished": {
+      "deliveredMessage": "Order delivered. Thank you for your trust in Swapo"
+    },
+    "status": {
+      "pending": "Pending",
+      "negotiating": "Negotiating",
+      "agreed": "Agreed",
+      "finished": "Finished"
+    },
+    "offer": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    },
+    "actions": {
+      "accept": "Accept offer",
+      "reject": "Reject offer",
+      "cancel": "Cancel offer",
+      "sendOffer": "Send offer",
+      "sendMessage": "Send",
+      "newOffer": "New offer",
+      "continuePayment": "Continue to payment"
+    },
+    "chat": {
+      "messagePlaceholder": "Write your message here",
+      "offerPlaceholder": "Proposed price",
+      "empty": "No messages yet",
+      "emptyHint": "Start by sending an offer or a message"
+    },
+    "errors": {
+      "loadFailed": "Failed to load negotiation",
+      "sendFailed": "Failed to send message, please try again"
     }
   },
   "seller": {

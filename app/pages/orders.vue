@@ -183,7 +183,7 @@ function handleLogout() {
             <p class="text-xs leading-5 text-grey-dark-hover">
               {{ formatOrderDate(order.createdAt) }}
             </p>
-            <SharedStatusStatusBadge :status="order.status" size="sm" />
+            <SharedStatusBadge :status="order.status" size="sm" />
             <p class="text-sm font-semibold text-black-normal" dir="ltr">
               {{ formatOrderTotal(order.total) }}
             </p>

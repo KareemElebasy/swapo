@@ -214,18 +214,16 @@ function sectionLabel(section: ProfileNavSection) {
       <button
         v-if="showLogout"
         type="button"
-        class="flex min-h-12.5 items-center justify-end gap-2 rounded-xs p-3 text-base font-normal tracking-[-0.15px] text-black-normal transition-colors hover:bg-grey-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-normal"
+        class="flex min-h-12.5 items-center rounded-xs p-3 gap-2 text-base font-normal tracking-[-0.15px] text-black-normal transition-colors hover:bg-grey-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-normal"
         @click="emit('logout')"
       >
-        <span class="min-w-0 flex-1 truncate text-end">{{
-          t("profile.nav.logout")
-        }}</span>
         <span
-          class="flex size-5 shrink-0 items-center justify-center"
+          class="flex size-5 shrink-0 items-center rtl:rotate-180 justify-center"
           aria-hidden="true"
         >
           <SharedProfileNavIcon name="logout" />
         </span>
+        <span class="min-w-0 truncate">{{ t("profile.nav.logout") }}</span>
       </button>
     </nav>
   </aside>

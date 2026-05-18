@@ -473,7 +473,13 @@
       "ad": "إعلان"
     },
     "addFavorite": "إضافة إلى المفضلة",
-    "removeFavorite": "إزالة من المفضلة"
+    "removeFavorite": "إزالة من المفضلة",
+    "addToCart": "أضف للسلة",
+    "negotiate": "تفاوض مع البائع",
+    "sold": "مُباع",
+    "views": "{count} مشاهدة",
+    "weight": "{value} {unit}",
+    "loginToAct": "سجل الدخول أولاً"
   },
   "productDetail": {
     "meta": {
@@ -509,7 +515,28 @@
       "signInToBuy": "سجل الدخول للمتابعة",
       "signInToNegotiate": "سجل الدخول للتفاوض",
       "unavailable": "غير متاح",
-      "viewAllProducts": "عرض كل المنتجات"
+      "viewAllProducts": "عرض كل المنتجات",
+      "addToCart": "أضف للسلة",
+      "inCart": "في السلة",
+      "startNegotiation": "ابدأ التفاوض",
+      "viewNegotiation": "عرض التفاوض",
+      "editProduct": "تعديل المنتج",
+      "deleteProduct": "حذف المنتج",
+      "soldOut": "نفد المخزون"
+    },
+    "cart": {
+      "quantity": "الكمية",
+      "max": "الحد الأقصى {max}",
+      "addedToCart": "تمت الإضافة للسلة"
+    },
+    "info": {
+      "views": "{count} مشاهدة",
+      "weight": "الوزن",
+      "category": "التصنيف",
+      "subcategory": "الفئة الفرعية",
+      "condition": "الحالة",
+      "adType": "نوع الإعلان",
+      "shipping": "الشحن"
     },
     "unavailable": {
       "message": "هذا المنتج غير متاح حاليا، لذلك تم تعطيل إجراءات الشراء."
@@ -836,6 +863,76 @@
       "resetFilters": "إعادة ضبط الفلاتر",
       "clearSearch": "مسح البحث",
       "viewAllProducts": "عرض كل المنتجات"
+    }
+  },
+  "negotiation": {
+    "meta": {
+      "title": "سوابو | التفاوض"
+    },
+    "startModal": {
+      "title": "إرسال عرض سعر",
+      "priceLabel": "السعر المقترح",
+      "pricePlaceholder": "أدخل السعر الذي يناسبك",
+      "submit": "إرسال العرض",
+      "policy": "بإرسال العرض، أنت توافق على سياسة التفاوض",
+      "rules": {
+        "title": "سياسة التفاوض:",
+        "onceOnly": "إرسال عروض جادة فقط",
+        "noEdit": "لا يمكن حذف أو تعديل العرض بعد إرساله",
+        "sellerCounter": "البائع قد يرسل سعراً جديداً",
+        "noChangeAfterAccept": "بعد قبول العرض لا يمكن تغييره",
+        "finalPrice": "السعر المتفق عليه يصبح السعر النهائي للشراء"
+      }
+    },
+    "detail": {
+      "product": "المنتج",
+      "originalPrice": "السعر الأصلي",
+      "proposedPrice": "السعر المقترح",
+      "shippingNote": "رسوم الشحن تحسب عند الدفع",
+      "expiresIn": "ينتهي العرض خلال {time}",
+      "awaitingReply": "في انتظار الرد",
+      "offerFrom": "عرض من {name}",
+      "you": "أنت",
+      "offerSubmitter": "جهة تقديم العرض",
+      "paymentWarning": "في حالة عدم إتمام الدفع قد يُلغى الطلب من البائع."
+    },
+    "rejected": {
+      "bySeller": "مرفوض (من طرف البائع)",
+      "byBuyer": "مرفوض (من طرف المشتري)"
+    },
+    "finished": {
+      "deliveredMessage": "تم تسليم الطلب. شكراً لثقتك في سواوبو"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "negotiating": "جارٍ التفاوض",
+      "agreed": "تم الاتفاق",
+      "finished": "منتهي"
+    },
+    "offer": {
+      "pending": "في الانتظار",
+      "accepted": "مقبول",
+      "rejected": "مرفوض",
+      "cancelled": "ملغى"
+    },
+    "actions": {
+      "accept": "قبول العرض",
+      "reject": "رفض العرض",
+      "cancel": "إلغاء العرض",
+      "sendOffer": "إرسال عرض",
+      "sendMessage": "إرسال",
+      "newOffer": "عرض جديد",
+      "continuePayment": "متابعة الدفع"
+    },
+    "chat": {
+      "messagePlaceholder": "اكتب رسالتك هنا",
+      "offerPlaceholder": "السعر المقترح",
+      "empty": "لا توجد رسائل بعد",
+      "emptyHint": "ابدأ بإرسال عرض أو رسالة"
+    },
+    "errors": {
+      "loadFailed": "تعذر تحميل التفاوض",
+      "sendFailed": "تعذر إرسال الرسالة، حاول مجدداً"
     }
   },
   "seller": {

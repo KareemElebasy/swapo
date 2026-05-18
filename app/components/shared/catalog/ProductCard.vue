@@ -227,7 +227,7 @@ function onFavorite() {
         <button
           v-if="shouldShowFavorite"
           type="button"
-          class="absolute left-2 top-2 flex size-10 items-center justify-center rounded-full bg-white/70 text-blue-light-active backdrop-blur transition-colors hover:text-brand-cyan focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-normal"
+          class="absolute end-2 top-2 flex size-10 items-center justify-center rounded-full bg-white/70 text-blue-light-active backdrop-blur transition-colors hover:text-brand-cyan focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-normal"
           :class="favorite ? 'text-brand-cyan' : ''"
           :aria-pressed="favorite"
           :aria-label="
@@ -252,7 +252,7 @@ function onFavorite() {
           </svg>
         </button>
 
-        <div class="absolute right-2 top-2 flex flex-col items-end gap-1">
+        <div class="absolute start-2 top-2 flex flex-col items-end gap-1">
           <slot name="badges" :product="product">
             <span
               class="rounded-xl bg-brand-cyan-light px-2 py-0.5 text-xs leading-4 text-blue-normal"
@@ -263,7 +263,7 @@ function onFavorite() {
         </div>
       </div>
 
-      <div class="flex min-w-0 flex-1 flex-col items-end gap-2 p-3 text-end">
+      <div class="flex min-w-0 flex-1 flex-col items-end gap-2 p-3">
         <NuxtLink
           v-if="resolvedTo"
           :to="resolvedTo"
@@ -276,7 +276,7 @@ function onFavorite() {
         </h3>
 
         <div
-          class="flex w-full flex-wrap items-center justify-end gap-2 text-sm text-grey-dark-hover"
+          class="flex w-full flex-wrap items-center gap-2 text-sm text-grey-dark-hover"
         >
           <span v-if="showPriceType">{{ priceTypeLabel }}</span>
 
@@ -296,8 +296,12 @@ function onFavorite() {
             :status="product.status"
             size="sm"
           />
-
-          <div class="ms-auto flex flex-col items-end gap-1">
+          <div class="flex flex-col items-end gap-1">
+            <span
+              class="rounded-xl bg-grey-normal px-2 py-0.5 text-xs leading-4 text-grey-darker"
+            >
+              {{ defaultListingLabel }}
+            </span>
             <SharedMoneyAmount
               :amount="product.price.amount"
               :currency="product.price.currency"
@@ -305,11 +309,6 @@ function onFavorite() {
               weight="bold"
               class="text-blue-normal"
             />
-            <span
-              class="rounded-xl bg-grey-normal px-2 py-0.5 text-xs leading-4 text-grey-darker"
-            >
-              {{ defaultListingLabel }}
-            </span>
           </div>
         </div>
 
