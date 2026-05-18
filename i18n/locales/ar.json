@@ -198,6 +198,15 @@
         "easy": "سهولة",
         "fastUpload": "رفع سريع"
       }
+    },
+    "appDownload": {
+      "label": "حمل تطبيق سوابو",
+      "title": "حمل تطبيق Swapo الان",
+      "subtitle": "استمتع بأفضل العروض واحصل على تجربة تسوق أسرع وأسهل",
+      "googlePlay": "Google Play",
+      "appStore": "App Store",
+      "appGallery": "AppGallery",
+      "phoneAlt": "تطبيق سوابو على الهاتف"
     }
   },
   "nav": {

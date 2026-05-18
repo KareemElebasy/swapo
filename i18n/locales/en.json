@@ -198,6 +198,15 @@
         "easy": "Easy",
         "fastUpload": "Fast upload"
       }
+    },
+    "appDownload": {
+      "label": "Download Swapo app",
+      "title": "Download Swapo App Now",
+      "subtitle": "Enjoy the best deals and get a faster, easier shopping experience",
+      "googlePlay": "Google Play",
+      "appStore": "App Store",
+      "appGallery": "AppGallery",
+      "phoneAlt": "Swapo app on mobile"
     }
   },
   "nav": {
