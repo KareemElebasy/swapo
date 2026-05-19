@@ -645,32 +645,16 @@ const breadcrumbs = computed(() => {
               v-for="related in product.similar_products"
               :key="related.id"
               :product="toProduct(related)"
+              :to="`/products/${related.id}`"
               :favorite="related.is_favorite"
+              show-favorite
               :condition-label="related.status_trans"
               :listing-label="related.ad_type_trans"
               show-seller
               :seller-name="related.seller_data.store_name || related.seller_data.full_name"
               class="w-[min(70vw,220px)] shrink-0 snap-start"
               @favorite="(p) => productStore.toggleFavorite(Number(p.id))"
-            >
-              <template v-if="!related.is_mine && related.availability_status !== 'sold'" #actions>
-                <button
-                  v-if="related.ad_type === 'negotiation'"
-                  type="button"
-                  class="mb-2 flex w-full items-center justify-center gap-2 rounded-lg border border-blue-normal py-2 text-sm font-medium text-blue-normal transition-colors hover:bg-blue-light"
-                  @click="navigateTo(localePath(`/products/${related.id}`))"
-                >
-                  {{ related.is_negotiating ? t('productDetail.actions.viewNegotiation') : t('product.negotiate') }}
-                </button>
-                <button
-                  type="button"
-                  class="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-normal py-2 text-sm font-medium text-white transition-colors hover:bg-blue-normal-hover"
-                  @click="cartStore.addToCart(related.id, 1)"
-                >
-                  {{ t('product.addToCart') }}
-                </button>
-              </template>
-            </SharedCatalogProductCard>
+            />
           </div>
         </section>
       </section>

@@ -34,6 +34,7 @@ export const useProductStore = defineStore('product', {
     async fetchProducts(params: ProductFilters = {}, append = false) {
       this.loading = true
       this.error = null
+      if (!append) this.products = []
       try {
         const response = await apiFetch<{
           data: ApiProductListItem[]

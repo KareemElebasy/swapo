@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ProductFilters, ApiProductListItem } from "~/types/api-product";
 import type { Product } from "~/types/product";
+import { apiFetch } from "~/composables/useApi";
 
 definePageMeta({ layout: "public" });
 
@@ -10,13 +11,28 @@ interface ApiCategory {
   image: string;
 }
 
+interface ApiSubCategory {
+  id: number;
+  title: string;
+}
+
 const { t } = useI18n();
-const localePath = useLocalePath();
-const authStore = useAuthStore();
 const productStore = useProductStore();
-const cartStore = useCartStore();
 
 useHead({ title: t("catalog.meta.productsTitle") });
+
+// ── Accordion state ────────────────────────────────────────────────────────
+const openSections = ref({
+  condition: true,
+  price: true,
+  rating: true,
+  tradeState: true,
+  categories: true,
+});
+
+function toggleSection(key: keyof typeof openSections.value) {
+  openSections.value[key] = !openSections.value[key];
+}
 
 // ── Filters state ─────────────────────────────────────────────────────────
 const conditionFilter = ref<"" | "new" | "used">("");
@@ -24,26 +40,51 @@ const adTypeFilter = ref<"" | "direct" | "negotiation">("");
 const priceFrom = ref<number | undefined>(undefined);
 const priceTo = ref<number | undefined>(undefined);
 const categoryId = ref<number | undefined>(undefined);
+const subCategoryId = ref<number | undefined>(undefined);
 const sort = ref<ProductFilters["sort"]>("recent");
 const rateFilter = ref<number | undefined>(undefined);
 const filterOpen = ref(false);
 
-// Categories for the filter panel
+// ── Categories ─────────────────────────────────────────────────────────────
 const { data: categoriesData } = await useApi<{ data: ApiCategory[] }>(
   "list/categories",
-  {
-    useGeneral: true,
-  },
+  { useGeneral: true },
 );
 const categories = computed(() => categoriesData.value?.data ?? []);
 
-// Build query params from filter state
+// ── Sub-categories ─────────────────────────────────────────────────────────
+const subCategories = ref<ApiSubCategory[]>([]);
+const loadingSubCats = ref(false);
+
+async function fetchSubCategories(catId: number) {
+  loadingSubCats.value = true;
+  try {
+    const res = await apiFetch<{ data: ApiSubCategory[] }>(
+      "list/sub-categories",
+      { useGeneral: true, query: { category_id: catId } },
+    );
+    subCategories.value = res.data ?? [];
+  } finally {
+    loadingSubCats.value = false;
+  }
+}
+
+watch(categoryId, (val) => {
+  subCategoryId.value = undefined;
+  subCategories.value = [];
+  if (val !== undefined) fetchSubCategories(val);
+});
+
+// ── Query params ───────────────────────────────────────────────────────────
 const queryParams = computed<ProductFilters>(() => ({
   ...(conditionFilter.value ? { type: conditionFilter.value } : {}),
   ...(adTypeFilter.value ? { ad_type: adTypeFilter.value } : {}),
   ...(priceFrom.value !== undefined ? { price_from: priceFrom.value } : {}),
   ...(priceTo.value !== undefined ? { price_to: priceTo.value } : {}),
   ...(categoryId.value !== undefined ? { category_id: categoryId.value } : {}),
+  ...(subCategoryId.value !== undefined
+    ? { sub_category_id: subCategoryId.value }
+    : {}),
   ...(sort.value ? { sort: sort.value } : {}),
   ...(rateFilter.value !== undefined ? { rate: rateFilter.value } : {}),
 }));
@@ -58,62 +99,126 @@ const hasActiveFilters = computed(
     rateFilter.value !== undefined,
 );
 
+// ── Active filter chips ────────────────────────────────────────────────────
+const activeChips = computed(() => {
+  const chips: { key: string; label: string; remove: () => void }[] = [];
+
+  if (conditionFilter.value === "new")
+    chips.push({
+      key: "cond",
+      label: t("product.condition.new"),
+      remove: () => {
+        conditionFilter.value = "";
+      },
+    });
+  else if (conditionFilter.value === "used")
+    chips.push({
+      key: "cond",
+      label: t("product.condition.used"),
+      remove: () => {
+        conditionFilter.value = "";
+      },
+    });
+
+  if (adTypeFilter.value === "direct")
+    chips.push({
+      key: "ad",
+      label: t("catalog.filters.buyNow"),
+      remove: () => {
+        adTypeFilter.value = "";
+      },
+    });
+  else if (adTypeFilter.value === "negotiation")
+    chips.push({
+      key: "ad",
+      label: t("catalog.filters.negotiate"),
+      remove: () => {
+        adTypeFilter.value = "";
+      },
+    });
+
+  if (rateFilter.value !== undefined)
+    chips.push({
+      key: "rate",
+      label: t("catalog.chips.rating", { rating: rateFilter.value }),
+      remove: () => {
+        rateFilter.value = undefined;
+      },
+    });
+
+  if (priceFrom.value !== undefined && priceTo.value !== undefined)
+    chips.push({
+      key: "price",
+      label: t("catalog.chips.priceRange", {
+        min: priceFrom.value,
+        max: priceTo.value,
+      }),
+      remove: () => {
+        priceFrom.value = undefined;
+        priceTo.value = undefined;
+      },
+    });
+  else if (priceFrom.value !== undefined)
+    chips.push({
+      key: "priceFrom",
+      label: t("catalog.chips.minPrice", { min: priceFrom.value }),
+      remove: () => {
+        priceFrom.value = undefined;
+      },
+    });
+  else if (priceTo.value !== undefined)
+    chips.push({
+      key: "priceTo",
+      label: t("catalog.chips.maxPrice", { max: priceTo.value }),
+      remove: () => {
+        priceTo.value = undefined;
+      },
+    });
+
+  return chips;
+});
+
 // ── Initial fetch ─────────────────────────────────────────────────────────
 await productStore.fetchProducts(queryParams.value);
 
 // ── Watchers ─────────────────────────────────────────────────────────────
-watch(
-  queryParams,
-  (params) => {
-    productStore.fetchProducts(params);
-  },
-  { deep: true },
-);
+watch(queryParams, (params) => productStore.fetchProducts(params), {
+  deep: true,
+});
 
-// ── Pagination ────────────────────────────────────────────────────────────
+// ── Infinity scroll ────────────────────────────────────────────────────────
+const sentinel = ref<HTMLElement | null>(null);
 const currentPage = computed(() => productStore.pagination?.current_page ?? 1);
 const lastPage = computed(() => productStore.pagination?.last_page ?? 1);
 
 async function loadMore() {
-  if (currentPage.value >= lastPage.value) return;
+  if (productStore.loading || currentPage.value >= lastPage.value) return;
   await productStore.fetchProducts(
     { ...queryParams.value, page: currentPage.value + 1 },
     true,
   );
 }
 
-// ── Actions ───────────────────────────────────────────────────────────────
-async function onFavorite(productId: number) {
-  await productStore.toggleFavorite(productId);
-}
+onMounted(() => {
+  if (!sentinel.value) return;
+  const obs = new IntersectionObserver(
+    (entries) => {
+      if (entries[0]?.isIntersecting) loadMore();
+    },
+    { rootMargin: "300px" },
+  );
+  obs.observe(sentinel.value);
+  onUnmounted(() => obs.disconnect());
+});
 
-async function onAddToCart(productId: number) {
-  if (!!!authStore.token) {
-    navigateTo(localePath("/auth/login"));
-    return;
-  }
-  try {
-    await cartStore.addToCart(productId, 1);
-    cartStore.openCart();
-  } catch {
-    // error handled by store
-  }
-}
-
-function onNegotiate(productId: number) {
-  if (!!!authStore.token) {
-    navigateTo(localePath("/auth/login"));
-    return;
-  }
-  navigateTo(localePath(`/products/${productId}`));
-}
-
+// ── Sort + Reset ───────────────────────────────────────────────────────────
 function resetFilters() {
   conditionFilter.value = "";
   adTypeFilter.value = "";
   priceFrom.value = undefined;
   priceTo.value = undefined;
   categoryId.value = undefined;
+  subCategoryId.value = undefined;
   rateFilter.value = undefined;
   sort.value = "recent";
 }
@@ -146,26 +251,31 @@ const pairedProducts = computed(() =>
   productStore.products.map((api) => ({ api, adapted: toProduct(api) })),
 );
 
-const cartProductIds = computed<Set<number>>(() => {
-  if (!cartStore.cart) return new Set();
-  const ids = new Set<number>();
-  for (const seller of cartStore.cart.sellers) {
-    for (const item of seller.items) {
-      ids.add(item.product_data.id);
-    }
-  }
-  return ids;
+// Price range bounds from API
+const apiMinPrice = computed(() => productStore.priceRange.min);
+const apiMaxPrice = computed(() => productStore.priceRange.max);
+
+// Range bar visual width helpers
+const rangeBarStyle = computed(() => {
+  const total = apiMaxPrice.value - apiMinPrice.value || 1;
+  const left =
+    priceFrom.value !== undefined
+      ? ((priceFrom.value - apiMinPrice.value) / total) * 100
+      : 0;
+  const right =
+    priceTo.value !== undefined
+      ? ((apiMaxPrice.value - priceTo.value) / total) * 100
+      : 0;
+  return { left: `${left}%`, right: `${right}%` };
 });
 </script>
 
 <template>
-  <main class="min-h-screen bg-grey-normal pb-12">
+  <main class="min-h-screen bg-grey-normal pb-16">
     <!-- Header -->
     <section class="border-b border-grey-normal-hover bg-white">
       <div class="container-app py-5">
-        <p
-          class="text-xs font-medium uppercase tracking-wide text-grey-dark-active"
-        >
+        <p class="text-xs font-medium uppercase tracking-wide text-grey-dark-active">
           {{ t("catalog.eyebrow") }}
         </p>
         <h1 class="mt-1 text-2xl font-bold text-black-normal">
@@ -179,10 +289,11 @@ const cartProductIds = computed<Set<number>>(() => {
 
     <div class="container-app mt-6">
       <div class="flex gap-6 lg:items-start">
-        <!-- ─── Sidebar filter (desktop) ─────────────────────────────── -->
+        <!-- ─── Desktop sidebar ─────────────────────────────────────────── -->
         <aside class="hidden w-64 shrink-0 lg:block">
-          <div class="rounded-xl bg-white p-5 shadow-sm">
-            <div class="mb-4 flex items-center justify-between">
+          <div class="rounded-xl bg-white shadow-sm">
+            <!-- Sidebar header -->
+            <div class="flex items-center justify-between border-b border-grey-normal-hover px-5 py-4">
               <h2 class="font-semibold text-black-normal">
                 {{ t("filters.title") }}
               </h2>
@@ -196,12 +307,113 @@ const cartProductIds = computed<Set<number>>(() => {
               </button>
             </div>
 
-            <!-- Condition -->
-            <div class="mb-5">
-              <p class="mb-2 text-sm font-medium text-black-normal">
-                {{ t("catalog.filters.condition") }}
-              </p>
-              <div class="flex gap-2">
+            <!-- ── Categories ─────────────────────────────────────────── -->
+            <div v-if="categories.length" class="border-b border-grey-normal-hover">
+              <button
+                type="button"
+                class="flex w-full items-center justify-between px-5 py-3"
+                @click="toggleSection('categories')"
+              >
+                <span class="text-sm font-semibold text-black-normal">
+                  {{ t("productDetail.info.category") }}
+                </span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="shrink-0 text-grey-darker transition-transform duration-200"
+                  :class="{ 'rotate-180': openSections.categories }"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M6 9l6 6 6-6"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <div v-show="openSections.categories" class="px-5 pb-4">
+                <div class="flex flex-col gap-0.5">
+                  <button
+                    type="button"
+                    class="flex items-center gap-2 rounded-lg px-2 py-1.5 text-start text-sm transition-colors"
+                    :class="
+                      categoryId === undefined
+                        ? 'bg-blue-light font-medium text-blue-normal'
+                        : 'text-grey-darker hover:bg-grey-normal'
+                    "
+                    @click="categoryId = undefined"
+                  >
+                    <span
+                      v-if="categoryId === undefined"
+                      class="ms-auto flex size-4 shrink-0 items-center justify-center rounded-full bg-blue-normal"
+                    >
+                      <svg width="8" height="8" viewBox="0 0 10 8" fill="white" aria-hidden="true">
+                        <path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </svg>
+                    </span>
+                    {{ t("catalog.filters.all") }}
+                  </button>
+                  <button
+                    v-for="cat in categories"
+                    :key="cat.id"
+                    type="button"
+                    class="flex items-center gap-2 rounded-lg px-2 py-1.5 text-start text-sm transition-colors"
+                    :class="
+                      categoryId === cat.id
+                        ? 'bg-blue-light font-medium text-blue-normal'
+                        : 'text-grey-darker hover:bg-grey-normal'
+                    "
+                    @click="categoryId = cat.id"
+                  >
+                    <span
+                      v-if="categoryId === cat.id"
+                      class="ms-auto flex size-4 shrink-0 items-center justify-center rounded-full bg-blue-normal"
+                    >
+                      <svg width="8" height="8" viewBox="0 0 10 8" fill="white" aria-hidden="true">
+                        <path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </svg>
+                    </span>
+                    {{ cat.title }}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── Condition ──────────────────────────────────────────── -->
+            <div class="border-b border-grey-normal-hover">
+              <button
+                type="button"
+                class="flex w-full items-center justify-between px-5 py-3"
+                @click="toggleSection('condition')"
+              >
+                <span class="text-sm font-semibold text-black-normal">
+                  {{ t("catalog.filters.condition") }}
+                </span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="shrink-0 text-grey-darker transition-transform duration-200"
+                  :class="{ 'rotate-180': openSections.condition }"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M6 9l6 6 6-6"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <div v-show="openSections.condition" class="flex flex-col gap-0.5 px-5 pb-4">
                 <button
                   v-for="opt in [
                     { value: '', label: t('catalog.filters.all') },
@@ -210,149 +422,232 @@ const cartProductIds = computed<Set<number>>(() => {
                   ]"
                   :key="opt.value"
                   type="button"
-                  class="rounded-lg border px-3 py-1 text-xs transition-colors"
+                  class="flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors"
                   :class="
                     conditionFilter === opt.value
-                      ? 'border-blue-normal bg-blue-normal text-white'
-                      : 'border-grey-normal-hover text-grey-darker hover:border-blue-normal'
+                      ? 'bg-blue-light font-medium text-blue-normal'
+                      : 'text-grey-darker hover:bg-grey-normal'
                   "
                   @click="conditionFilter = opt.value as '' | 'new' | 'used'"
                 >
                   {{ opt.label }}
+                  <span
+                    v-if="conditionFilter === opt.value"
+                    class="flex size-4 shrink-0 items-center justify-center rounded-full bg-blue-normal"
+                  >
+                    <svg width="8" height="8" viewBox="0 0 10 8" fill="white" aria-hidden="true">
+                      <path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    </svg>
+                  </span>
                 </button>
               </div>
             </div>
 
-            <!-- Ad type -->
-            <div class="mb-5">
-              <p class="mb-2 text-sm font-medium text-black-normal">
-                {{ t("catalog.filters.tradeState") }}
-              </p>
-              <div class="flex gap-2">
-                <button
-                  v-for="opt in [
-                    { value: '', label: t('catalog.filters.all') },
-                    { value: 'direct', label: t('catalog.filters.buyNow') },
-                    {
-                      value: 'negotiation',
-                      label: t('catalog.filters.negotiate'),
-                    },
-                  ]"
-                  :key="opt.value"
-                  type="button"
-                  class="rounded-lg border px-3 py-1 text-xs transition-colors"
-                  :class="
-                    adTypeFilter === opt.value
-                      ? 'border-blue-normal bg-blue-normal text-white'
-                      : 'border-grey-normal-hover text-grey-darker hover:border-blue-normal'
-                  "
-                  @click="
-                    adTypeFilter = opt.value as '' | 'direct' | 'negotiation'
-                  "
+            <!-- ── Price ──────────────────────────────────────────────── -->
+            <div class="border-b border-grey-normal-hover">
+              <button
+                type="button"
+                class="flex w-full items-center justify-between px-5 py-3"
+                @click="toggleSection('price')"
+              >
+                <span class="text-sm font-semibold text-black-normal">
+                  {{ t("catalog.filters.price") }}
+                </span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="shrink-0 text-grey-darker transition-transform duration-200"
+                  :class="{ 'rotate-180': openSections.price }"
+                  aria-hidden="true"
                 >
-                  {{ opt.label }}
-                </button>
+                  <path
+                    d="M6 9l6 6 6-6"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <div v-show="openSections.price" class="px-5 pb-4">
+                <div class="mb-3 flex gap-2">
+                  <div class="flex-1">
+                    <p class="mb-1 text-xs text-grey-darker">{{ t("filters.min") }}</p>
+                    <BaseInput
+                      v-model="priceFrom"
+                      type="number"
+                      :placeholder="String(apiMinPrice)"
+                      dir="ltr"
+                    />
+                  </div>
+                  <div class="flex-1">
+                    <p class="mb-1 text-xs text-grey-darker">{{ t("filters.max") }}</p>
+                    <BaseInput
+                      v-model="priceTo"
+                      type="number"
+                      :placeholder="String(apiMaxPrice)"
+                      dir="ltr"
+                    />
+                  </div>
+                </div>
+                <!-- Visual range track -->
+                <div class="relative mx-1 h-1.5 rounded-full bg-grey-normal-hover">
+                  <div
+                    class="absolute inset-y-0 rounded-full bg-blue-normal"
+                    :style="rangeBarStyle"
+                  />
+                  <div
+                    class="absolute -top-1.5 size-4 -translate-x-1/2 rounded-full border-2 border-blue-normal bg-white shadow-sm"
+                    :style="{ left: rangeBarStyle.left }"
+                  />
+                  <div
+                    class="absolute -top-1.5 size-4 translate-x-1/2 rounded-full border-2 border-blue-normal bg-white shadow-sm"
+                    :style="{ right: rangeBarStyle.right }"
+                  />
+                </div>
+                <div class="mt-2 flex justify-between text-xs text-grey-darker">
+                  <span dir="ltr">{{ apiMinPrice }}</span>
+                  <span dir="ltr">{{ apiMaxPrice }}</span>
+                </div>
               </div>
             </div>
 
-            <!-- Categories -->
-            <div v-if="categories.length" class="mb-5">
-              <p class="mb-2 text-sm font-medium text-black-normal">
-                {{ t("productDetail.info.category") }}
-              </p>
-              <div class="flex flex-col gap-1">
-                <button
-                  type="button"
-                  class="rounded-lg px-3 py-1.5 text-start text-sm transition-colors"
-                  :class="
-                    categoryId === undefined
-                      ? 'bg-blue-light font-medium text-blue-normal'
-                      : 'text-grey-darker hover:bg-grey-normal'
-                  "
-                  @click="categoryId = undefined"
+            <!-- ── Rating ─────────────────────────────────────────────── -->
+            <div class="border-b border-grey-normal-hover">
+              <button
+                type="button"
+                class="flex w-full items-center justify-between px-5 py-3"
+                @click="toggleSection('rating')"
+              >
+                <span class="text-sm font-semibold text-black-normal">
+                  {{ t("catalog.filters.rating") }}
+                </span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="shrink-0 text-grey-darker transition-transform duration-200"
+                  :class="{ 'rotate-180': openSections.rating }"
+                  aria-hidden="true"
                 >
-                  {{ t("catalog.filters.all") }}
-                </button>
-                <button
-                  v-for="cat in categories"
-                  :key="cat.id"
-                  type="button"
-                  class="rounded-lg px-3 py-1.5 text-start text-sm transition-colors"
-                  :class="
-                    categoryId === cat.id
-                      ? 'bg-blue-light font-medium text-blue-normal'
-                      : 'text-grey-darker hover:bg-grey-normal'
-                  "
-                  @click="categoryId = cat.id"
-                >
-                  {{ cat.title }}
-                </button>
-              </div>
-            </div>
-
-            <!-- Price range -->
-            <div class="mb-5">
-              <p class="mb-2 text-sm font-medium text-black-normal">
-                {{ t("catalog.filters.price") }}
-              </p>
-              <div class="flex gap-2">
-                <BaseInput
-                  v-model="priceFrom"
-                  type="number"
-                  :placeholder="t('filters.min')"
-                  dir="ltr"
-                  class="flex-1"
-                />
-                <BaseInput
-                  v-model="priceTo"
-                  type="number"
-                  :placeholder="t('filters.max')"
-                  dir="ltr"
-                  class="flex-1"
-                />
-              </div>
-            </div>
-
-            <!-- Rating -->
-            <div class="mb-5">
-              <p class="mb-2 text-sm font-medium text-black-normal">
-                {{ t("catalog.filters.rating") }}
-              </p>
-              <div class="flex gap-2">
+                  <path
+                    d="M6 9l6 6 6-6"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <div v-show="openSections.rating" class="flex flex-col gap-0.5 px-5 pb-4">
                 <button
                   v-for="star in [5, 4, 3, 2, 1]"
                   :key="star"
                   type="button"
-                  class="flex items-center gap-1 rounded-lg border px-2 py-1 text-xs transition-colors"
+                  class="flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors"
                   :class="
                     rateFilter === star
-                      ? 'border-blue-normal bg-blue-normal text-white'
-                      : 'border-grey-normal-hover text-grey-darker hover:border-blue-normal'
+                      ? 'bg-blue-light font-medium text-blue-normal'
+                      : 'text-grey-darker hover:bg-grey-normal'
                   "
                   @click="rateFilter = rateFilter === star ? undefined : star"
                 >
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 16 16"
-                    fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
+                  <span class="flex items-center gap-1.5">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="m8 1.8 1.9 3.8 4.2.6-3 2.9.7 4.1L8 11.2l-3.8 2 .7-4.1-3-2.9 4.2-.6L8 1.8Z"
+                      />
+                    </svg>
+                    {{ star }}+
+                  </span>
+                  <span
+                    v-if="rateFilter === star"
+                    class="flex size-4 shrink-0 items-center justify-center rounded-full bg-blue-normal"
                   >
-                    <path
-                      d="m8 1.8 1.9 3.8 4.2.6-3 2.9.7 4.1L8 11.2l-3.8 2 .7-4.1-3-2.9 4.2-.6L8 1.8Z"
-                    />
-                  </svg>
-                  {{ star }}+
+                    <svg width="8" height="8" viewBox="0 0 10 8" fill="white" aria-hidden="true">
+                      <path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <!-- ── Listing type ────────────────────────────────────────── -->
+            <div>
+              <button
+                type="button"
+                class="flex w-full items-center justify-between px-5 py-3"
+                @click="toggleSection('tradeState')"
+              >
+                <span class="text-sm font-semibold text-black-normal">
+                  {{ t("catalog.filters.tradeState") }}
+                </span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="shrink-0 text-grey-darker transition-transform duration-200"
+                  :class="{ 'rotate-180': openSections.tradeState }"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M6 9l6 6 6-6"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <div v-show="openSections.tradeState" class="flex flex-col gap-0.5 px-5 pb-4">
+                <button
+                  v-for="opt in [
+                    { value: '', label: t('catalog.filters.all') },
+                    { value: 'direct', label: t('catalog.filters.buyNow') },
+                    { value: 'negotiation', label: t('catalog.filters.negotiate') },
+                  ]"
+                  :key="opt.value"
+                  type="button"
+                  class="flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors"
+                  :class="
+                    adTypeFilter === opt.value
+                      ? 'bg-blue-light font-medium text-blue-normal'
+                      : 'text-grey-darker hover:bg-grey-normal'
+                  "
+                  @click="adTypeFilter = opt.value as '' | 'direct' | 'negotiation'"
+                >
+                  {{ opt.label }}
+                  <span
+                    v-if="adTypeFilter === opt.value"
+                    class="flex size-4 shrink-0 items-center justify-center rounded-full bg-blue-normal"
+                  >
+                    <svg width="8" height="8" viewBox="0 0 10 8" fill="white" aria-hidden="true">
+                      <path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    </svg>
+                  </span>
                 </button>
               </div>
             </div>
           </div>
         </aside>
 
-        <!-- ─── Main content ─────────────────────────────────────────── -->
+        <!-- ─── Main content ───────────────────────────────────────────── -->
         <div class="min-w-0 flex-1">
-          <!-- Toolbar: sort + mobile filter button -->
+          <!-- Toolbar -->
           <div class="mb-4 flex items-center justify-between gap-3">
             <div class="flex items-center gap-2">
               <!-- Mobile filter toggle -->
@@ -386,10 +681,7 @@ const cartProductIds = computed<Set<number>>(() => {
               </button>
 
               <!-- Result count -->
-              <p
-                v-if="productStore.pagination"
-                class="text-sm text-grey-darker"
-              >
+              <p v-if="productStore.pagination" class="text-sm text-grey-darker">
                 {{
                   t("catalog.results.count", {
                     count: productStore.pagination.total,
@@ -411,6 +703,87 @@ const cartProductIds = computed<Set<number>>(() => {
                 {{ opt.label }}
               </option>
             </select>
+          </div>
+
+          <!-- Sub-categories horizontal scroll -->
+          <div
+            v-if="categoryId !== undefined && (subCategories.length || loadingSubCats)"
+            class="mb-3 overflow-x-auto"
+          >
+            <div class="flex gap-2 pb-1" style="width: max-content">
+              <button
+                type="button"
+                class="rounded-full border px-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors"
+                :class="
+                  subCategoryId === undefined
+                    ? 'border-blue-normal bg-blue-normal text-white'
+                    : 'border-grey-normal-hover bg-white text-grey-darker hover:border-blue-normal'
+                "
+                @click="subCategoryId = undefined"
+              >
+                {{ t("catalog.filters.all") }}
+              </button>
+              <template v-if="loadingSubCats">
+                <div
+                  v-for="i in 5"
+                  :key="i"
+                  class="h-8 w-20 animate-pulse rounded-full bg-grey-normal"
+                />
+              </template>
+              <button
+                v-for="sub in subCategories"
+                v-else
+                :key="sub.id"
+                type="button"
+                class="rounded-full border px-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors"
+                :class="
+                  subCategoryId === sub.id
+                    ? 'border-blue-normal bg-blue-normal text-white'
+                    : 'border-grey-normal-hover bg-white text-grey-darker hover:border-blue-normal'
+                "
+                @click="subCategoryId = sub.id"
+              >
+                {{ sub.title }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Active filter chips -->
+          <div
+            v-if="activeChips.length"
+            class="mb-4 flex flex-wrap items-center gap-2"
+          >
+            <button
+              v-for="chip in activeChips"
+              :key="chip.key"
+              type="button"
+              class="flex items-center gap-1.5 rounded-full border border-blue-normal bg-blue-light px-3 py-1 text-xs font-medium text-blue-normal transition-colors hover:bg-blue-normal hover:text-white"
+              @click="chip.remove()"
+            >
+              {{ chip.label }}
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M18 6 6 18M6 6l12 12"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="text-xs text-grey-darker underline underline-offset-2 hover:text-black-normal"
+              @click="resetFilters"
+            >
+              {{ t("filters.reset") }}
+            </button>
           </div>
 
           <!-- Error state -->
@@ -438,10 +811,8 @@ const cartProductIds = computed<Set<number>>(() => {
             v-else
             class="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
           >
-            <!-- Loading skeletons -->
-            <template
-              v-if="productStore.loading && !productStore.products.length"
-            >
+            <!-- Initial loading skeletons -->
+            <template v-if="productStore.loading && !productStore.products.length">
               <SharedCatalogProductCard
                 v-for="i in skeletonCards"
                 :key="i"
@@ -454,52 +825,13 @@ const cartProductIds = computed<Set<number>>(() => {
               v-for="pair in pairedProducts"
               :key="pair.api.id"
               :product="pair.adapted"
+              :to="`/products/${pair.api.id}`"
               :favorite="pair.api.is_favorite"
+              show-favorite
               :condition-label="pair.api.status_trans"
               :listing-label="pair.api.ad_type_trans"
-              show-seller
-              :seller-name="
-                pair.api.seller_data.store_name ||
-                pair.api.seller_data.full_name
-              "
               @favorite="(p) => productStore.toggleFavorite(Number(p.id))"
-            >
-              <template
-                v-if="
-                  !pair.api.is_mine && pair.api.availability_status !== 'sold'
-                "
-                #actions
-              >
-                <button
-                  v-if="pair.api.ad_type === 'negotiation'"
-                  type="button"
-                  class="mb-2 flex w-full items-center justify-center gap-2 rounded-lg border border-blue-normal py-2 text-sm font-medium text-blue-normal transition-colors hover:bg-blue-light"
-                  @click="onNegotiate(pair.api.id)"
-                >
-                  {{
-                    pair.api.is_negotiating
-                      ? t("productDetail.actions.viewNegotiation")
-                      : t("product.negotiate")
-                  }}
-                </button>
-                <button
-                  type="button"
-                  class="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-normal py-2 text-sm font-medium text-white transition-colors hover:bg-blue-normal-hover"
-                  :class="
-                    cartProductIds.has(pair.api.id)
-                      ? 'bg-green-normal! hover:bg-green-normal-hover!'
-                      : ''
-                  "
-                  @click="onAddToCart(pair.api.id)"
-                >
-                  {{
-                    cartProductIds.has(pair.api.id)
-                      ? t("productDetail.actions.inCart")
-                      : t("product.addToCart")
-                  }}
-                </button>
-              </template>
-            </SharedCatalogProductCard>
+            />
           </div>
 
           <!-- Empty state -->
@@ -535,20 +867,10 @@ const cartProductIds = computed<Set<number>>(() => {
             </BaseButton>
           </div>
 
-          <!-- Load more -->
-          <div
-            v-if="!productStore.loading && currentPage < lastPage"
-            class="mt-6 flex justify-center"
-          >
-            <BaseButton variant="secondary" @click="loadMore">
-              {{ t("common.next") }}
-            </BaseButton>
-          </div>
-
-          <!-- Loading more indicator -->
+          <!-- Load-more skeletons (append loading) -->
           <div
             v-if="productStore.loading && productStore.products.length"
-            class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
+            class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
           >
             <SharedCatalogProductCard
               v-for="i in 4"
@@ -556,6 +878,9 @@ const cartProductIds = computed<Set<number>>(() => {
               loading
             />
           </div>
+
+          <!-- Infinity scroll sentinel -->
+          <div ref="sentinel" class="h-1" aria-hidden="true" />
         </div>
       </div>
     </div>
@@ -573,11 +898,12 @@ const cartProductIds = computed<Set<number>>(() => {
       <Transition name="sheet">
         <aside
           v-if="filterOpen"
-          class="fixed inset-x-0 bottom-0 z-50 max-h-[85dvh] overflow-y-auto rounded-t-2xl bg-white p-5 lg:hidden"
+          class="fixed inset-x-0 bottom-0 z-50 max-h-[90dvh] overflow-y-auto rounded-t-2xl bg-white lg:hidden"
           role="dialog"
           :aria-label="t('filters.title')"
         >
-          <div class="mb-4 flex items-center justify-between">
+          <!-- Sheet header -->
+          <div class="sticky top-0 flex items-center justify-between border-b border-grey-normal-hover bg-white px-5 py-4">
             <h2 class="font-semibold text-black-normal">
               {{ t("filters.title") }}
             </h2>
@@ -587,30 +913,36 @@ const cartProductIds = computed<Set<number>>(() => {
               :aria-label="t('common.close')"
               @click="filterOpen = false"
             >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  d="M18 6 6 18M6 6l12 12"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
               </svg>
             </button>
           </div>
 
-          <!-- Condition -->
-          <div class="mb-5">
-            <p class="mb-2 text-sm font-medium text-black-normal">
-              {{ t("catalog.filters.condition") }}
-            </p>
-            <div class="flex gap-2 flex-wrap">
+          <!-- ── Mobile: Condition ──────────────────────────────────────── -->
+          <div class="border-b border-grey-normal-hover">
+            <button
+              type="button"
+              class="flex w-full items-center justify-between px-5 py-3.5"
+              @click="toggleSection('condition')"
+            >
+              <span class="font-semibold text-black-normal">
+                {{ t("catalog.filters.condition") }}
+              </span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="shrink-0 text-grey-darker transition-transform duration-200"
+                :class="{ 'rotate-180': openSections.condition }"
+                aria-hidden="true"
+              >
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <div v-show="openSections.condition" class="flex flex-wrap gap-2 px-5 pb-4">
               <button
                 v-for="opt in [
                   { value: '', label: t('catalog.filters.all') },
@@ -619,7 +951,7 @@ const cartProductIds = computed<Set<number>>(() => {
                 ]"
                 :key="opt.value"
                 type="button"
-                class="rounded-lg border px-4 py-2 text-sm transition-colors"
+                class="rounded-xl border px-4 py-2 text-sm transition-colors"
                 :class="
                   conditionFilter === opt.value
                     ? 'border-blue-normal bg-blue-normal text-white'
@@ -632,72 +964,100 @@ const cartProductIds = computed<Set<number>>(() => {
             </div>
           </div>
 
-          <!-- Ad type -->
-          <div class="mb-5">
-            <p class="mb-2 text-sm font-medium text-black-normal">
-              {{ t("catalog.filters.tradeState") }}
-            </p>
-            <div class="flex gap-2 flex-wrap">
-              <button
-                v-for="opt in [
-                  { value: '', label: t('catalog.filters.all') },
-                  { value: 'direct', label: t('catalog.filters.buyNow') },
-                  {
-                    value: 'negotiation',
-                    label: t('catalog.filters.negotiate'),
-                  },
-                ]"
-                :key="opt.value"
-                type="button"
-                class="rounded-lg border px-4 py-2 text-sm transition-colors"
-                :class="
-                  adTypeFilter === opt.value
-                    ? 'border-blue-normal bg-blue-normal text-white'
-                    : 'border-grey-normal-hover text-grey-darker'
-                "
-                @click="
-                  adTypeFilter = opt.value as '' | 'direct' | 'negotiation'
-                "
+          <!-- ── Mobile: Price ──────────────────────────────────────────── -->
+          <div class="border-b border-grey-normal-hover">
+            <button
+              type="button"
+              class="flex w-full items-center justify-between px-5 py-3.5"
+              @click="toggleSection('price')"
+            >
+              <span class="font-semibold text-black-normal">
+                {{ t("catalog.filters.price") }}
+              </span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="shrink-0 text-grey-darker transition-transform duration-200"
+                :class="{ 'rotate-180': openSections.price }"
+                aria-hidden="true"
               >
-                {{ opt.label }}
-              </button>
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <div v-show="openSections.price" class="px-5 pb-5">
+              <div class="flex gap-3">
+                <div class="flex-1">
+                  <p class="mb-1.5 text-sm text-grey-darker">{{ t("filters.min") }}</p>
+                  <BaseInput
+                    v-model="priceFrom"
+                    type="number"
+                    :placeholder="String(apiMinPrice)"
+                    dir="ltr"
+                  />
+                </div>
+                <div class="flex-1">
+                  <p class="mb-1.5 text-sm text-grey-darker">{{ t("filters.max") }}</p>
+                  <BaseInput
+                    v-model="priceTo"
+                    type="number"
+                    :placeholder="String(apiMaxPrice)"
+                    dir="ltr"
+                  />
+                </div>
+              </div>
+              <div class="relative mx-1 mt-4 h-1.5 rounded-full bg-grey-normal-hover">
+                <div
+                  class="absolute inset-y-0 rounded-full bg-blue-normal"
+                  :style="rangeBarStyle"
+                />
+                <div
+                  class="absolute -top-1.5 size-4 -translate-x-1/2 rounded-full border-2 border-blue-normal bg-white shadow-sm"
+                  :style="{ left: rangeBarStyle.left }"
+                />
+                <div
+                  class="absolute -top-1.5 size-4 translate-x-1/2 rounded-full border-2 border-blue-normal bg-white shadow-sm"
+                  :style="{ right: rangeBarStyle.right }"
+                />
+              </div>
+              <div class="mt-2 flex justify-between text-xs text-grey-darker">
+                <span dir="ltr">{{ apiMinPrice }}</span>
+                <span dir="ltr">{{ apiMaxPrice }}</span>
+              </div>
             </div>
           </div>
 
-          <!-- Price -->
-          <div class="mb-5">
-            <p class="mb-2 text-sm font-medium text-black-normal">
-              {{ t("catalog.filters.price") }}
-            </p>
-            <div class="flex gap-2">
-              <BaseInput
-                v-model="priceFrom"
-                type="number"
-                :placeholder="t('filters.min')"
-                dir="ltr"
-                class="flex-1"
-              />
-              <BaseInput
-                v-model="priceTo"
-                type="number"
-                :placeholder="t('filters.max')"
-                dir="ltr"
-                class="flex-1"
-              />
-            </div>
-          </div>
-
-          <!-- Rating -->
-          <div class="mb-5">
-            <p class="mb-2 text-sm font-medium text-black-normal">
-              {{ t("catalog.filters.rating") }}
-            </p>
-            <div class="flex flex-wrap gap-2">
+          <!-- ── Mobile: Rating ─────────────────────────────────────────── -->
+          <div class="border-b border-grey-normal-hover">
+            <button
+              type="button"
+              class="flex w-full items-center justify-between px-5 py-3.5"
+              @click="toggleSection('rating')"
+            >
+              <span class="font-semibold text-black-normal">
+                {{ t("catalog.filters.rating") }}
+              </span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="shrink-0 text-grey-darker transition-transform duration-200"
+                :class="{ 'rotate-180': openSections.rating }"
+                aria-hidden="true"
+              >
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <div v-show="openSections.rating" class="flex flex-wrap gap-2 px-5 pb-4">
               <button
                 v-for="star in [5, 4, 3, 2, 1]"
                 :key="star"
                 type="button"
-                class="flex items-center gap-1 rounded-lg border px-3 py-1.5 text-sm transition-colors"
+                class="flex items-center gap-1.5 rounded-xl border px-4 py-2 text-sm transition-colors"
                 :class="
                   rateFilter === star
                     ? 'border-blue-normal bg-blue-normal text-white'
@@ -705,37 +1065,118 @@ const cartProductIds = computed<Set<number>>(() => {
                 "
                 @click="rateFilter = rateFilter === star ? undefined : star"
               >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="m8 1.8 1.9 3.8 4.2.6-3 2.9.7 4.1L8 11.2l-3.8 2 .7-4.1-3-2.9 4.2-.6L8 1.8Z"
-                  />
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="m8 1.8 1.9 3.8 4.2.6-3 2.9.7 4.1L8 11.2l-3.8 2 .7-4.1-3-2.9 4.2-.6L8 1.8Z" />
                 </svg>
                 {{ star }}+
               </button>
             </div>
           </div>
 
-          <!-- Actions -->
-          <div class="flex gap-3 pt-2">
-            <BaseButton
-              variant="secondary"
-              class="flex-1"
-              @click="resetFilters"
+          <!-- ── Mobile: Listing type ───────────────────────────────────── -->
+          <div class="border-b border-grey-normal-hover">
+            <button
+              type="button"
+              class="flex w-full items-center justify-between px-5 py-3.5"
+              @click="toggleSection('tradeState')"
             >
+              <span class="font-semibold text-black-normal">
+                {{ t("catalog.filters.tradeState") }}
+              </span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="shrink-0 text-grey-darker transition-transform duration-200"
+                :class="{ 'rotate-180': openSections.tradeState }"
+                aria-hidden="true"
+              >
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <div v-show="openSections.tradeState" class="flex flex-wrap gap-2 px-5 pb-4">
+              <button
+                v-for="opt in [
+                  { value: '', label: t('catalog.filters.all') },
+                  { value: 'direct', label: t('catalog.filters.buyNow') },
+                  { value: 'negotiation', label: t('catalog.filters.negotiate') },
+                ]"
+                :key="opt.value"
+                type="button"
+                class="rounded-xl border px-4 py-2 text-sm transition-colors"
+                :class="
+                  adTypeFilter === opt.value
+                    ? 'border-blue-normal bg-blue-normal text-white'
+                    : 'border-grey-normal-hover text-grey-darker'
+                "
+                @click="adTypeFilter = opt.value as '' | 'direct' | 'negotiation'"
+              >
+                {{ opt.label }}
+              </button>
+            </div>
+          </div>
+
+          <!-- ── Mobile: Categories ─────────────────────────────────────── -->
+          <div v-if="categories.length" class="border-b border-grey-normal-hover">
+            <button
+              type="button"
+              class="flex w-full items-center justify-between px-5 py-3.5"
+              @click="toggleSection('categories')"
+            >
+              <span class="font-semibold text-black-normal">
+                {{ t("productDetail.info.category") }}
+              </span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="shrink-0 text-grey-darker transition-transform duration-200"
+                :class="{ 'rotate-180': openSections.categories }"
+                aria-hidden="true"
+              >
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <div v-show="openSections.categories" class="flex flex-col gap-0.5 px-5 pb-4">
+              <button
+                type="button"
+                class="rounded-lg px-3 py-2 text-start text-sm transition-colors"
+                :class="
+                  categoryId === undefined
+                    ? 'bg-blue-light font-medium text-blue-normal'
+                    : 'text-grey-darker hover:bg-grey-normal'
+                "
+                @click="categoryId = undefined"
+              >
+                {{ t("catalog.filters.all") }}
+              </button>
+              <button
+                v-for="cat in categories"
+                :key="cat.id"
+                type="button"
+                class="rounded-lg px-3 py-2 text-start text-sm transition-colors"
+                :class="
+                  categoryId === cat.id
+                    ? 'bg-blue-light font-medium text-blue-normal'
+                    : 'text-grey-darker hover:bg-grey-normal'
+                "
+                @click="categoryId = cat.id"
+              >
+                {{ cat.title }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Sheet actions -->
+          <div class="sticky bottom-0 flex gap-3 border-t border-grey-normal-hover bg-white px-5 py-4">
+            <BaseButton variant="secondary" class="flex-1" @click="resetFilters">
               {{ t("filters.reset") }}
             </BaseButton>
-            <BaseButton
-              variant="primary"
-              class="flex-1"
-              @click="filterOpen = false"
-            >
+            <BaseButton variant="primary" class="flex-1" @click="filterOpen = false">
               {{ t("filters.apply") }}
             </BaseButton>
           </div>

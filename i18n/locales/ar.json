@@ -22,7 +22,8 @@
     "optional": "(اختياري)",
     "previous": "السابق",
     "next": "التالي",
-    "home": "الرئيسية"
+    "home": "الرئيسية",
+    "loadMore": "تحميل المزيد"
   },
   "auth": {
     "login": "تسجيل الدخول",
@@ -836,7 +837,8 @@
       "rating": "التقييم",
       "tradeState": "الحالة التجارية",
       "buyNow": "شراء الآن",
-      "negotiate": "تفاوض مع البائع"
+      "negotiate": "تفاوض مع البائع",
+      "subcategory": "الفئة الفرعية"
     },
     "sort": {
       "recommended": "الأكثر ملاءمة",
@@ -942,6 +944,20 @@
     "errors": {
       "loadFailed": "تعذر تحميل التفاوض",
       "sendFailed": "تعذر إرسال الرسالة، حاول مجدداً"
+    },
+    "list": {
+      "title": "المفاوضات",
+      "roleBuyer": "مشتري",
+      "roleSeller": "بائع",
+      "filterAll": "الكل",
+      "filterOpen": "قيد الانتظار",
+      "filterNegotiating": "قيد التفاوض",
+      "filterAgreed": "متفق عليه",
+      "empty": "لا توجد مفاوضات",
+      "emptyBuyer": "لم تبدأ أي تفاوض بعد",
+      "emptySeller": "لا توجد مفاوضات على منتجاتك",
+      "lastOffer": "عرض: {price} ر.س",
+      "product": "المنتج"
     }
   },
   "seller": {

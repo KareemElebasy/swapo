@@ -22,7 +22,8 @@
     "optional": "(Optional)",
     "previous": "Previous",
     "next": "Next",
-    "home": "Home"
+    "home": "Home",
+    "loadMore": "Load more"
   },
   "auth": {
     "login": "Login",
@@ -836,7 +837,8 @@
       "rating": "Rating",
       "tradeState": "Listing type",
       "buyNow": "Buy now",
-      "negotiate": "Negotiate with seller"
+      "negotiate": "Negotiate with seller",
+      "subcategory": "Subcategory"
     },
     "sort": {
       "recommended": "Recommended",
@@ -942,6 +944,20 @@
     "errors": {
       "loadFailed": "Failed to load negotiation",
       "sendFailed": "Failed to send message, please try again"
+    },
+    "list": {
+      "title": "Negotiations",
+      "roleBuyer": "Buyer",
+      "roleSeller": "Seller",
+      "filterAll": "All",
+      "filterOpen": "Pending",
+      "filterNegotiating": "Negotiating",
+      "filterAgreed": "Agreed",
+      "empty": "No negotiations",
+      "emptyBuyer": "You haven't started any negotiations yet",
+      "emptySeller": "No negotiations on your products",
+      "lastOffer": "Offer: {price} SAR",
+      "product": "Product"
     }
   },
   "seller": {

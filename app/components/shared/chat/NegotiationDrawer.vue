@@ -100,7 +100,8 @@ onUnmounted(() => {
 // ── Derived offer data ────────────────────────────────────────────────────
 const latestOffer = computed(() => {
   for (let i = messages.value.length - 1; i >= 0; i--) {
-    if (messages.value[i].type === "offer") return messages.value[i];
+    const m = messages.value[i]
+    if (m?.type === "offer") return m;
   }
   return negotiation.value?.accepted_offer ?? null;
 });
@@ -108,7 +109,7 @@ const latestOffer = computed(() => {
 const pendingOffer = computed(() => {
   for (let i = messages.value.length - 1; i >= 0; i--) {
     const m = messages.value[i];
-    if (m.type === "offer" && m.status === "pending") return m;
+    if (m?.type === "offer" && m?.status === "pending") return m;
   }
   return null;
 });

@@ -121,6 +121,7 @@ export interface ProductFilters {
   price_from?: number
   price_to?: number
   category_id?: number
+  sub_category_id?: number
   sort?: 'recent' | 'highest_price' | 'lowest_price' | 'highest_rate' | 'lowest_rate' | 'most_ordered'
   rate?: number
   page?: number

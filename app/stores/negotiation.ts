@@ -176,6 +176,25 @@ export const useNegotiationStore = defineStore('negotiation', {
       }
     },
 
+    async openDrawerFromListItem(item: ApiNegotiationListItem) {
+      this.drawerProduct = {
+        id: item.product_data.id,
+        product_name: item.product_data.product_name,
+        price: item.product_data.price,
+        cover: item.product_data.cover ?? null,
+        seller_name: item.seller_data.store_name ?? item.seller_data.full_name,
+      }
+      this.drawerView = 'chat'
+      this.drawerOpen = true
+      this.detailLoading = true
+      try {
+        const detail = await apiFetch<{ data: ApiNegotiationDetail }>(`negotiation/${item.id}`)
+        this.currentNegotiation = detail.data
+      } finally {
+        this.detailLoading = false
+      }
+    },
+
     closeDrawer() {
       this.drawerOpen = false
     },
