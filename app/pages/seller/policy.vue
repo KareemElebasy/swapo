@@ -2,8 +2,8 @@
 import { apiFetch } from '~/composables/useApi'
 
 definePageMeta({
-  layout: 'buyer',
-  middleware: 'auth',
+  layout: 'seller',
+  middleware: ['auth', 'seller'],
 })
 
 const { t } = useI18n()
@@ -39,7 +39,7 @@ function handleLogout() {
 </script>
 
 <template>
-  <SharedProfileShell role="buyer" @logout="handleLogout">
+  <SharedProfileShell role="seller" @logout="handleLogout">
     <section class="rounded-sm border border-blue-light bg-white p-6">
       <h2 class="mb-4 text-xl font-bold text-black-normal">
         {{ t('profile.policyPage.title') }}

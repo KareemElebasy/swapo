@@ -208,6 +208,15 @@
       "appStore": "App Store",
       "appGallery": "AppGallery",
       "phoneAlt": "Swapo app on mobile"
+    },
+    "posts": {
+      "buttonLabel": "Best Products",
+      "close": "Close",
+      "loading": "Loading...",
+      "viewProduct": "View Product",
+      "back": "Back",
+      "noMore": "No more posts",
+      "swipeHint": "Swipe to browse"
     }
   },
   "nav": {
@@ -281,11 +290,84 @@
     },
     "ordersPage": {
       "metaTitle": "Swapo | Purchases",
+      "title": "My purchases",
       "orderNumber": "Order ID {id}",
       "productsCount": "{count} products",
       "moreProducts": "+ {count} products",
       "filters": {
-        "recent": "Last week"
+        "recent": "Last week",
+        "all": "All"
+      },
+      "empty": {
+        "title": "No orders yet",
+        "message": "Start shopping and your orders will appear here."
+      },
+      "loadMore": "Load more"
+    },
+    "orderDetailPage": {
+      "metaTitle": "Swapo | Order details",
+      "title": "Order details",
+      "breadcrumb": "My purchases",
+      "orderCode": "Order #{code}",
+      "print": "Print",
+      "summary": {
+        "productCount": "Total products ({count} items)",
+        "shipping": "Shipping fee",
+        "commission": "Service fee",
+        "total": "Total"
+      },
+      "sections": {
+        "address": "Delivery address",
+        "addressEmpty": "No address set",
+        "payment": "Payment method",
+        "notes": "Order notes",
+        "notesEmpty": "No notes",
+        "items": "Items"
+      },
+      "timeline": {
+        "pendingApproval": "Awaiting approval",
+        "pendingApprovalHint": "Once approved you cannot cancel",
+        "pendingPayment": "Awaiting payment",
+        "pendingPaymentHint": "Your order ships after payment",
+        "pendingShipment": "Awaiting shipment",
+        "shipped": "Shipped",
+        "completed": "Completed",
+        "cancelled": "Cancelled",
+        "rejected": "Rejected"
+      },
+      "actions": {
+        "cancel": "Cancel order",
+        "cancelConfirm": "Are you sure you want to cancel this order?"
+      },
+      "product": {
+        "qty": "{qty}x",
+        "weight": "{value} {unit}"
+      }
+    },
+    "sellerOrdersPage": {
+      "metaTitle": "Swapo | Incoming orders",
+      "title": "Incoming orders",
+      "empty": {
+        "title": "No incoming orders",
+        "message": "Buyer orders will appear here when they arrive."
+      },
+      "loadMore": "Load more"
+    },
+    "sellerOrderDetailPage": {
+      "metaTitle": "Swapo | Order details",
+      "breadcrumb": "Incoming orders",
+      "buyer": "Buyer",
+      "actions": {
+        "accept": "Accept order",
+        "reject": "Reject order",
+        "ship": "Ship order",
+        "complete": "Confirm delivery",
+        "cancel": "Cancel order",
+        "acceptConfirm": "Accept all items in this order?",
+        "rejectConfirm": "Reject this order?",
+        "shipConfirm": "Has the order been dispatched for shipment?",
+        "completeConfirm": "Confirm that the buyer has received the order?",
+        "cancelConfirm": "Are you sure you want to cancel this order?"
       }
     },
     "settingsPage": {
@@ -1025,5 +1107,8 @@
         }
       }
     }
+  },
+  "errors": {
+    "general": "Failed to load content, please try again"
   }
 }

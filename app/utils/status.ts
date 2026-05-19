@@ -119,3 +119,29 @@ export function getStatusMeta(status: AppStatus | string): StatusMeta {
     textClass: 'text-grey-darker',
   }
 }
+
+const apiOrderStatusMap: Record<string, AppStatus> = {
+  pending_approval: 'pending',
+  pending_payment: 'awaitingPayment',
+  pending_shipment: 'confirmed',
+  shipped: 'shipped',
+  completed: 'completed',
+  cancelled: 'canceled',
+  rejected: 'rejected',
+}
+
+export function mapApiOrderStatus(apiStatus: string): AppStatus {
+  return apiOrderStatusMap[apiStatus] ?? 'pending'
+}
+
+/** Returns a 0-based index of the current step in the order timeline (0–4), or -1 for terminal states */
+export function orderTimelineStep(apiStatus: string): number {
+  const steps: Record<string, number> = {
+    pending_approval: 0,
+    pending_payment: 1,
+    pending_shipment: 2,
+    shipped: 3,
+    completed: 4,
+  }
+  return steps[apiStatus] ?? -1
+}

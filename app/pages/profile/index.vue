@@ -4,12 +4,19 @@ definePageMeta({
   middleware: ["auth", "profile"],
 });
 
+const localePath = useLocalePath()
+
 function handleLogout() {
   const authStore = useAuthStore()
-  const localePath = useLocalePath()
   authStore.logout()
   navigateTo(localePath("/auth/login"))
 }
+
+onMounted(() => {
+  if (window.matchMedia('(min-width: 1024px)').matches) {
+    navigateTo(localePath('/profile/account'), { replace: true })
+  }
+})
 </script>
 
 <template>

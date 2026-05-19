@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { apiFetch } from '~/composables/useApi'
+
 definePageMeta({
   layout: 'buyer',
   middleware: 'auth',
@@ -11,7 +13,24 @@ const router = useRouter()
 
 useHead({ title: t('profile.aboutPage.metaTitle') })
 
-const points = ['trusted', 'simple', 'secure'] as const
+interface StaticPageData {
+  data: { id: number; desc: string }
+}
+
+const content = ref('')
+const loading = ref(true)
+const fetchError = ref(false)
+
+onMounted(async () => {
+  try {
+    const res = await apiFetch<StaticPageData>('static-data/about')
+    content.value = res?.data?.desc ?? ''
+  } catch {
+    fetchError.value = true
+  } finally {
+    loading.value = false
+  }
+})
 
 function handleLogout() {
   authStore.logout()
@@ -25,24 +44,18 @@ function handleLogout() {
       <h2 class="mb-4 text-xl font-bold text-black-normal">
         {{ t('profile.aboutPage.title') }}
       </h2>
-      <p class="max-w-2xl text-sm leading-7 text-black-normal">
-        {{ t('profile.aboutPage.description') }}
-      </p>
 
-      <ul class="mt-6 grid gap-3 sm:grid-cols-3">
-        <li
-          v-for="point in points"
-          :key="point"
-          class="rounded-sm bg-grey-normal p-4 text-end"
-        >
-          <p class="text-sm font-semibold text-black-normal">
-            {{ t(`profile.aboutPage.points.${point}.title`) }}
-          </p>
-          <p class="mt-1 text-xs leading-5 text-grey-dark-hover">
-            {{ t(`profile.aboutPage.points.${point}.description`) }}
-          </p>
-        </li>
-      </ul>
+      <div v-if="loading" class="text-sm text-grey-dark-hover">
+        {{ t('common.loading') }}
+      </div>
+      <p v-else-if="fetchError" class="text-sm text-red-500">
+        {{ t('errors.general') }}
+      </p>
+      <div
+        v-else
+        class="static-html-content text-sm leading-7 text-black-normal"
+        v-html="content"
+      />
     </section>
   </SharedProfileShell>
 </template>

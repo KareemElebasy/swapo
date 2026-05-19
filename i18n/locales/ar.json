@@ -208,6 +208,15 @@
       "appStore": "App Store",
       "appGallery": "AppGallery",
       "phoneAlt": "تطبيق سوابو على الهاتف"
+    },
+    "posts": {
+      "buttonLabel": "أفضل المنتجات",
+      "close": "إغلاق",
+      "loading": "جاري التحميل...",
+      "viewProduct": "عرض المنتج",
+      "back": "العودة",
+      "noMore": "لا يوجد المزيد",
+      "swipeHint": "مرر للاستعراض"
     }
   },
   "nav": {
@@ -281,11 +290,84 @@
     },
     "ordersPage": {
       "metaTitle": "سوابو | مشترياتي",
+      "title": "مشترياتي",
       "orderNumber": "رقم تعريف الطلب {id}",
       "productsCount": "{count} منتجات",
       "moreProducts": "+ {count} منتجات",
       "filters": {
-        "recent": "آخر أسبوع"
+        "recent": "آخر أسبوع",
+        "all": "الكل"
+      },
+      "empty": {
+        "title": "لا توجد طلبات بعد",
+        "message": "ابدأ التسوق وستظهر طلباتك هنا."
+      },
+      "loadMore": "تحميل المزيد"
+    },
+    "orderDetailPage": {
+      "metaTitle": "سوابو | تفاصيل الطلب",
+      "title": "تفاصيل الطلب",
+      "breadcrumb": "طلباتي",
+      "orderCode": "طلب رقم {code}",
+      "print": "طباعة",
+      "summary": {
+        "productCount": "إجمالي المنتجات ({count} منتجات)",
+        "shipping": "رسوم الشحن",
+        "commission": "رسوم الخدمة",
+        "total": "الإجمالي"
+      },
+      "sections": {
+        "address": "عنوان التوصيل",
+        "addressEmpty": "لم يتم تحديد عنوان",
+        "payment": "وسيلة الدفع",
+        "notes": "ملاحظات الطلب",
+        "notesEmpty": "لا توجد ملاحظات",
+        "items": "المنتجات"
+      },
+      "timeline": {
+        "pendingApproval": "في انتظار التأكيد",
+        "pendingApprovalHint": "بمجرد التأكيد لا يمكنك الإلغاء",
+        "pendingPayment": "في انتظار الدفع",
+        "pendingPaymentHint": "بمجرد الدفع سيتم شحن طلبك",
+        "pendingShipment": "في انتظار الشحن",
+        "shipped": "تم الشحن",
+        "completed": "مكتمل",
+        "cancelled": "ملغى",
+        "rejected": "مرفوض"
+      },
+      "actions": {
+        "cancel": "إلغاء الطلب",
+        "cancelConfirm": "هل أنت متأكد من إلغاء هذا الطلب؟"
+      },
+      "product": {
+        "qty": "{qty}x",
+        "weight": "{value} {unit}"
+      }
+    },
+    "sellerOrdersPage": {
+      "metaTitle": "سوابو | الطلبات الواردة",
+      "title": "الطلبات الواردة",
+      "empty": {
+        "title": "لا توجد طلبات واردة",
+        "message": "ستظهر طلبات المشترين هنا عند وصولها."
+      },
+      "loadMore": "تحميل المزيد"
+    },
+    "sellerOrderDetailPage": {
+      "metaTitle": "سوابو | تفاصيل الطلب",
+      "breadcrumb": "الطلبات الواردة",
+      "buyer": "المشتري",
+      "actions": {
+        "accept": "قبول الطلب",
+        "reject": "رفض الطلب",
+        "ship": "شحن الطلب",
+        "complete": "تأكيد الاستلام",
+        "cancel": "إلغاء الطلب",
+        "acceptConfirm": "هل تريد قبول جميع منتجات هذا الطلب؟",
+        "rejectConfirm": "هل تريد رفض هذا الطلب؟",
+        "shipConfirm": "هل تم إرسال الطلب للشحن؟",
+        "completeConfirm": "هل تأكدت من استلام المشتري للطلب؟",
+        "cancelConfirm": "هل أنت متأكد من إلغاء هذا الطلب؟"
       }
     },
     "settingsPage": {
@@ -1025,5 +1107,8 @@
         }
       }
     }
+  },
+  "errors": {
+    "general": "تعذر تحميل المحتوى، حاول مجدداً"
   }
 }

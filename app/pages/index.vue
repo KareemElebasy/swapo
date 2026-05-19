@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { Swiper, SwiperSlide } from "swiper/vue";
-import { Autoplay, Pagination, FreeMode, Navigation } from "swiper/modules";
+import {
+  Autoplay,
+  Pagination,
+  FreeMode,
+  Navigation,
+  EffectCoverflow,
+} from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
 import type { Product } from "~/types/product";
-import { useApi } from "~/composables/useApi";
+import { useApi, apiFetch } from "~/composables/useApi";
 
 interface HomeCategory {
   id: number;
@@ -69,6 +76,28 @@ type PageSection =
   | { type: "products"; id: string; title: string; products: ApiProduct[] }
   | { type: "promo" }
   | { type: "app" };
+
+interface Post {
+  id: number;
+  is_viewed: boolean;
+  product_data: {
+    id: number;
+    product_name: string;
+    product_desc: string;
+    banner: string;
+  };
+}
+
+interface PostsApiResponse {
+  data: Post[];
+  meta: { current_page: number; last_page: number };
+  status: string;
+}
+
+interface PostDetailApiResponse {
+  data: Post;
+  status: string;
+}
 
 definePageMeta({ layout: "public" });
 
@@ -235,6 +264,64 @@ const swiperProgressMap = ref<Record<string, number>>({});
 
 function onSwiperProgress(sectionId: string, progress: number) {
   swiperProgressMap.value[sectionId] = progress;
+}
+
+// ── Posts feed ──────────────────────────────────────────────────────────────
+const postsOpen = ref(false);
+const posts = ref<Post[]>([]);
+const postsPage = ref(1);
+const postsLastPage = ref(1);
+const postsLoading = ref(false);
+const activePost = ref<Post | null>(null);
+const postsSwiper = ref<SwiperType | null>(null);
+
+const hasMorePosts = computed(() => postsPage.value < postsLastPage.value);
+
+async function fetchPosts(page: number) {
+  if (postsLoading.value) return;
+  postsLoading.value = true;
+  try {
+    const res = await apiFetch<PostsApiResponse>("post", { query: { page } });
+    posts.value = page === 1 ? res.data : [...posts.value, ...res.data];
+    postsLastPage.value = res.meta.last_page;
+    postsPage.value = page;
+    await nextTick();
+    postsSwiper.value?.update();
+  } finally {
+    postsLoading.value = false;
+  }
+}
+
+async function openPostsFeed() {
+  postsOpen.value = true;
+  if (posts.value.length === 0) await fetchPosts(1);
+}
+
+function closePostsFeed() {
+  postsOpen.value = false;
+  activePost.value = null;
+}
+
+async function onPostsSwiperReachEnd() {
+  if (!hasMorePosts.value || postsLoading.value) return;
+  await fetchPosts(postsPage.value + 1);
+}
+
+function openPostDetail(post: Post) {
+  // Show immediately with data already in the list — no loading wait
+  activePost.value = post;
+  // Silently refresh from API in background to pick up any extra fields
+  apiFetch<PostDetailApiResponse>(`post/${post.id}`)
+    .then((res) => {
+      if (activePost.value?.id === post.id) activePost.value = res.data;
+    })
+    .catch(() => {});
+}
+
+if (import.meta.client) {
+  watch(postsOpen, (open) => {
+    document.body.style.overflow = open ? "hidden" : "";
+  });
 }
 
 useHead(() => ({ title: t("homePage.metaTitle") }));
@@ -685,6 +772,256 @@ useHead(() => ({ title: t("homePage.metaTitle") }));
         </template>
       </template>
     </div>
+    <!-- ── Best Products fixed button ───────────────────────────────────────── -->
+    <button
+      class="fixed bottom-6 inset-s-1/2 z-40 -translate-x-1/2 flex items-center gap-2 rounded-full bg-blue-normal px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-blue-normal-hover active:scale-95 rtl:translate-x-1/2"
+      :aria-label="t('homePage.posts.buttonLabel')"
+      @click="openPostsFeed"
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <path
+          d="M8 1C5 4 3 6.5 3 9.5a5 5 0 0 0 10 0C13 6.5 11 4 8 1Z"
+          fill="currentColor"
+          opacity=".85"
+        />
+        <path
+          d="M8 6c-1 1.5-1.5 2.5-1.5 3.5a1.5 1.5 0 0 0 3 0C9.5 8.5 9 7.5 8 6Z"
+          fill="white"
+          opacity=".7"
+        />
+      </svg>
+      {{ t("homePage.posts.buttonLabel") }}
+    </button>
+
+    <!-- ── Posts feed overlay ────────────────────────────────────────────────── -->
+    <Teleport to="body">
+      <Transition name="posts-overlay">
+        <div
+          v-if="postsOpen"
+          class="fixed inset-0 z-9999 flex items-center justify-center bg-black/65 backdrop-blur-sm"
+          role="dialog"
+          :aria-label="t('homePage.posts.buttonLabel')"
+          aria-modal="true"
+          @click.self="closePostsFeed"
+        >
+          <!-- ── First-load skeleton ── -->
+          <div v-if="postsLoading && posts.length === 0" class="w-full">
+            <div
+              class="mx-auto w-[72vw] max-w-75 animate-pulse rounded-2xl bg-white/10"
+              style="aspect-ratio: 3/4"
+            />
+          </div>
+
+          <!-- ── Empty state ── -->
+          <div
+            v-else-if="!postsLoading && posts.length === 0"
+            class="flex flex-col items-center gap-2"
+          >
+            <span class="text-sm text-white/60">{{ t("common.empty") }}</span>
+          </div>
+
+          <!-- ── Coverflow swiper ── -->
+          <Swiper
+            v-else
+            :modules="[EffectCoverflow]"
+            effect="coverflow"
+            :coverflow-effect="{
+              rotate: 30,
+              stretch: 0,
+              depth: 100,
+              modifier: 1,
+              slideShadows: true,
+            }"
+            :grab-cursor="true"
+            :centered-slides="true"
+            slides-per-view="auto"
+            :space-between="16"
+            class="posts-feed-swiper w-full"
+            @swiper="(s: SwiperType) => (postsSwiper = s)"
+            @reachEnd="onPostsSwiperReachEnd"
+          >
+            <SwiperSlide
+              v-for="post in posts"
+              :key="post.id"
+              class="posts-card-slide"
+            >
+              <!-- Card -->
+              <div
+                class="relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-2xl will-change-transform"
+                style="max-height: 70vh"
+              >
+                <!-- ✕ close button -->
+                <button
+                  class="absolute inset-e-2 top-2 z-10 flex size-7 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition hover:bg-black/60"
+                  :aria-label="t('homePage.posts.close')"
+                  @click.stop="closePostsFeed"
+                >
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M1 1l8 8M9 1 1 9"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </button>
+
+                <!-- Image -->
+                <div
+                  class="relative w-full overflow-hidden bg-grey-light"
+                  style="aspect-ratio: 3/4"
+                >
+                  <img
+                    :src="post.product_data.banner"
+                    :alt="post.product_data.product_name"
+                    class="size-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+
+                <!-- Info -->
+                <div
+                  class="flex cursor-pointer flex-col gap-2 px-4 pb-4 pt-3"
+                  @click="openPostDetail(post)"
+                >
+                  <h3
+                    class="line-clamp-2 text-sm font-bold leading-5 text-black-normal-hover"
+                  >
+                    {{ post.product_data.product_name }}
+                  </h3>
+                  <p class="line-clamp-2 text-xs leading-5 text-grey-darker">
+                    {{ post.product_data.product_desc }}
+                  </p>
+                  <span
+                    class="mt-1 inline-flex w-full items-center justify-center gap-1 rounded-lg bg-blue-normal px-3 py-2.5 text-xs font-bold text-white"
+                  >
+                    {{ t("homePage.posts.viewProduct") }} 🛒
+                  </span>
+                </div>
+              </div>
+            </SwiperSlide>
+
+            <!-- Infinite-scroll sentinel -->
+            <SwiperSlide v-if="hasMorePosts" class="posts-card-slide">
+              <div
+                class="flex w-full items-center justify-center rounded-2xl border border-white/15 bg-white/8"
+                style="aspect-ratio: 3/4"
+              >
+                <div
+                  v-if="postsLoading"
+                  class="size-7 animate-spin rounded-full border-2 border-white/25 border-t-white/70"
+                />
+              </div>
+            </SwiperSlide>
+          </Swiper>
+
+          <!-- ── Detail bottom sheet ── -->
+          <Transition name="slide-up">
+            <div
+              v-if="activePost"
+              class="absolute inset-x-0 bottom-0 z-10 flex max-h-[88dvh] flex-col overflow-hidden rounded-t-[28px] bg-white shadow-2xl"
+            >
+              <!-- Handle -->
+              <div class="flex shrink-0 flex-col items-center pb-1 pt-3">
+                <span
+                  class="h-1 w-10 rounded-full bg-grey-normal"
+                  aria-hidden="true"
+                />
+              </div>
+              <!-- Sub-header -->
+              <div
+                class="flex shrink-0 items-center gap-3 border-b border-grey-normal px-5 pb-3"
+              >
+                <button
+                  class="flex size-8 shrink-0 items-center justify-center rounded-full bg-grey-light text-black-normal transition hover:bg-grey-normal"
+                  :aria-label="t('homePage.posts.back')"
+                  @click="activePost = null"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                    aria-hidden="true"
+                    class="rtl:rotate-180"
+                  >
+                    <path
+                      d="M9 2 3 7l6 5"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+                <span
+                  class="min-w-0 flex-1 truncate text-sm font-semibold text-black-normal-hover"
+                >
+                  {{ activePost.product_data.product_name }}
+                </span>
+              </div>
+              <!-- Scrollable content -->
+              <div class="overflow-y-auto overscroll-contain">
+                <img
+                  :src="activePost.product_data.banner"
+                  :alt="activePost.product_data.product_name"
+                  class="w-full object-cover"
+                  style="max-height: 42vh"
+                  loading="eager"
+                />
+                <div class="flex flex-col gap-4 p-5 pb-10">
+                  <h2
+                    class="text-xl font-bold leading-7 text-black-normal-hover"
+                  >
+                    {{ activePost.product_data.product_name }}
+                  </h2>
+                  <p class="text-sm leading-6 text-grey-darker">
+                    {{ activePost.product_data.product_desc }}
+                  </p>
+                  <NuxtLink
+                    :to="localePath(`/products/${activePost.product_data.id}`)"
+                    class="flex items-center justify-center gap-2 rounded-xl bg-blue-normal px-5 py-3.5 text-sm font-bold text-white transition hover:bg-blue-normal-hover"
+                    @click="closePostsFeed"
+                  >
+                    {{ t("homePage.posts.viewProduct") }}
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      aria-hidden="true"
+                      class="rtl:rotate-180"
+                    >
+                      <path
+                        d="M2.5 7h9M8 3l4 4-4 4"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </NuxtLink>
+                </div>
+              </div>
+            </div>
+          </Transition>
+        </div>
+      </Transition>
+    </Teleport>
   </main>
 </template>
 
@@ -709,6 +1046,50 @@ useHead(() => ({ title: t("homePage.metaTitle") }));
 .product-swiper .swiper-button-disabled {
   opacity: 0;
   pointer-events: none;
+}
+
+/* Posts feed overlay — fade in */
+.posts-overlay-enter-active {
+  transition: opacity 0.22s ease;
+}
+.posts-overlay-leave-active {
+  transition: opacity 0.18s ease;
+}
+.posts-overlay-enter-from,
+.posts-overlay-leave-to {
+  opacity: 0;
+}
+
+/* Detail sheet — slide up from bottom */
+.slide-up-enter-active {
+  transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.slide-up-leave-active {
+  transition: transform 0.22s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.slide-up-enter-from,
+.slide-up-leave-to {
+  transform: translateY(100%);
+}
+
+/* Coverflow card slide — explicit width so slides-per-view="auto" works */
+.posts-feed-swiper .posts-card-slide {
+  width: 200px;
+}
+@media (min-width: 480px) {
+  .posts-feed-swiper .posts-card-slide {
+    width: 220px;
+  }
+}
+@media (min-width: 768px) {
+  .posts-feed-swiper .posts-card-slide {
+    width: 240px;
+  }
+}
+@media (min-width: 1024px) {
+  .posts-feed-swiper .posts-card-slide {
+    width: 280px;
+  }
 }
 
 /* Hero pagination pill animation */
